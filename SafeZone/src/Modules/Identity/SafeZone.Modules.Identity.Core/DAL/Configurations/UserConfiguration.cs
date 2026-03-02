@@ -7,7 +7,11 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.HasKey(u => u.Id.Value);
+        builder.HasKey(u => u.Id);
+        builder.OwnsOne(u => u.Name, userName =>
+        {
+            userName.Property(u => u.Value).HasColumnName("UserName").IsRequired();
+        });
         builder.OwnsOne(u => u.Email, email =>
         {
             email.Property(e => e.Value).HasColumnName("Email").IsRequired();

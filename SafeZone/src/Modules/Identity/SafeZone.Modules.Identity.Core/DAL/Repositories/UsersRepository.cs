@@ -26,7 +26,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IPasswordManager _pass
 
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id.Value == id, cancellationToken: cancellationToken);
+        var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
         if(user is null){
             return false;
         }
@@ -38,7 +38,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IPasswordManager _pass
 
     public async Task<bool> SoftDeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id.Value == id, cancellationToken: cancellationToken);
+        var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
         if(user is null){
             return false;
         }
@@ -55,7 +55,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IPasswordManager _pass
 
     public async Task<User> GetAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id.Value == id, cancellationToken: cancellationToken)
+        var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException(id);
         return user;
     }

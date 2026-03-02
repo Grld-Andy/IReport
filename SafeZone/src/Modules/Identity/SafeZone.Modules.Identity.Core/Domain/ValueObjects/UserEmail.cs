@@ -4,15 +4,21 @@ public record UserEmail
 {
     public string Value { get; } = string.Empty;
 
-    public UserEmail(string email)
+    public UserEmail(string value)
     {
-        if (string.IsNullOrWhiteSpace(email))
+        if (string.IsNullOrWhiteSpace(value))
         {
             throw new BadRequestException("Please provide email");
         }
+        if (!Value.Contains('@'))
+        {
+            throw new BadRequestException("Please enter a valid email");
+        }
 
-        Value = email;
+        Value = value;
     }
+
+    private UserEmail(){}
 
     public static implicit operator string(UserEmail email) => email.Value;
     public static implicit operator UserEmail(string value) => new(value);

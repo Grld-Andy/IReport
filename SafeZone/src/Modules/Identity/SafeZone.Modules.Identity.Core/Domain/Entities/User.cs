@@ -1,16 +1,15 @@
-using SafeZone.Shared.Abstractions.Domain;
-
 namespace SafeZone.Modules.Identity.Core.Domain.Entities;
 
-internal class User : AggregateRoot
+internal class User
 {
-    public UserName Name { get; private set; }
-    public UserEmail Email { get; }
-    public UserPassword Password { get; private set; }
-    public UserRole Role { get; }
-    public UserStatus Status { get; private set; }
-    public DateTime CreatedAt { get; }
-    public DateTime UpdatedAt { get; private set; }
+    public Guid Id { get; set; } = default;
+    public UserName Name { get; private set; } = default!;
+    public UserEmail Email { get; } = default!;
+    public UserPassword Password { get; private set; } = default!;
+    public UserRole Role { get; } = default!;
+    public UserStatus Status { get; private set; } = default!;
+    public DateTime CreatedAt { get; } = default;
+    public DateTime UpdatedAt { get; private set; } = default!;
 
     private User() { }
 
