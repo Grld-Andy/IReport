@@ -1,0 +1,8 @@
+﻿{
+    "incident":  {
+                     "module":  {
+                                    "name":  "Incident",
+                                    "enabled":  true
+                                }
+                 }
+}

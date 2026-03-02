@@ -1,0 +1,8 @@
+﻿{
+    "reporting":  {
+                      "module":  {
+                                     "name":  "Reporting",
+                                     "enabled":  true
+                                 }
+                  }
+}

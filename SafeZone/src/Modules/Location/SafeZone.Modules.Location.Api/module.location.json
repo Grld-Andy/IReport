@@ -1,0 +1,8 @@
+﻿{
+    "location":  {
+                     "module":  {
+                                    "name":  "Location",
+                                    "enabled":  true
+                                }
+                 }
+}

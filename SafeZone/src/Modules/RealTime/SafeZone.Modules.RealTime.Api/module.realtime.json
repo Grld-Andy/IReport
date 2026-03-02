@@ -1,0 +1,8 @@
+﻿{
+    "realtime":  {
+                     "module":  {
+                                    "name":  "RealTime",
+                                    "enabled":  true
+                                }
+                 }
+}

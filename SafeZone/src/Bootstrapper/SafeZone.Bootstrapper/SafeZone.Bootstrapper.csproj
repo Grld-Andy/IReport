@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\SafeZone.Shared.Infrastructure\SafeZone.Shared.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Identity\SafeZone.Modules.Identity.Api\SafeZone.Modules.Identity.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Incident\SafeZone.Modules.Incident.Api\SafeZone.Modules.Incident.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Dispatch\SafeZone.Modules.Dispatch.Api\SafeZone.Modules.Dispatch.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Location\SafeZone.Modules.Location.Api\SafeZone.Modules.Location.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\RealTime\SafeZone.Modules.RealTime.Api\SafeZone.Modules.RealTime.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Reporting\SafeZone.Modules.Reporting.Api\SafeZone.Modules.Reporting.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Comments\SafeZone.Modules.Comments.Api\SafeZone.Modules.Comments.Api.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
+
+
+

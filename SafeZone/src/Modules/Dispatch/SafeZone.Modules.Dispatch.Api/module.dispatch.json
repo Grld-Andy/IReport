@@ -1,0 +1,8 @@
+﻿{
+    "dispatch":  {
+                     "module":  {
+                                    "name":  "Dispatch",
+                                    "enabled":  true
+                                }
+                 }
+}

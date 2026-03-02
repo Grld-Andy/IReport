@@ -1,0 +1,8 @@
+﻿{
+    "comments":  {
+                     "module":  {
+                                    "name":  "Comments",
+                                    "enabled":  true
+                                }
+                 }
+}
