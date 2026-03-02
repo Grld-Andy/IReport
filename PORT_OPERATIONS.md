@@ -247,6 +247,7 @@ This system is tailored for large ports and shipping terminals where real-time i
 - JWT access tokens + refresh tokens
 - Soft delete for incidents
 - Audit logging of assignments, status changes, and location updates
+- Users can be banned for abusing system
 
 ## Map / Location Considerations
 - Entire port layout rendered on map: docks, container yards, cranes, roads, warehouses

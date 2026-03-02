@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SafeZone.Shared.Infrastructure.Postgres;
 using SafeZone.Shared.Infrastructure.Security;
 
 namespace SafeZone.Modules.Identity.Core.DAL.Repositories;
@@ -48,9 +49,9 @@ internal class UsersRepository(UsersDbContext _dbContext, IPasswordManager _pass
         return true;
     }
 
-    public async Task<List<User>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<Paged<User>> GetAllAsync(IPagedQuery query, CancellationToken cancellationToken = default)
     {
-        return await dbContext.Users.AsNoTracking().ToListAsync(cancellationToken: cancellationToken);
+        return await dbContext.Users.AsNoTracking().PaginateAsync(query, cancellationToken: cancellationToken);
     }
 
     public async Task<User> GetAsync(Guid id, CancellationToken cancellationToken = default)

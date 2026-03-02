@@ -5,3 +5,5 @@ global using SafeZone.Modules.Identity.Core.Domain.Repositories;
 global using SafeZone.Modules.Identity.Core.DAL;
 global using SafeZone.Modules.Identity.Core.DAL.Repositories;
 global using SafeZone.Modules.Identity.Core.Exceptions;
+global using SafeZone.Shared.Abstractions.Commands;
+global using SafeZone.Shared.Abstractions.Queries;
