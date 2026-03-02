@@ -4,14 +4,16 @@ public record UserName
 {
     public string Value { get; } = string.Empty;
 
-    public UserName(string userName)
+    private UserName(){}
+
+    public UserName(string value)
     {
-        if (string.IsNullOrWhiteSpace(userName))
+        if (string.IsNullOrWhiteSpace(value))
         {
             throw new BadRequestException("Please provide username");
         }
 
-        Value = userName;
+        Value = value;
     }
 
     public static implicit operator string(UserName userName) => userName.Value;

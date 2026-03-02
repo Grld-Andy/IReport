@@ -1,39 +1,61 @@
+using SafeZone.Shared.Abstractions.Domain;
+
 namespace SafeZone.Modules.Identity.Core.Domain.Entities;
 
-internal class User
+internal class User : AggregateRoot
 {
-    public Guid Id { get; private set; }
-    public UserName Name { get; private set; } = default!;
-    public UserEmail Email { get; private set; } = default!;
-    public string PasswordHashed { get; private set; } = default!;
-    public string Role { get; private set; } = default!;
-    public string Status { get; private set; } = default!;
+    public UserName Name { get; private set; }
+    public UserEmail Email { get; }
+    public UserPassword Password { get; private set; }
+    public UserRole Role { get; }
+    public UserStatus Status { get; private set; }
+    public DateTime CreatedAt { get; }
+    public DateTime UpdatedAt { get; private set; }
 
-    private User(){}
+    private User() { }
 
-    public static User CreateUser(Guid id, string name, string email, string password, string role = "user", string status = "Inactive")
+    private User(
+        Guid id,
+        UserName name,
+        UserEmail email,
+        UserPassword password,
+        UserRole role,
+        DateTime now)
     {
-        return new User()
-        {
-            Id = id,
-            Name = name,
-            Email = email,
-            PasswordHashed = password,
-            Role = role,
-            Status = status
-        };
+        Id = id;
+        Name = name;
+        Email = email;
+        Password = password;
+        Role = role;
+        Status = UserStatus.Inactive;
+        CreatedAt = now;
+        UpdatedAt = now;
     }
 
-    // do a soft delete here, just set status to inactive
-    public static void DeleteUser()
+    public static User Register(
+        Guid id,
+        UserName name,
+        UserEmail email,
+        UserPassword password,
+        UserRole role,
+        DateTime now)
     {
-        
+        return new User(id, name, email, password, role, now);
     }
 
-    public void UpdateUser(string name)
+    public void ChangeStatus(UserStatus newStatus, DateTime now)
+    {
+        if (!Status.CanTransitionTo(newStatus))
+            throw new BadRequestException(
+                $"Cannot transition from {Status} to {newStatus}");
+
+        Status = newStatus;
+        UpdatedAt = now;
+    }
+
+    public void ChangeName(UserName name, DateTime now)
     {
         Name = name;
+        UpdatedAt = now;
     }
-
-    // for password change, might send an email with link to reset password
 }
