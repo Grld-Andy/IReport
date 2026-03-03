@@ -10,8 +10,8 @@ internal class User
     public UserPassword Password { get; private set; } = default!;
     public UserRole Role { get; } = default!;
     public UserStatus Status { get; private set; } = default!;
-    public DateTime CreatedAt { get; } = default;
-    public DateTime UpdatedAt { get; private set; } = default!;
+    public DateTime CreatedAt { get; private set; } = default;
+    public DateTime UpdatedAt { get; private set; } = default;
 
     private User() { }
 

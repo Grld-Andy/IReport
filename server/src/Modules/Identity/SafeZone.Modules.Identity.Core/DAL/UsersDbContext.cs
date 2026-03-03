@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace SafeZone.Modules.Identity.Core.DAL;
 
 internal class UsersDbContext(DbContextOptions<UsersDbContext> options) : DbContext(options)

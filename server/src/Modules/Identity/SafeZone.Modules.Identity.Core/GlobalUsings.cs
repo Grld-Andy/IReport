@@ -8,3 +8,4 @@ global using SafeZone.Modules.Identity.Core.Exceptions;
 global using SafeZone.Shared.Abstractions.Commands;
 global using SafeZone.Shared.Abstractions.Queries;
 global using Microsoft.EntityFrameworkCore;
+global using SafeZone.Modules.Identity.Core.DTO;

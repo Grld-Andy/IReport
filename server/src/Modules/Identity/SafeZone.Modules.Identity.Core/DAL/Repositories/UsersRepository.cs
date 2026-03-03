@@ -57,11 +57,11 @@ internal class UsersRepository(UsersDbContext _dbContext) : IUserRepository
         return UserMapper.FromEntity(user);
     }
 
-    public async Task<UserDetailsDto> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
         var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Email.Value.Equals(email, StringComparison.InvariantCultureIgnoreCase), cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException(email);
-        return UserMapper.FromEntity(user);
+        return user;
     }
 
     public async Task SaveAsync(CancellationToken cancellationToken = default)

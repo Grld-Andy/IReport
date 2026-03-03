@@ -33,7 +33,7 @@ const Register: React.FC = () => {
               <Field>
                 <FieldLabel htmlFor="fieldgroup-name">User Name</FieldLabel>
                 <Input
-                  className="h-10"
+                  className="h-10 bg-white"
                   id="fieldgroup-name"
                   placeholder="Enter your username"
                 />
@@ -42,7 +42,7 @@ const Register: React.FC = () => {
                 <FieldLabel htmlFor="fieldgroup-email">Email</FieldLabel>
                 <Input
                   type="email"
-                  className="h-10"
+                  className="h-10 bg-white"
                   id="fieldgroup-email"
                   placeholder="Enter your email"
                 />
@@ -54,7 +54,7 @@ const Register: React.FC = () => {
                 <Input
                   id="fieldgroup-password"
                   type="password"
-                  className="h-10"
+                  className="h-10 bg-white"
                   placeholder="***************"
                 />
               </Field>
@@ -65,7 +65,7 @@ const Register: React.FC = () => {
                 <Input
                   id="fieldgroup-passwordConfirm"
                   type="password"
-                  className="h-10"
+                  className="h-10 bg-white"
                   placeholder="***************"
                 />
               </Field>
@@ -81,7 +81,7 @@ const Register: React.FC = () => {
           <div className="relative my-4">
             <div className="bg-black w-full h-[1px]"></div>
             <div className="absolute w-full flex items-center justify-center top-1/2 -translate-y-1/2">
-              <span className="bg-white px-3 text-gray-500">OR</span>
+              <span className="bg-gray-50 px-3 text-gray-500">OR</span>
             </div>
           </div>
 
@@ -90,7 +90,7 @@ const Register: React.FC = () => {
             {[<FcGoogle size={25} />].map((item, index) => (
               <div
                 key={index}
-                className="flex justify-center h-10 items-center border-2 border-black/50 p-3 rounded-lg w-full cursor-pointer hover:bg-gray-100 transition"
+                className="flex bg-white justify-center h-10 items-center border-2 border-black/50 p-3 rounded-lg w-full cursor-pointer hover:bg-gray-100 transition"
               >
                 {item}
               </div>

@@ -6,14 +6,18 @@ internal static class UserMapper
     public static User ToEntity(UserCreateDto dto)
     {
         var now = DateTime.UtcNow;
+        
+        Console.WriteLine($"== Email before creating user : {dto.Email}==");
 
-        return User.Register(
+        var user = User.Register(
             new UserName(dto.Name),
             new UserEmail(dto.Email),
             new UserPassword(dto.Password),
             UserRole.From(dto.Role),
             now
         );
+        Console.WriteLine($"== Email after creating user : {user.Email.Value}==");
+        return user;
     }
 
     public static UserDetailsDto FromEntity(User user)

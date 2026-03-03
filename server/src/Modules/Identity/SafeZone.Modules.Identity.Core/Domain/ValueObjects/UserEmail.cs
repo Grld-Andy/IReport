@@ -10,8 +10,9 @@ public record UserEmail
         {
             throw new BadRequestException("Please provide email");
         }
-        if (!Value.Contains('@'))
+        if (!value.Contains('@'))
         {
+            Console.WriteLine($"=== email in useremail: {Value} ===");
             throw new BadRequestException("Please enter a valid email");
         }
 
