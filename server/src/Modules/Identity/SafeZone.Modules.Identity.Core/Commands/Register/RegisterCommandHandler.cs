@@ -10,7 +10,6 @@ internal class RegisterCommandHandler(IUserRepository _userRepository, IPassword
     public async Task HandleAsync(RegisterCommand command, CancellationToken cancellationToken = default)
     {
         var userDto = command.User;
-        Console.WriteLine($"== Email from handler: {userDto.Email}==");
         userDto.Password = passwordManager.Secure(userDto.Password);
         await userRepository.CreateAsync(UserMapper.ToEntity(userDto), cancellationToken);
     }

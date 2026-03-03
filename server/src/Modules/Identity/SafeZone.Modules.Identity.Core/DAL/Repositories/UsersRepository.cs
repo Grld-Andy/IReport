@@ -9,6 +9,11 @@ internal class UsersRepository(UsersDbContext _dbContext) : IUserRepository
 
     public async Task CreateAsync(User userDto, CancellationToken cancellationToken = default)
     {
+        var userExists = dbContext.Users.AsNoTracking().FirstOrDefault(u => u.Email.Equals(userDto.Email));
+        if(userExists is not null){
+            throw new BadRequestException($"User with email {userDto.Email} already exists");
+        }
+
         var user = User.Register(
             name: userDto.Name,
             email: userDto.Email,
@@ -59,7 +64,7 @@ internal class UsersRepository(UsersDbContext _dbContext) : IUserRepository
 
     public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Email.Value.Equals(email, StringComparison.InvariantCultureIgnoreCase), cancellationToken: cancellationToken)
+        var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Email.Value.Equals(email.ToLower()), cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException(email);
         return user;
     }

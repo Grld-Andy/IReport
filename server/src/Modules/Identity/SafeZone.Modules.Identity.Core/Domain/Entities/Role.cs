@@ -26,11 +26,12 @@ public sealed class UserRole : IEquatable<UserRole>
     public static UserRole From(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Role cannot be empty.");
+            throw new BadRequestException("Role cannot be empty.");
+        
 
         if (!Roles.TryGetValue(value.Trim(), out var role))
-            throw new ArgumentException($"Invalid user role: {value}");
-
+            throw new BadRequestException($"Invalid user role: {value}");
+        
         return role;
     }
 
