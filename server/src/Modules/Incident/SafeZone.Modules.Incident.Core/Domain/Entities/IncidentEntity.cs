@@ -14,7 +14,7 @@ internal class IncidentEntity
     public IncidentStatus Status { get; private set; }
     public Guid ReporterId { get; private set; }
     public Guid? AssignedToId { get; private set; }
-
+    public bool IsDeleted { get; private set; }
     public IncidentLocation Location { get; private set; } = default!;
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
@@ -92,6 +92,15 @@ internal class IncidentEntity
             throw new BadRequestException("Only in-progress incidents can be resolved.");
 
         Status = IncidentStatus.Resolved;
+        Touch();
+    }
+
+    public void Delete()
+    {
+        if (Status == IncidentStatus.InProgress)
+            throw new BadRequestException("Cannot delete an incident in progress.");
+
+        IsDeleted = true;
         Touch();
     }
 

@@ -18,6 +18,10 @@ internal sealed class IncidentConfiguration : IEntityTypeConfiguration<IncidentE
         builder.Property(x => x.Status)
             .HasConversion<int>()
             .IsRequired();
+        builder.Property(x => x.IsDeleted)
+            .IsRequired();
+
+        builder.HasQueryFilter(x => !x.IsDeleted);
 
         builder.OwnsOne(x => x.Subject, subject =>
         {
