@@ -13,7 +13,7 @@ internal static class Extensions
     {
         services
             .AddSingleton<ITokenStorage, HttpContextTokenStorage>()
-            .AddScoped<UsersRepository, UsersRepository>()
+            .AddScoped<IUserRepository, UsersRepository>()
             .AddPostgres<UsersDbContext>(configuration);
         return services;
     }

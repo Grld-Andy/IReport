@@ -5,7 +5,7 @@ internal class GetSingleUserQueryHandler(IUserRepository _userRepository) : IQue
     private readonly IUserRepository userRepository = _userRepository;
     public async Task<User> HandleAsync(GetSingleUserQuery query, CancellationToken cancellationToken = default)
     {
-        var user = await userRepository.GetAsync(query.Id, cancellationToken);
+        var user = await userRepository.GetByIdAsync(query.Id, cancellationToken);
         return user;
     }
 }

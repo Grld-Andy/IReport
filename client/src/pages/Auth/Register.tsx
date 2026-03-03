@@ -13,13 +13,15 @@ const Register: React.FC = () => {
         {/* Logo */}
         <div className="flex items-center gap-3">
           <SiGoogleauthenticator size={50} />
-          <span className="text-[30px] font-bold">SafeZone</span>
+          <span className="text-[30px] font-bold font-serif">SafeZone</span>
         </div>
 
         {/* Form container */}
         <div className="w-full max-w-md flex flex-col gap-6">
           <div className="text-center">
-            <h1 className="text-[40px] font-extrabold text-black">Welcome!</h1>
+            <h1 className="text-[40px] font-extrabold text-black font-serif">
+              Welcome!
+            </h1>
             <p className="text-gray-700 mt-2">
               Join us today and start your journey with SafeZone.
             </p>
@@ -30,12 +32,17 @@ const Register: React.FC = () => {
             <div className="flex flex-row gap-3">
               <Field>
                 <FieldLabel htmlFor="fieldgroup-name">UserName</FieldLabel>
-                <Input id="fieldgroup-name" placeholder="Enter your username" />
+                <Input
+                  className="h-10"
+                  id="fieldgroup-name"
+                  placeholder="Enter your username"
+                />
               </Field>
               <Field>
                 <FieldLabel htmlFor="fieldgroup-email">Email</FieldLabel>
                 <Input
                   type="email"
+                  className="h-10"
                   id="fieldgroup-email"
                   placeholder="Enter your email"
                 />
@@ -47,6 +54,7 @@ const Register: React.FC = () => {
                 <Input
                   id="fieldgroup-password"
                   type="password"
+                  className="h-10"
                   placeholder="***************"
                 />
               </Field>
@@ -57,12 +65,13 @@ const Register: React.FC = () => {
                 <Input
                   id="fieldgroup-passwordConfirm"
                   type="password"
+                  className="h-10"
                   placeholder="***************"
                 />
               </Field>
             </div>
             <Field>
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full h-10">
                 Sign In
               </Button>
             </Field>
@@ -81,7 +90,7 @@ const Register: React.FC = () => {
             {[<FcGoogle size={25} />].map((item, index) => (
               <div
                 key={index}
-                className="flex justify-center items-center border-2 border-black/50 p-3 rounded-lg w-full cursor-pointer hover:bg-gray-100 transition"
+                className="flex justify-center h-10 items-center border-2 border-black/50 p-3 rounded-lg w-full cursor-pointer hover:bg-gray-100 transition"
               >
                 {item}
               </div>
