@@ -1,22 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using SafeZone.Shared.Infrastructure.Postgres;
-using SafeZone.Shared.Infrastructure.Security;
 
 namespace SafeZone.Modules.Identity.Core.DAL.Repositories;
 
-internal class UsersRepository(UsersDbContext _dbContext, IPasswordManager _passwordManager) : IUserRepository
+internal class UsersRepository(UsersDbContext _dbContext) : IUserRepository
 {
     private readonly UsersDbContext dbContext = _dbContext;
-    private readonly IPasswordManager passwordManager = _passwordManager;
 
     public async Task CreateAsync(User userDto, CancellationToken cancellationToken = default)
     {
-        var hashedPassword = passwordManager.Secure(userDto.Password);
         var user = User.Register(
             id: userDto.Id,
             name: userDto.Name,
             email: userDto.Email,
-            password: hashedPassword,
+            password: userDto.Password,
             role: userDto.Role,
             now: DateTime.Now
         );
@@ -54,10 +51,17 @@ internal class UsersRepository(UsersDbContext _dbContext, IPasswordManager _pass
         return await dbContext.Users.AsNoTracking().PaginateAsync(query, cancellationToken: cancellationToken);
     }
 
-    public async Task<User> GetAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<User> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException(id);
+        return user;
+    }
+
+    public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    {
+        var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Email.Value.Equals(email, StringComparison.InvariantCultureIgnoreCase), cancellationToken: cancellationToken)
+            ?? throw new UserNotFoundException(email);
         return user;
     }
 

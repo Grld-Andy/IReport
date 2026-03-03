@@ -15,7 +15,7 @@ public record UserEmail
             throw new BadRequestException("Please enter a valid email");
         }
 
-        Value = value;
+        Value = value.ToLowerInvariant();
     }
 
     private UserEmail(){}
