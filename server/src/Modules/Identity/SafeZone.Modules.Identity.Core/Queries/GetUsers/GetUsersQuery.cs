@@ -1,3 +1,5 @@
+using SafeZone.Modules.Identity.Core.DTO;
+
 namespace SafeZone.Modules.Identity.Core.Queries.GetUsers;
 
-internal class GetUsersQuery() : PagedQuery<User>;
+internal class GetUsersQuery() : PagedQuery<UserDetailsDto>;

@@ -1,3 +1,4 @@
+using SafeZone.Modules.Identity.Core.DTO;
 using SafeZone.Shared.Infrastructure.Postgres;
 
 namespace SafeZone.Modules.Identity.Core.DAL.Repositories;
@@ -44,23 +45,23 @@ internal class UsersRepository(UsersDbContext _dbContext) : IUserRepository
         return true;
     }
 
-    public async Task<Paged<User>> GetAllAsync(IPagedQuery query, CancellationToken cancellationToken = default)
+    public async Task<Paged<UserDetailsDto>> GetAllAsync(IPagedQuery query, CancellationToken cancellationToken = default)
     {
-        return await dbContext.Users.AsNoTracking().PaginateAsync(query, cancellationToken: cancellationToken);
+        return await dbContext.Users.AsNoTracking().Select(u => UserMapper.FromEntity(u)).PaginateAsync(query, cancellationToken: cancellationToken);
     }
 
-    public async Task<User> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<UserDetailsDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException(id);
-        return user;
+        return UserMapper.FromEntity(user);
     }
 
-    public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public async Task<UserDetailsDto> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
         var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Email.Value.Equals(email, StringComparison.InvariantCultureIgnoreCase), cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException(email);
-        return user;
+        return UserMapper.FromEntity(user);
     }
 
     public async Task SaveAsync(CancellationToken cancellationToken = default)

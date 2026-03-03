@@ -15,4 +15,17 @@ internal static class UserMapper
             now
         );
     }
+
+    public static UserDetailsDto FromEntity(User user)
+    {
+        return new UserDetailsDto{
+            Id = user.Id,
+            CreatedAt = user.CreatedAt,
+            UpdatedAt = user.UpdatedAt,
+            Status = user.Status.Value,
+            Name = user.Name,
+            Email = user.Email,
+            Role = user.Role.Value
+        };
+    }
 }

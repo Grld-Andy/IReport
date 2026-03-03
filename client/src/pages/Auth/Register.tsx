@@ -31,7 +31,7 @@ const Register: React.FC = () => {
           <FieldGroup>
             <div className="flex flex-row gap-3">
               <Field>
-                <FieldLabel htmlFor="fieldgroup-name">UserName</FieldLabel>
+                <FieldLabel htmlFor="fieldgroup-name">User Name</FieldLabel>
                 <Input
                   className="h-10"
                   id="fieldgroup-name"

@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SafeZone.Modules.Identity.Core.Commands.Login;
-using SafeZone.Modules.Identity.Core.Commands.Register;
+using SafeZone.Modules.Identity.Core.Domain.Entities;
+using SafeZone.Modules.Identity.Core.DTO;
+using SafeZone.Modules.Identity.Core.Queries.GetSingleUser;
+using SafeZone.Modules.Identity.Core.Queries.GetUsers;
 using SafeZone.Modules.Identity.Core.Services;
 using SafeZone.Shared.Abstractions.Dispatchers;
+using SafeZone.Shared.Abstractions.Queries;
 
 namespace SafeZone.Modules.Identity.Api.Controllers;
 
@@ -16,19 +19,17 @@ internal class UsersController(IDispatcher _dispatcher, ITokenStorage _tokenStor
     private readonly CookieOptions cookieOptions = _cookieOptions;
     
 
-    [HttpPost("register")]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterCommand command, CancellationToken cancellationToken)
+    [HttpGet]
+    public async Task<ActionResult<Paged<UserDetailsDto>>> GetAllUsers([FromRoute] GetUsersQuery query, CancellationToken cancellationToken)
     {
-        await dispatcher.SendAsync(command, cancellationToken);
-        return NoContent();
+        var result = await dispatcher.QueryAsync(query, cancellationToken);
+        return result;
     }
 
-    [HttpPost("login")]
-    public async Task<IActionResult> LoginUser([FromBody] LoginCommand command, CancellationToken cancellationToken)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<User>> LoginUser([FromRoute] Guid id, CancellationToken cancellationToken)
     {
-        await dispatcher.SendAsync(command, cancellationToken);
-        var jwt = tokenStorage.Get();
-        Response.Cookies.Append("__access_token", jwt.AccessToken, cookieOptions);
-        return NoContent();
+        var user = await dispatcher.QueryAsync(new GetSingleUserQuery(id), cancellationToken);
+        return Ok(user);
     }
 }
