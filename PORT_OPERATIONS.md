@@ -101,7 +101,7 @@ This system is tailored for large ports and shipping terminals where real-time i
   "Location": {
     "Latitude": "double",
     "Longitude": "double",
-    "DockZone": "string"
+    "ExtraDetails": "string"
   },
   "Timestamp": "datetime",
   "LastUpdated": "datetime"

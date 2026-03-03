@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SafeZone.Modules.Identity.Core.Commands.Login;

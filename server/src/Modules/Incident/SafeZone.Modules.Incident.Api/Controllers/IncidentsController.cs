@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using SafeZone.Shared.Abstractions.Dispatchers;
 
-namespace SafeZone.Modules.Identity.Api.Controllers;
+namespace SafeZone.Modules.Incident.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

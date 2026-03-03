@@ -22,7 +22,7 @@ public sealed class UserStatus : IEquatable<UserStatus>
             nameof(Active) => Active,
             nameof(Suspended) => Suspended,
             nameof(Deleted) => Deleted,
-            _ => throw new ArgumentException($"Invalid user status: {value}")
+            _ => throw new BadRequestException($"Invalid user status: {value}")
         };
     }
 

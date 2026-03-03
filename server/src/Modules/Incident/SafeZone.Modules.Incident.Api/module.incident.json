@@ -1,8 +1,8 @@
 ﻿{
-    "incident":  {
-                     "module":  {
-                                    "name":  "Incident",
-                                    "enabled":  true
-                                }
-                 }
+  "incident": {
+    "module": {
+      "name": "Incident",
+      "enabled": true
+    }
+  }
 }
