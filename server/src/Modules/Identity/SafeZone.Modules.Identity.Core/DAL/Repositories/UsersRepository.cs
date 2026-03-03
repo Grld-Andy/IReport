@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using SafeZone.Shared.Infrastructure.Postgres;
 
 namespace SafeZone.Modules.Identity.Core.DAL.Repositories;
@@ -10,7 +9,6 @@ internal class UsersRepository(UsersDbContext _dbContext) : IUserRepository
     public async Task CreateAsync(User userDto, CancellationToken cancellationToken = default)
     {
         var user = User.Register(
-            id: userDto.Id,
             name: userDto.Name,
             email: userDto.Email,
             password: userDto.Password,

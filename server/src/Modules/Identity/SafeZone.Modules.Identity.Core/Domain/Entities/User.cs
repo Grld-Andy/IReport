@@ -1,3 +1,5 @@
+using SafeZone.Modules.Identity.Core.DTO;
+
 namespace SafeZone.Modules.Identity.Core.Domain.Entities;
 
 internal class User
@@ -32,14 +34,13 @@ internal class User
     }
 
     public static User Register(
-        Guid id,
         UserName name,
         UserEmail email,
         UserPassword password,
         UserRole role,
         DateTime now)
     {
-        return new User(id, name, email, password, role, now);
+        return new User(Guid.NewGuid(), name, email, password, role, now);
     }
 
     public void ChangeStatus(UserStatus newStatus, DateTime now)
