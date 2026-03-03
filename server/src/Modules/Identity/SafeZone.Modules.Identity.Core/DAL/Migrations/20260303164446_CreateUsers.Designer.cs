@@ -12,7 +12,7 @@ using SafeZone.Modules.Identity.Core.DAL;
 namespace SafeZone.Modules.Identity.Core.DAL.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    [Migration("20260303152729_CreateUsers")]
+    [Migration("20260303164446_CreateUsers")]
     partial class CreateUsers
     {
         /// <inheritdoc />
@@ -74,6 +74,9 @@ namespace SafeZone.Modules.Identity.Core.DAL.Migrations
                                 .HasColumnName("Email");
 
                             b1.HasKey("UserId");
+
+                            b1.HasIndex("Value")
+                                .IsUnique();
 
                             b1.ToTable("Users", "users");
 

@@ -15,6 +15,7 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
         builder.OwnsOne(u => u.Email, email =>
         {
             email.Property(e => e.Value).HasColumnName("Email").IsRequired();
+            email.HasIndex(e => e.Value).IsUnique();
         });
         builder.OwnsOne(u => u.Password, password =>
         {

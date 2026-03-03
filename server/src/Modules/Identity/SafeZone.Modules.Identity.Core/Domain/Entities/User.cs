@@ -1,5 +1,3 @@
-using SafeZone.Modules.Identity.Core.DTO;
-
 namespace SafeZone.Modules.Identity.Core.Domain.Entities;
 
 internal class User

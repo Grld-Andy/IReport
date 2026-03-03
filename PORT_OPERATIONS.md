@@ -70,7 +70,7 @@ This system is tailored for large ports and shipping terminals where real-time i
   "Id": "guid",
   "Name": "string",
   "Email": "string",
-  "Role": "Witness | Responder | Supervisor | Admin",
+  "Role": "Witness/User | Responder | Supervisor | Admin",
   "Status": "Active | Inactive",
   "AssignedIncidents": ["IncidentId"]
 }

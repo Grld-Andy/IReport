@@ -72,6 +72,9 @@ namespace SafeZone.Modules.Identity.Core.DAL.Migrations
 
                             b1.HasKey("UserId");
 
+                            b1.HasIndex("Value")
+                                .IsUnique();
+
                             b1.ToTable("Users", "users");
 
                             b1.WithOwner()

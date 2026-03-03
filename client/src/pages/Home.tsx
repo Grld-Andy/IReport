@@ -3,7 +3,7 @@ import React from 'react'
 
 const Home : React.FC = () => {
   return (
-    <div className='text-underline'>
+    <div className='text-underline w-full'>
         <Button>Click me</Button>
     </div>
   )

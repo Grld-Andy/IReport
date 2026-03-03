@@ -3,6 +3,7 @@ namespace SafeZone.Modules.Identity.Core.Domain.ValueObjects;
 public record UserEmail
 {
     public string Value { get; } = string.Empty;
+    public Guid UserId { get; private set; }
 
     public UserEmail(string value)
     {
@@ -12,11 +13,10 @@ public record UserEmail
         }
         if (!value.Contains('@'))
         {
-            Console.WriteLine($"=== email in useremail: {Value} ===");
             throw new BadRequestException("Please enter a valid email");
         }
 
-        Value = value.ToLowerInvariant();
+        Value = value.ToLower();
     }
 
     private UserEmail(){}
