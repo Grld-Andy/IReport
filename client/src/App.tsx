@@ -8,13 +8,21 @@ import Dashboard from "./pages/ProtectedPages/Dashboard"
 import LiveMap from "./pages/ProtectedPages/LiveMap"
 import "./App.css"
 import 'leaflet/dist/leaflet.css';
+import IncidentsPage from "./pages/ProtectedPages/IncidentsPage"
+import KanbanBoardPage from "./pages/ProtectedPages/KanbanBoardPage"
+import ReportsPage from "./pages/ProtectedPages/ReportsPage"
+import UsersPage from "./pages/ProtectedPages/UsersPage"
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout/>}>
         <Route path="dashboard" element={<Dashboard/>}/>
+        <Route path="incidents" element={<IncidentsPage/>}/>
         <Route path="map" element={<LiveMap/>}/>
+        <Route path="kanban" element={<KanbanBoardPage/>}/>
+        <Route path="reports" element={<ReportsPage/>}/>
+        <Route path="users" element={<UsersPage/>}/>
       </Route>
       <Route path="/" element={<AuthLayout/>}>
         <Route path="auth/register" element={<Register/>}/>

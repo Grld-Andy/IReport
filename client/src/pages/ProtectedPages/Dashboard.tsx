@@ -1,6 +1,5 @@
 import DashboardChart from "@/components/custom/Dashboard/Charts";
 import DashboardActivityFeed from "@/components/custom/Dashboard/DashboardActivityFeed";
-import DashboardNavbar from "@/components/custom/Dashboard/DashboardNavbar";
 import StatsCard from "@/components/custom/Dashboard/StatsCard";
 import PageHeader from "@/components/custom/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -11,13 +10,10 @@ import React from "react";
 const Dashboard: React.FC = () => {
 
   return (
-    <div className="flex flex-col gap-5 w-full">
-      <DashboardNavbar />
-
+    <div>
       <div className="flex justify-between gap-5">
         <div>
-          <PageHeader title="Welcome Back"/>
-          <p>Plan, prioritize, and accomplish task with ease</p>
+          <PageHeader title="Welcome Back" subtitle="Plan, prioritize, and accomplish task with ease"/>
         </div>
 
         <div>

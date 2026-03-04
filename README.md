@@ -1,7 +1,5 @@
 # A Real-Time Incident Reporting & Coordination (Port Operations)
 
-Refer to ../README.md
-
 ---
 
 # Niche Overview: Port & Shipping Terminal Operations
