@@ -9,4 +9,4 @@ internal record CreateIncidentCommand(
     double Latitude,
     double Longitude,
     string LocationDetails
-) : ICommand;
+) : ICommand<Guid>;

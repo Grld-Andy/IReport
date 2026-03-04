@@ -2,12 +2,12 @@ namespace SafeZone.Modules.Incident.Core.Commands.CreateIncident;
 
 internal sealed class CreateIncidentHandler
     (IIncidentRepository _repository, IncidentDbContext _context)
-    : ICommandHandler<CreateIncidentCommand>
+    : ICommandHandler<CreateIncidentCommand, Guid>
 {
     private readonly IIncidentRepository repository = _repository;
     private readonly IncidentDbContext context = _context;
 
-    public async Task HandleAsync(CreateIncidentCommand command, CancellationToken cancellationToken = default)
+    public async Task<Guid> HandleAsync(CreateIncidentCommand command, CancellationToken cancellationToken = default)
     {
         var location = new IncidentLocation(
             command.Longitude,
@@ -24,5 +24,7 @@ internal sealed class CreateIncidentHandler
 
         await repository.AddAsync(incident, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
+
+        return incident.Id;
     }
 }

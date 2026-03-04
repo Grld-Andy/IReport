@@ -7,3 +7,5 @@ global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using SafeZone.Shared.Abstractions.Commands;
 global using SafeZone.Shared.Abstractions.Exceptions.ExceptionClasses;
 global using SafeZone.Modules.Incident.Core.Domain.ValueObjects;
+global using SafeZone.Modules.Incident.Core.DTO;
+global using SafeZone.Shared.Abstractions.Queries;
