@@ -10,7 +10,6 @@ using SafeZone.Modules.Incident.Core.Queries.GetOpenIncidents;
 using SafeZone.Modules.Incident.Core.Queries.GetAssignedIncidents;
 using SafeZone.Shared.Abstractions.Dispatchers;
 using SafeZone.Modules.Incident.Core.Domain.Enums;
-using Microsoft.AspNetCore.Http;
 using SafeZone.Shared.Abstractions.Contexts;
 
 namespace SafeZone.Modules.Incident.Api.Controllers;
