@@ -23,14 +23,14 @@ const Sidebar: React.FC = () => {
   ]
 
   return (
-    <div className="flex flex-col justify-between bg-gray-100 h-full py-3 px-5">
+    <div className="flex flex-col justify-between bg-gray-100 w-full h-full py-3 px-5">
       {/* upper */}
       <div className="flex flex-col gap-8">
 
         {/* logo */}
-        <div className="flex items-center justify-center gap-2">
-          <SiGoogleauthenticator size={20} />
-          <span className="text-[20px] font-bold font-serif">SafeZone</span>
+        <div className="flex items-center justify-center gap-2 py-5">
+          <SiGoogleauthenticator size={25} />
+          <span className="text-[20px] font-bold font-serif hidden md:block">SafeZone</span>
         </div>
 
         {/* navitems */}
@@ -48,7 +48,7 @@ const Sidebar: React.FC = () => {
                     <item.icon className="scale-125"/>
                     : <item.activeIcon className="scale-125 text-white"/>
                   }
-                  <p>{item.name}</p>
+                  <p className="hidden md:block">{item.name}</p>
                 </Button>
               )
             })
@@ -59,7 +59,7 @@ const Sidebar: React.FC = () => {
       {/* lower: logout button */}
       <Button className="flex items-center justify-start hover:bg-green-400 gap-3 bg-transparent shadow-none">
         <CiLogout className="text-gray-800"/>
-        <p className="text-gray-800">Logout</p>
+        <p className="text-gray-800 hidden md:block">Logout</p>
       </Button>
     </div>
   );

@@ -1,39 +1,36 @@
-import { Input } from '@/components/ui/input';
-import React from 'react'
-import { CiSearch } from "react-icons/ci";
-import { GoBell } from "react-icons/go";
-import { MdOutlineEmail } from 'react-icons/md';
-import { FaUser } from "react-icons/fa";
+import DashboardNavbar from "@/components/custom/Dashboard/DashboardNavbar";
+import StatsCard from "@/components/custom/Dashboard/StatsCard";
+import { Button } from "@/components/ui/button";
+import React from "react";
 
-const Dashboard : React.FC = () => {
+const Dashboard: React.FC = () => {
   return (
-    <div className='flex flex-col gap-5 w-full'>
-      <nav className='px-5 py-3 bg-gray-100 rounded-lg w-full flex justify-between items-center gap-5'>
-        <div className='bg-white rounded-full p-2 flex gap-2 items-center'>
-          <CiSearch size={25}/>
-          <Input placeholder='Search Incident' className='shadow-none active:ring-transparent active:outline-none active:border-none border-none outline-none'/>
+    <div className="flex flex-col gap-5 w-full">
+      <DashboardNavbar />
+
+      <div className="flex justify-between gap-5">
+        <div>
+          <h1>Welcome Back</h1>
+          <p>Plan, prioritize, and accomplish task with ease</p>
         </div>
 
-        <div className='flex gap-1 items-center'>
-          <div className='grid place-content-center h-[45px] w-[45px] rounded-full bg-white'>
-            <MdOutlineEmail size={25}/>
-          </div> 
-          <div className='grid place-content-center h-[45px] w-[45px] rounded-full bg-white'>
-            <GoBell size={25}/>
-          </div>
-          <div className='flex gap-2 items-center'>
-            <div className='grid place-content-center h-[45px] w-[45px] rounded-full bg-green-500'>
-              <FaUser size={25} color='white'/>
-            </div>
-            <div className='flex flex-col justify-between items-start py-1'>
-              <h3 className='text-black text-[1em]'>John Doe</h3>
-              <p className='text-gray-800 text-[0.8em]'>johndoe@gmail.com</p>
-            </div>
-          </div>
+        <div>
+          <Button className="bg-green-500 text-white rounded-full">
+            + Add Project
+          </Button>
         </div>
-      </nav>
+      </div>
+
+      {/* stats cards */}
+        <div className="flex gap-3 overflow-x-scroll hide-scrollbar">
+          {
+            Array.from({ length: 4 }).map((_, index) => (
+              <StatsCard key={index}/>
+            ))
+          }
+        </div>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

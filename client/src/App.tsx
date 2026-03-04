@@ -4,6 +4,7 @@ import Login from "./pages/Auth/Login"
 import Register from "./pages/Auth/Register"
 import NotFound from "./pages/NotFound"
 import AuthLayout from "./components/Layout/AuthLayout"
+import "./App.css"
 import Dashboard from "./pages/ProtectedPages/Dashboard"
 
 function App() {
