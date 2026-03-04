@@ -1,14 +1,14 @@
 namespace SafeZone.Modules.Incident.Core.Queries.GetOpenIncidents;
 
-internal class GetOpenIncidentsHandler(IncidentDbContext context) : IQueryHandler<GetOpenIncidentsQuery, List<IncidentDto>>
+internal class GetOpenIncidentsHandler(IncidentDbContext _context) : IQueryHandler<GetOpenIncidentsQuery, List<IncidentDto>>
 {
-    private readonly IncidentDbContext _context = context;
+    private readonly IncidentDbContext context = _context;
 
     public async Task<List<IncidentDto>> HandleAsync(
         GetOpenIncidentsQuery query,
         CancellationToken cancellationToken = default)
     {
-        return await _context.Incidents
+        return await context.Incidents
             .AsNoTracking()
             .Where(x => x.Status == IncidentStatus.Open)
             .Select(x => new IncidentDto

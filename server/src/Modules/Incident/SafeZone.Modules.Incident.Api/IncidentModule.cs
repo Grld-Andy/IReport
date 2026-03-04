@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SafeZone.Modules.Incident.Core;
 using SafeZone.Shared.Abstractions.Modules;
 
 namespace SafeZone.Modules.Incident.Api;
@@ -19,6 +20,7 @@ internal sealed class IncidentModule : IModule
     public void Register(IServiceCollection services, IConfiguration configuration)
     {
         // Optional: register core services here
+        services.AddCore(configuration);
     }
         
     public void Use(IApplicationBuilder app)

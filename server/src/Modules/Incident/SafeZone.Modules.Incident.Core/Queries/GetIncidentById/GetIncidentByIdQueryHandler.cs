@@ -1,14 +1,14 @@
 namespace SafeZone.Modules.Incident.Core.Queries.GetIncidentById;
 
-internal class GetIncidentByIdHandler(IncidentDbContext context) : IQueryHandler<GetIncidentByIdQuery, IncidentDto>
+internal class GetIncidentByIdHandler(IncidentDbContext _context) : IQueryHandler<GetIncidentByIdQuery, IncidentDto>
 {
-    private readonly IncidentDbContext _context = context;
+    private readonly IncidentDbContext context = _context;
 
     public async Task<IncidentDto> HandleAsync(
         GetIncidentByIdQuery query,
         CancellationToken cancellationToken = default)
     {
-        var incidents = await _context.Incidents
+        var incidents = await context.Incidents
             .AsNoTracking()
             .Where(x => x.Id == query.Id)
             .Select(x => new IncidentDto
