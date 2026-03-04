@@ -7,7 +7,7 @@ interface Props {
 
 const StatsCard: React.FC<Props> = ({ cardDetails }) => {
   return (
-    <div className="flex gap-2 bg-white flex-col shadow-md border-[1px] border-black/20 rounded-2xl p-3">
+    <div className="flex flex-1 gap-2 bg-white flex-col shadow-md border-[1px] border-black/20 rounded-2xl p-3">
       <div className="flex flex-col justify-between h-full">
         <div>
           <p className="text-[1.2em] font-[400]">{cardDetails.title}</p>
