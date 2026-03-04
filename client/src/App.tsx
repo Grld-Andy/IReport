@@ -6,12 +6,14 @@ import NotFound from "./pages/NotFound"
 import AuthLayout from "./components/Layout/AuthLayout"
 import "./App.css"
 import Dashboard from "./pages/ProtectedPages/Dashboard"
+import LiveMap from "./pages/ProtectedPages/LiveMap"
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout/>}>
         <Route path="dashboard" element={<Dashboard/>}/>
+        <Route path="map" element={<LiveMap/>}/>
       </Route>
       <Route path="/" element={<AuthLayout/>}>
         <Route path="auth/register" element={<Register/>}/>
