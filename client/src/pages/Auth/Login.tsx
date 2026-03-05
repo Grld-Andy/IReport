@@ -1,12 +1,57 @@
 import { Button } from "@/components/ui/button";
 import { SiGoogleauthenticator } from "react-icons/si";
-import React from "react";
+import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import type z from "zod";
+import { userLoginSchema } from "@/types/User";
+import { useForm, type SubmitErrorHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { RegisterUser } from "./Register";
+import { apiUrl } from "@/constants";
+import axios from "axios";
 
 const Login: React.FC = () => {
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [apiError, setApiError] = useState<string>("");
+  const navigate = useNavigate();
+
+  type LoginUser = z.infer<typeof userLoginSchema>;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginUser>({
+    resolver: zodResolver(userLoginSchema),
+  });
+
+  const onSubmit = async (data: LoginUser) => {
+    try {
+      setApiError("")
+      setIsSubmitting(true);
+      const response = await axios.post(`${apiUrl}auth/login`, data);
+
+      if(response.status == 204){
+        navigate("/")
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setApiError(error.response?.data.errors[0].message);
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const onError: SubmitErrorHandler<RegisterUser> = (errors) => {
+    console.error("Validation errors:", errors);
+  };
+
   return (
     <div className="grid md:grid-cols-2 h-screen">
       <div className="relative p-1 hidden md:block">
@@ -29,42 +74,57 @@ const Login: React.FC = () => {
         </div>
 
         {/* Form container */}
-        <div className="w-full max-w-md flex flex-col gap-6">
+        <div
+          className={`w-full max-w-md flex flex-col gap-4 ${isSubmitting ? "select-none opacity-80 transition-all duration-100" : ""}`}
+        >
           <div className="text-center">
             <h1 className="text-[40px] font-extrabold text-black font-serif">
               Welcome Back
             </h1>
-            <p className="text-gray-700 mt-2">
+            <p className="text-gray-700">
               Enter your email and password to access your account
             </p>
           </div>
 
           {/* Actual form */}
-          <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor="fieldgroup-email">Email</FieldLabel>
-              <Input
-                type="email"
-                className="h-10 bg-white"
-                id="fieldgroup-email"
-                placeholder="Enter your email"
-              />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="fieldgroup-password">Password</FieldLabel>
-              <Input
-                id="fieldgroup-password"
-                type="password"
-                className="h-10 bg-white"
-                placeholder="***************"
-              />
-            </Field>
-            <Field>
-              <Button type="submit" className="w-full h-10">
-                Sign In
-              </Button>
-            </Field>
-          </FieldGroup>
+          <form onSubmit={handleSubmit(onSubmit, onError)}>
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="fieldgroup-email">Email</FieldLabel>
+                <Input
+                  type="email"
+                  className="h-10 bg-white"
+                  id="fieldgroup-email"
+                  placeholder="Enter your email"
+                  {...register("email")}
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email.message}</p>
+                )}
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="fieldgroup-password">Password</FieldLabel>
+                <Input
+                  id="fieldgroup-password"
+                  type="password"
+                  className="h-10 bg-white"
+                  placeholder="***************"
+                  {...register("password")}
+                />
+                {errors.password && (
+                  <p className="text-red-500 text-sm">
+                    {errors.password.message}
+                  </p>
+                )}
+              </Field>
+              {apiError && <p className="text-red-500 text-sm">{apiError}</p>}
+              <Field>
+                <Button type="submit" className="w-full h-10">
+                  Sign In
+                </Button>
+              </Field>
+            </FieldGroup>
+          </form>
 
           {/* Horizontal line */}
           <div className="relative my-4">

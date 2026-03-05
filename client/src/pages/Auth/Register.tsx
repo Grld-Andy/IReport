@@ -1,12 +1,58 @@
 import { Button } from "@/components/ui/button";
 import { SiGoogleauthenticator } from "react-icons/si";
-import React from "react";
+import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import { useForm, type SubmitErrorHandler } from "react-hook-form";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { userRegisterSchema } from "@/types/User";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import axios from 'axios';
+import { apiUrl } from "@/constants";
+
+export type RegisterUser = z.infer<typeof userRegisterSchema>;
 
 const Register: React.FC = () => {
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const navigate = useNavigate()
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterUser>({
+    resolver: zodResolver(userRegisterSchema),
+  });
+
+  const onSubmit = async (data: RegisterUser) => {
+    try{
+      setIsSubmitting(true)
+      const response = await axios.post(`${apiUrl}auth/register`,
+        {
+          user: {
+            name: data.name,
+            email: data.email,
+            role: "user",
+            password: data.password,
+            confirmPassword: data.confirmPassword
+          }
+        }
+      );
+      console.log(response)
+      navigate("/auth/login")
+    }catch(e){
+      console.error(e);
+    }finally{
+      setIsSubmitting(false)
+    }
+  };
+
+  const onError: SubmitErrorHandler<RegisterUser> = (errors) => {
+    console.error("Validation errors:", errors);
+  };
+
   return (
     <div className="grid md:grid-cols-2 h-screen">
       <div className="flex flex-col justify-center items-center h-full p-8 gap-8">
@@ -16,8 +62,7 @@ const Register: React.FC = () => {
           <span className="text-[30px] font-bold font-serif">SafeZone</span>
         </div>
 
-        {/* Form container */}
-        <div className="w-full max-w-md flex flex-col gap-6">
+        <div className={`w-full max-w-md flex flex-col gap-6 ${isSubmitting ? "select-none opacity-80 transition-all duration-100" : ""}`}>
           <div className="text-center">
             <h1 className="text-[40px] font-extrabold text-black font-serif">
               Welcome!
@@ -27,57 +72,81 @@ const Register: React.FC = () => {
             </p>
           </div>
 
-          {/* Actual form */}
-          <FieldGroup>
-            <div className="flex flex-row gap-3">
-              <Field>
-                <FieldLabel htmlFor="fieldgroup-name">User Name</FieldLabel>
-                <Input
-                  className="h-10 bg-white"
-                  id="fieldgroup-name"
-                  placeholder="Enter your username"
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="fieldgroup-email">Email</FieldLabel>
-                <Input
-                  type="email"
-                  className="h-10 bg-white"
-                  id="fieldgroup-email"
-                  placeholder="Enter your email"
-                />
-              </Field>
-            </div>
-            <div className="flex flex-row gap-3">
-              <Field>
-                <FieldLabel htmlFor="fieldgroup-password">Password</FieldLabel>
-                <Input
-                  id="fieldgroup-password"
-                  type="password"
-                  className="h-10 bg-white"
-                  placeholder="***************"
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="fieldgroup-passwordConfirm">
-                  Confirm Password
-                </FieldLabel>
-                <Input
-                  id="fieldgroup-passwordConfirm"
-                  type="password"
-                  className="h-10 bg-white"
-                  placeholder="***************"
-                />
-              </Field>
-            </div>
-            <Field>
-              <Button type="submit" className="w-full h-10">
-                Sign In
-              </Button>
-            </Field>
-          </FieldGroup>
+          {/* FORM */}
+          <form onSubmit={handleSubmit(onSubmit, onError)}>
+            <FieldGroup>
+              <div className="flex flex-row gap-3">
+                <Field>
+                  <FieldLabel>User Name</FieldLabel>
+                  <Input
+                    className="h-10 bg-white"
+                    placeholder="Enter your name"
+                    {...register("name")}
+                  />
+                  {errors.name && (
+                    <p className="text-red-500 text-sm">
+                      {errors.name.message}
+                    </p>
+                  )}
+                </Field>
 
-          {/* Horizontal line */}
+                <Field>
+                  <FieldLabel>Email</FieldLabel>
+                  <Input
+                    type="email"
+                    className="h-10 bg-white"
+                    placeholder="Enter your email"
+                    {...register("email")}
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-sm">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </Field>
+              </div>
+
+              <div className="flex flex-row gap-3">
+                <Field>
+                  <FieldLabel>Password</FieldLabel>
+                  <Input
+                    type="password"
+                    className="h-10 bg-white"
+                    placeholder="***************"
+                    {...register("password")}
+                  />
+                  {errors.password && (
+                    <p className="text-red-500 text-sm">
+                      {errors.password.message}
+                    </p>
+                  )}
+                </Field>
+
+                <Field>
+                  <FieldLabel>Confirm Password</FieldLabel>
+                  <Input
+                    type="password"
+                    className="h-10 bg-white"
+                    placeholder="***************"
+                    {...register("confirmPassword")}
+                  />
+                  {errors.confirmPassword && (
+                    <p className="text-red-500 text-sm">
+                      {errors.confirmPassword.message}
+                    </p>
+                  )}
+                </Field>
+              </div>
+
+              <Field>
+                <Button type="submit" className="w-full h-10">
+                  Sign Up
+                </Button>
+              </Field>
+            </FieldGroup>
+          </form>
+
+          {/* OR Divider */}
           <div className="relative my-4">
             <div className="bg-black w-full h-[1px]"></div>
             <div className="absolute w-full flex items-center justify-center top-1/2 -translate-y-1/2">
@@ -85,8 +154,8 @@ const Register: React.FC = () => {
             </div>
           </div>
 
-          {/* Social login */}
-          <div className="flex gap-4">
+          {/* Social Login */}
+          <div className={`flex gap-4`}>
             {[<FcGoogle size={25} />].map((item, index) => (
               <div
                 key={index}
@@ -97,7 +166,7 @@ const Register: React.FC = () => {
             ))}
           </div>
 
-          {/* Signup link */}
+          {/* Login Link */}
           <div className="text-center text-gray-700 mt-2">
             Already have an account?{" "}
             <Link
@@ -110,7 +179,7 @@ const Register: React.FC = () => {
         </div>
       </div>
 
-      {/* side image */}
+      {/* Side Image */}
       <div className="relative p-1 hidden md:block">
         <div className="overflow-hidden rounded-3xl h-full">
           <img
