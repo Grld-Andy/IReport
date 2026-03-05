@@ -2,16 +2,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SafeZone.Modules.Identity.Core.Commands.Login;
 using SafeZone.Modules.Identity.Core.Commands.Register;
+using SafeZone.Modules.Identity.Core.Queries.GetSingleUser;
 using SafeZone.Modules.Identity.Core.Services;
+using SafeZone.Shared.Abstractions.Contexts;
 using SafeZone.Shared.Abstractions.Dispatchers;
 
 namespace SafeZone.Modules.Identity.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-internal class AuthController(IDispatcher _dispatcher, ITokenStorage _tokenStorage) : ControllerBase
+internal class AuthController(IDispatcher _dispatcher, IContext _context, ITokenStorage _tokenStorage) : ControllerBase
 {
     private readonly IDispatcher dispatcher = _dispatcher;
+    private readonly IContext context = _context;
     private readonly ITokenStorage tokenStorage = _tokenStorage;
     
 
@@ -21,6 +24,14 @@ internal class AuthController(IDispatcher _dispatcher, ITokenStorage _tokenStora
     {
         await dispatcher.SendAsync(command, cancellationToken);
         return NoContent();
+    }
+
+    [HttpGet("me")]
+    public async Task<ActionResult> CheckAuth()
+    {
+        var currentUserId = context.Identity.Id;
+        var result = await dispatcher.QueryAsync(new GetSingleUserQuery(currentUserId));
+        return Ok(result);
     }
 
     [HttpPost("login")]
@@ -34,7 +45,7 @@ internal class AuthController(IDispatcher _dispatcher, ITokenStorage _tokenStora
             jwt.AccessToken,
             new CookieOptions{ 
                 HttpOnly=true,
-                // Secure = true // uncomment once deployes over https
+                // Secure = true // uncomment once deployed over https
             }
         );
         return NoContent();

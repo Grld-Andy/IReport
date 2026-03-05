@@ -30,12 +30,5 @@ internal sealed class IdentityModule : IModule
 
     public void Expose(IEndpointRouteBuilder endpoints)
     {
-        // Simple GET endpoint
-        endpoints.MapGet("/identity/status", () =>
-        {
-            return Results.Ok("Identity is working");
-        })
-        .WithTags("Identity")
-        .WithName("Get Identity Status");
     }
 }

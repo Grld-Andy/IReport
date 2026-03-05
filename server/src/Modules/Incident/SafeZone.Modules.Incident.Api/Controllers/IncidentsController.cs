@@ -48,7 +48,6 @@ internal class IncidentsController(IDispatcher _dispatcher, IContext _context) :
     public async Task<IActionResult> GetIncidentsAssignedToUser()
     {
         var currentUserId = context.Identity.Id;
-        Console.WriteLine($"===  {currentUserId} ===");  // todo: current user id is an empty guid
         var result = await dispatcher.QueryAsync(new GetAssignedIncidentsQuery(currentUserId));
 
         return Ok(result);
@@ -77,14 +76,14 @@ internal class IncidentsController(IDispatcher _dispatcher, IContext _context) :
         return NoContent();
     }
 
-    [HttpPut("{id:guid}/assign")]
+    [HttpPatch("{id:guid}/assign")]
     public async Task<IActionResult> AssignIncident([FromRoute] Guid id, [FromBody] Guid userId)
     {
         await dispatcher.SendAsync(new AssignIncidentCommand(id, userId));
         return NoContent();
     }
 
-    [HttpPut("{id:guid}/status")]
+    [HttpPatch("{id:guid}/status")]
     public async Task<IActionResult> UpdateIncidentStatus([FromRoute] Guid id, [FromBody] IncidentStatus status)
     {
         await dispatcher.SendAsync(new ChangeIncidentStatusCommand(id, status));

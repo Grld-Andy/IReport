@@ -30,12 +30,5 @@ internal sealed class IncidentModule : IModule
 
     public void Expose(IEndpointRouteBuilder endpoints)
     {
-        // Simple GET endpoint
-        endpoints.MapGet("/incident/status", () =>
-        {
-            return Results.Ok("Incident is working");
-        })
-        .WithTags("Incident")
-        .WithName("Get Incident Status");
     }
 }

@@ -157,7 +157,7 @@ public static class Extensions
             reDoc.SpecUrl("/swagger/v1/swagger.json");
             reDoc.DocumentTitle = "SafeZone API";
         });
-        app.UseAuthentication();
+        app.UseAuth();
         app.UseContext();
         app.UseLogging();
         app.UseRouting();

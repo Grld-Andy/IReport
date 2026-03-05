@@ -7,12 +7,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\SafeZone.Shared.Infrastructure\SafeZone.Shared.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Comments\SafeZone.Modules.Comments.Api\SafeZone.Modules.Comments.Api.csproj" />
-    <ProjectReference Include="..\..\Modules\Dispatch\SafeZone.Modules.Dispatch.Api\SafeZone.Modules.Dispatch.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Identity\SafeZone.Modules.Identity.Api\SafeZone.Modules.Identity.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Incident\SafeZone.Modules.Incident.Api\SafeZone.Modules.Incident.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Location\SafeZone.Modules.Location.Api\SafeZone.Modules.Location.Api.csproj" />
-    <ProjectReference Include="..\..\Modules\RealTime\SafeZone.Modules.RealTime.Api\SafeZone.Modules.RealTime.Api.csproj" />
-    <ProjectReference Include="..\..\Modules\Reporting\SafeZone.Modules.Reporting.Api\SafeZone.Modules.Reporting.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

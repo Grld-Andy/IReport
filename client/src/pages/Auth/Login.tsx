@@ -32,7 +32,7 @@ const Login: React.FC = () => {
     try {
       setApiError("")
       setIsSubmitting(true);
-      const response = await axios.post(`${apiUrl}auth/login`, data);
+      const response = await axios.post(`${apiUrl}auth/login`, data, {withCredentials: true});
 
       if(response.status == 204){
         navigate("/")
