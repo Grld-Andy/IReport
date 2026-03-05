@@ -16,17 +16,23 @@ namespace SafeZone.Modules.Incident.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-internal class IncidentsController(IDispatcher _dispatcher, IIdentityContext _identityContext) : ControllerBase
+internal class IncidentsController(IDispatcher _dispatcher, IContext _context) : ControllerBase
 {
     private readonly IDispatcher dispatcher = _dispatcher;
-    private readonly IIdentityContext identityContext = _identityContext;
+    private readonly IContext context = _context;
 
+
+    [HttpPost]
+    public async Task<IActionResult> CreateIncident([FromBody] CreateIncidentCommand command)
+    {
+        var id = await dispatcher.SendAsync<CreateIncidentCommand, Guid>(command);
+        return CreatedAtAction(nameof(GetIncidentById), new { id }, null);
+    }
+    
     [HttpGet]
     public async Task<IActionResult> GetAllIncidents()
     {
         var result = await dispatcher.QueryAsync(new GetIncidentsQuery());
-        if (result.Count == 0)
-            return NoContent();
 
         return Ok(result);
     }
@@ -41,11 +47,9 @@ internal class IncidentsController(IDispatcher _dispatcher, IIdentityContext _id
     [HttpGet("assigned/me")]
     public async Task<IActionResult> GetIncidentsAssignedToUser()
     {
-        var currentUserId = identityContext.Id;
+        var currentUserId = context.Identity.Id;
+        Console.WriteLine($"===  {currentUserId} ===");  // todo: current user id is an empty guid
         var result = await dispatcher.QueryAsync(new GetAssignedIncidentsQuery(currentUserId));
-
-        if (result.Count == 0)
-            return NoContent();
 
         return Ok(result);
     }
@@ -54,17 +58,8 @@ internal class IncidentsController(IDispatcher _dispatcher, IIdentityContext _id
     public async Task<IActionResult> GetOpenIncidents()
     {
         var result = await dispatcher.QueryAsync(new GetOpenIncidentsQuery());
-        if (result.Count == 0)
-            return NoContent();
 
         return Ok(result);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> CreateIncident([FromBody] CreateIncidentCommand command)
-    {
-        var id = await dispatcher.SendAsync<CreateIncidentCommand, Guid>(command);
-        return CreatedAtAction(nameof(GetIncidentById), new { id }, null);
     }
 
     [HttpPut("{id:guid}")]

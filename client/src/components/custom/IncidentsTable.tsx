@@ -153,7 +153,6 @@ const IncidentsTable: React.FC = () => {
                 "Status",
                 "Assigned To",
                 "Date Assigned",
-                "Date Created",
                 "Last Updated",
                 "Action",
               ].map((col) => (
@@ -231,15 +230,6 @@ const IncidentsTable: React.FC = () => {
                 {/* Date Assigned */}
                 <TableCell className="text-sm text-gray-500 tabular-nums whitespace-nowrap">
                   {incident.updatedAt.toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </TableCell>
-
-                {/* Date Created */}
-                <TableCell className="text-sm text-gray-500 tabular-nums whitespace-nowrap">
-                  {incident.createdAt.toLocaleDateString("en-GB", {
                     day: "2-digit",
                     month: "short",
                     year: "numeric",
