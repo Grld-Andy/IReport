@@ -2,7 +2,6 @@ import DashboardChart from "@/components/custom/Dashboard/Charts";
 import DashboardActivityFeed from "@/components/custom/Dashboard/DashboardActivityFeed";
 import StatsCard from "@/components/custom/Dashboard/StatsCard";
 import PageHeader from "@/components/custom/PageHeader";
-import { Button } from "@/components/ui/button";
 import { activityFeeds } from "@/constants/activityFeeds";
 import { dashboardCardDetails } from "@/constants/dashboardCardDetails";
 import React from "react";
@@ -17,9 +16,9 @@ const Dashboard: React.FC = () => {
         </div>
 
         <div>
-          <Button className="bg-green-500 hover:bg-green-600 text-white rounded-full">
+          {/* <Button className="bg-green-500 hover:bg-green-600 text-white rounded-full">
             + Add Project
-          </Button>
+          </Button> */}
         </div>
       </div>
 
