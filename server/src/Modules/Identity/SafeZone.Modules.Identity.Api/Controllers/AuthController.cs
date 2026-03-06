@@ -55,6 +55,9 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> LogoutUser(CancellationToken cancellationToken)
     {
+        Response.Cookies.Delete(
+            "__access_token"
+        );
         return NoContent();
     }
 }

@@ -61,7 +61,7 @@ internal class IncidentsController(IDispatcher _dispatcher, IContext _context) :
         return Ok(result);
     }
 
-    [HttpPut("{id:guid}")]
+    [HttpPatch("{id:guid}")]
     public async Task<IActionResult> UpdateIncident([FromRoute] Guid id, [FromBody] UpdateIncidentCommand command)
     {
         command = command with { IncidentId = id };

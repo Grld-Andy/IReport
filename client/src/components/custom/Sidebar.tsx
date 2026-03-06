@@ -4,10 +4,18 @@ import { CiLogout } from "react-icons/ci";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { sidebarItems } from "@/constants/sidebarItems";
+import { apiUrl } from "@/constants";
+import axios from "axios";
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const logout = async () => {
+    await axios.post(`${apiUrl}auth/logout`, {}, {withCredentials: true})
+    localStorage.removeItem("__safezone_user")
+    navigate("/auth/login")
+  }
 
   return (
     <div className="flex flex-col justify-between bg-gray-100 w-full h-full py-3 px-5">
@@ -49,7 +57,7 @@ const Sidebar: React.FC = () => {
       </div>
 
       {/* lower: logout button */}
-      <Button className="flex items-center justify-start hover:bg-green-400 gap-3 bg-transparent shadow-none">
+      <Button onClick={logout} className="flex items-center justify-start hover:bg-green-400 gap-3 bg-transparent shadow-none">
         <CiLogout className="text-gray-800" />
         <p className="text-gray-800 hidden md:block">Logout</p>
       </Button>

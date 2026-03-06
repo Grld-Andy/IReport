@@ -3,8 +3,12 @@ import { FaUser } from "react-icons/fa";
 import { GoBell } from "react-icons/go";
 import { MdOutlineEmail } from "react-icons/md";
 import SearchInput from "../ui/SearchInput";
+import { getUser } from "@/constants/getUser";
+import type { User } from "@/types/User";
 
 const Navbar: React.FC = () => {
+  const user : User | null = getUser();
+  
   return (
     <nav className="px-5 py-3 bg-gray-100 rounded-lg w-full flex justify-between items-center gap-5">
       <SearchInput/>
@@ -22,8 +26,8 @@ const Navbar: React.FC = () => {
             <FaUser size={17} color="white" />
           </div>
           <div className="flex flex-col justify-between items-start py-1">
-            <h3 className="text-black text-[1em]">John Doe</h3>
-            <p className="text-gray-800 text-[0.8em]">johndoe@gmail.com</p>
+            <h3 className="text-black text-[1em] text-nowrap">{user?.name}</h3>
+            <p className="text-gray-800 text-[0.8em] text-nowrap">{user?.email}</p>
           </div>
         </div>
       </div>
