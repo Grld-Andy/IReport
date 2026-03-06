@@ -1,5 +1,3 @@
-using SafeZone.Modules.Identity.Core.DTO;
-
 namespace SafeZone.Modules.Identity.Core.Queries.GetUsers;
 
 internal class GetUsersQueryHandler(IUserRepository _userRepository) : IQueryHandler<GetUsersQuery, Paged<UserDetailsDto>>

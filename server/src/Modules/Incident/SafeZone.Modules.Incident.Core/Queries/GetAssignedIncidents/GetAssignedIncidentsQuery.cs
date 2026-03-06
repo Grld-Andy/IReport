@@ -1,3 +1,6 @@
 namespace SafeZone.Modules.Incident.Core.Queries.GetAssignedIncidents;
 
-internal record GetAssignedIncidentsQuery(Guid UserId) : IQuery<List<IncidentDto>>;
+internal class GetAssignedIncidentsQuery() : PagedQuery<IncidentDto>
+{
+    public Guid UserId { get; set; }
+}
