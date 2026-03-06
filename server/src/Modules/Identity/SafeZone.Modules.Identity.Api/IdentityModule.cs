@@ -32,13 +32,7 @@ internal sealed class IdentityModule : IModule
     {
         // Optional: add middleware here
         app.UseModuleRequests()
-            .Subscribe<GetSingleUserQuery, UserDetailsDto>("users/get",
-                (query, serviceProvider, cancellationtoken) =>
-                {
-                    return serviceProvider.GetRequiredService<IDispatcher>().QueryAsync(query, cancellationtoken);
-                }
-            )
-            .Subscribe<GetUsersByIdsQuery, List<UserDetailsDto>>("users/getall",
+            .Subscribe<GetUsersByIdsQuery, List<UserDetailsDto>>("users/get",
                 (query, serviceProvider, cancellationToken) =>
                 {
                     return serviceProvider.GetRequiredService<IDispatcher>().QueryAsync(query, cancellationToken);

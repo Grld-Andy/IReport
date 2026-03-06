@@ -8,10 +8,20 @@ internal sealed class IncidentRepository(IncidentDbContext _context, IUserApiCli
     private readonly IncidentDbContext context = _context;
     private readonly IUserApiClient userApiClient = _userApiClient;
 
-    public async Task<IncidentEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<IncidentDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await context.Incidents
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        var incident = await context.Incidents
+            .FirstOrDefaultAsync(i => i.Id == id, cancellationToken)
+            ?? throw new NotFoundException("Incident", id);
+        
+        List<Guid> usersIds = [incident.ReporterId];
+        if (incident.AssignedToId.HasValue)
+        {
+            usersIds.Add(incident.AssignedToId.Value);
+        }
+        var users = await userApiClient.GetUsersByIds(usersIds);
+        var usersDict = users.ToDictionary(u => u.Id);
+        return IncidentMapper.FromEntity(incident, usersDict);
     }
 
     public async Task AddAsync(IncidentEntity incident, CancellationToken cancellationToken = default)
@@ -71,10 +81,6 @@ internal sealed class IncidentRepository(IncidentDbContext _context, IUserApiCli
 
         var users = await userApiClient.GetUsersByIds(userIds);
         var usersById = users.ToDictionary(u => u.Id);
-
-        var incidentsDto = incidentsPaged.Items
-            .Select(i => IncidentMapper.FromEntity(i, usersById))
-            .ToList();
 
         return incidentsPaged.Map(i => IncidentMapper.FromEntity(i, usersById));
     }
