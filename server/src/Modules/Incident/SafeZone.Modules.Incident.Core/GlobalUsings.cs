@@ -9,3 +9,4 @@ global using SafeZone.Shared.Abstractions.Exceptions.ExceptionClasses;
 global using SafeZone.Modules.Incident.Core.Domain.ValueObjects;
 global using SafeZone.Modules.Incident.Core.DTO;
 global using SafeZone.Shared.Abstractions.Queries;
+global using SafeZone.Modules.Incident.Core.Clients;
