@@ -3,11 +3,11 @@ import { FaUser } from "react-icons/fa";
 import { GoBell } from "react-icons/go";
 import { MdOutlineEmail } from "react-icons/md";
 import SearchInput from "../ui/SearchInput";
-import { getUser } from "@/constants/getUser";
 import type { User } from "@/types/User";
+import { useAppSelector } from "@/redux/app/hooks";
 
 const Navbar: React.FC = () => {
-  const user : User | null = getUser();
+  const user: User|null = useAppSelector((state) => state.auth.user);
   
   return (
     <nav className="px-5 py-3 bg-gray-100 rounded-lg w-full flex justify-between items-center gap-5">

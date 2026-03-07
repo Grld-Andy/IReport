@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SafeZone.Modules.Identity.Core.Commands.Login;
 using SafeZone.Modules.Identity.Core.Commands.Register;
+using SafeZone.Modules.Identity.Core.DTO;
 using SafeZone.Modules.Identity.Core.Queries.GetSingleUser;
 using SafeZone.Modules.Identity.Core.Services;
 using SafeZone.Shared.Abstractions.Contexts;
@@ -36,9 +37,9 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
 
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> LoginUser([FromBody] LoginCommand command, CancellationToken cancellationToken)
+    public async Task<ActionResult<UserDetailsDto>> LoginUser([FromBody] LoginCommand command, CancellationToken cancellationToken)
     {
-        await dispatcher.SendAsync(command, cancellationToken);
+        var result = await dispatcher.SendAsync<LoginCommand, UserDetailsDto>(command, cancellationToken);
         var jwt = tokenStorage.Get();
         Response.Cookies.Append(
             "__access_token",
@@ -48,7 +49,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
                 // Secure = true // uncomment once deployed over https
             }
         );
-        return NoContent();
+        return Ok(result);
     }
 
     [HttpPost("logout")]

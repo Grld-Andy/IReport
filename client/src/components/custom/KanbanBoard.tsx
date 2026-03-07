@@ -46,7 +46,7 @@ const KanbanBoard: React.FC = () => {
                 <p>{columnIncidents.length}</p>
               </div>
 
-              <div className="px-1 py-3 overflow-y-scroll max-h-[395px] hide-scrollbar">
+              <div className="px-1 py-3 relative overflow-y-scroll max-h-[395px] h-full hide-scrollbar">
 
                 <ReactSortable
                   list={columnIncidents}
@@ -55,12 +55,12 @@ const KanbanBoard: React.FC = () => {
                   }
                   group="kanban"
                   animation={150}
-                  className="flex flex-col gap-2"
+                  className="flex min-h-full flex-col gap-2"
                 >
                   {columnIncidents.map((incident) => (
                     <div
                       key={incident.id}
-                      className="bg-white p-2 rounded-lg shadow-md border border-black/10 flex flex-col gap-1 cursor-grab"
+                      className="bg-white z-10 p-2 rounded-lg shadow-md border border-black/10 flex flex-col gap-1 cursor-grab"
                     >
                       <div
                         className={`${getSeverityColor(
@@ -93,7 +93,7 @@ const KanbanBoard: React.FC = () => {
                 </ReactSortable>
 
                 {columnIncidents.length === 0 && (
-                  <p className="text-sm text-gray-400 text-center py-4">
+                  <p className="text-sm text-gray-400 text-center w-full py-4 absolute top-0">
                     No incidents
                   </p>
                 )}

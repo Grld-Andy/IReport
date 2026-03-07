@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Outlet, Navigate } from "react-router-dom";
 import Sidebar from "../custom/Sidebar";
 import Navbar from "../custom/Navbar";
-import type { User } from "@/types/User";
 import axios from "axios";
 import { apiUrl } from "@/constants";
+import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
+import { loginSuccess, logout } from "@/redux/features/auth/authSlice";
+import type { User } from "@/types/User";
 
 const Layout: React.FC = () => {
-  const storedUser = localStorage.getItem("__safezone_user");
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!storedUser);
-  const [loading, setLoading] = useState<boolean>(true);
+  const dispatch = useAppDispatch()
+  const user : User|null = useAppSelector((state) => state.auth.user)
 
   useEffect(() => {
     const setUser = async () => {
@@ -19,30 +20,21 @@ const Layout: React.FC = () => {
         });
 
         if (!response.data) {
-          localStorage.removeItem("__safezone_user");
-          setIsLoggedIn(false);
+          dispatch(logout());
         } else {
-          const user: User = response.data;
-          localStorage.setItem("__safezone_user", JSON.stringify(user));
-          setIsLoggedIn(true);
+          dispatch(loginSuccess(response.data))
         }
       } catch (e) {
         console.error(e);
-        localStorage.removeItem("__safezone_user");
-        setIsLoggedIn(false);
-      } finally {
-        setLoading(false);
+          dispatch(logout());
       }
     };
 
     setUser();
-  }, []);
+  }, [dispatch]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!isLoggedIn) {
+  console.log("current user is : ", user)
+  if (!user) {
     return <Navigate to="/auth/login" replace />;
   }
 

@@ -12,9 +12,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { RegisterUser } from "./Register";
 import { apiUrl } from "@/constants";
 import axios from "axios";
+import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
+import { loginStart, loginStop, loginSuccess } from "@/redux/features/auth/authSlice";
 
 const Login: React.FC = () => {
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const isLoading : boolean = useAppSelector((state) => state.auth.isLoading)
+  const dispatch = useAppDispatch()
   const [apiError, setApiError] = useState<string>("");
   const navigate = useNavigate();
 
@@ -31,10 +34,11 @@ const Login: React.FC = () => {
   const onSubmit = async (data: LoginUser) => {
     try {
       setApiError("")
-      setIsSubmitting(true);
+      dispatch(loginStart());
       const response = await axios.post(`${apiUrl}auth/login`, data, {withCredentials: true});
 
       if(response.status == 204){
+        dispatch(loginSuccess(response.data))
         navigate("/")
       }
     } catch (error) {
@@ -44,7 +48,7 @@ const Login: React.FC = () => {
         console.error("Unexpected error:", error);
       }
     } finally {
-      setIsSubmitting(false);
+      dispatch(loginStop());
     }
   };
 
@@ -75,7 +79,7 @@ const Login: React.FC = () => {
 
         {/* Form container */}
         <div
-          className={`w-full max-w-md flex flex-col gap-4 ${isSubmitting ? "select-none opacity-80 transition-all duration-100" : ""}`}
+          className={`w-full max-w-md flex flex-col gap-4 ${isLoading ? "select-none opacity-80 transition-all duration-100" : ""}`}
         >
           <div className="text-center">
             <h1 className="text-[40px] font-extrabold text-black font-serif">
