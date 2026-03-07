@@ -5,7 +5,7 @@ internal class GetUsersByIdsQueryHandler(IUserRepository _userRepository) : IQue
     private readonly IUserRepository userRepository = _userRepository;
     public async Task<List<UserDetailsDto>> HandleAsync(GetUsersByIdsQuery query, CancellationToken cancellationToken = default)
     {
-        var users = await userRepository.GetAllByIdsAsync(query.Guids, cancellationToken);
+        var users = await userRepository.GetAllByIdsAsync(query.Ids, cancellationToken);
         return users;
     }
 }

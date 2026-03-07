@@ -32,7 +32,7 @@ internal class IncidentsController(IDispatcher _dispatcher, IContext _context) :
     }
     
     [HttpGet]
-    public async Task<ActionResult<PagedQuery<IncidentDto>>> GetAllIncidents()
+    public async Task<ActionResult<Paged<IncidentDto>>> GetAllIncidents()
     {
         var result = await dispatcher.QueryAsync(new GetIncidentsQuery());
         return Ok(result);
@@ -46,7 +46,7 @@ internal class IncidentsController(IDispatcher _dispatcher, IContext _context) :
     }
 
     [HttpGet("assigned/me")]
-    public async Task<ActionResult<PagedQuery<IncidentDto>>> GetIncidentsAssignedToUser()
+    public async Task<ActionResult<Paged<IncidentDto>>> GetIncidentsAssignedToUser()
     {
         var currentUserId = context.Identity.Id;
         var result = await dispatcher.QueryAsync(new GetAssignedIncidentsQuery(){UserId = currentUserId});
