@@ -1,5 +1,5 @@
 import z from "zod"
-import { IncidentCategory } from "./CategoryEnum"
+import { categoryOptions, IncidentCategory } from "./CategoryEnum"
 import { IncidentSeverity, severityOptions } from "./SeverityEnum"
 import { IncidentStatus, statusOptions } from "./StatusEnum"
 
@@ -28,8 +28,8 @@ interface IncidentUser{
 export const incidentSchema = z.object({
   subject: z.string().min(1, "Please provide the subject"),
   description: z.string().min(1, "Please provide a description"),
-  category: z.number().refine((val) => Object.values(IncidentCategory).includes(val as IncidentCategory), {
-    message: "Select a valid category",
+  category: z.number().refine((val) => categoryOptions.map((s) => s[1]).includes(val as IncidentSeverity), {
+    message: "Select a valid severity",
   }),
   severity: z.number().refine((val) => severityOptions.map((s) => s[1]).includes(val as IncidentSeverity), {
     message: "Select a valid severity",

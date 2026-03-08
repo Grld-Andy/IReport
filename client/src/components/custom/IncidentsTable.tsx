@@ -21,6 +21,7 @@ import type { Incident } from "@/types/Incident";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "../ui/button";
 import UpdateIncidentModal from "./IncidentsPage/UpdateIncidentModal";
+import DeleteIncidentModal from "./IncidentsPage/DeleteIncidentModal";
 
 
 const IncidentsTable: React.FC = () => {
@@ -165,8 +166,9 @@ const IncidentsTable: React.FC = () => {
                 </TableCell>
 
                 {/* Action */}
-                <TableCell>
+                <TableCell className="flex gap-1">
                   <UpdateIncidentModal incident={incident}/>
+                  <DeleteIncidentModal id={incident.id}/>
                 </TableCell>
               </TableRow>
             ))}
