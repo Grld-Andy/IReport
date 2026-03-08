@@ -1,4 +1,4 @@
-import CreateIncidentButton from "@/components/custom/IncidentsPage/CreateButton";
+import IncidentFormModal from "@/components/custom/IncidentsPage/IncidentFormModal";
 import IncidentsTable from "@/components/custom/IncidentsTable";
 import PageHeader from "@/components/custom/PageHeader";
 import React from "react";
@@ -13,7 +13,7 @@ const IncidentsPage: React.FC = () => {
           subtitle="Manage and track all incidents"
         />
 
-        <CreateIncidentButton/>
+        <IncidentFormModal isEditing={false}/>
       </div>
 
       <IncidentsTable />

@@ -1,14 +1,20 @@
+import z from "zod"
+import { IncidentCategory } from "./CategoryEnum"
+import { IncidentSeverity, severityOptions } from "./SeverityEnum"
+import { IncidentStatus, statusOptions } from "./StatusEnum"
+
 export interface Incident{
     id: string
     subject: string
     description: string
-    status: "Open" | "InProgress" | "Resolved" | "Closed"
-    category: "EquipmentFailure" | "CargoSpill" | "Fire" | "SecurityBreach" | "Injury" | "Congestion"
-    severity: "Low" | "Medium" | "High" | "Critical"
+    status: IncidentStatus
+    category: IncidentCategory
+    severity: IncidentSeverity
     reporter: IncidentUser
     assignedTo?: IncidentUser
-    locationLng: number
-    locationLat: number
+    latitude: number
+    longitude: number
+    locationDetails: string
     createdAt: string
     updatedAt: string
 }
@@ -18,3 +24,22 @@ interface IncidentUser{
     name: string
     id: string
 }
+
+export const incidentSchema = z.object({
+  subject: z.string().min(1, "Please provide the subject"),
+  description: z.string().min(1, "Please provide a description"),
+  category: z.number().refine((val) => Object.values(IncidentCategory).includes(val as IncidentCategory), {
+    message: "Select a valid category",
+  }),
+  severity: z.number().refine((val) => severityOptions.map((s) => s[1]).includes(val as IncidentSeverity), {
+    message: "Select a valid severity",
+  }),
+  status: z
+    .number()
+    .optional()
+    .refine((val) => !val || statusOptions.map((s) => s[1]).includes(val as IncidentStatus), {
+      message: "Select a valid status",
+    }),
+  assignedTo: z.string().optional(),
+  locationDetails: z.string().optional()
+});

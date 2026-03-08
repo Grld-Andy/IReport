@@ -20,6 +20,7 @@ import { saveIncidents } from "@/redux/features/incidents/incidentsSlice";
 import type { Incident } from "@/types/Incident";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "../ui/button";
+import IncidentFormModal from "./IncidentsPage/IncidentFormModal";
 
 
 const IncidentsTable: React.FC = () => {
@@ -123,7 +124,7 @@ const IncidentsTable: React.FC = () => {
 
                 {/* Severity */}
                 <TableCell>
-                  <Badge value={incident.severity} config={severityConfig} />
+                  <Badge value={incident.severity.toString()} config={severityConfig} />
                 </TableCell>
 
                 {/* Category */}
@@ -133,7 +134,7 @@ const IncidentsTable: React.FC = () => {
 
                 {/* Status */}
                 <TableCell>
-                  <Badge value={incident.status} config={statusConfig} />
+                  <Badge value={incident.status.toString()} config={statusConfig} />
                 </TableCell>
 
                 {/* Assigned To */}
@@ -165,9 +166,7 @@ const IncidentsTable: React.FC = () => {
 
                 {/* Action */}
                 <TableCell>
-                  <button className="text-sm text-indigo-600 hover:underline">
-                    View
-                  </button>
+                  <IncidentFormModal isEditing={true} incident={incident}/>
                 </TableCell>
               </TableRow>
             ))}

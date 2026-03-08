@@ -7,3 +7,5 @@ export const IncidentStatus = {
 
 export type IncidentStatus =
   (typeof IncidentStatus)[keyof typeof IncidentStatus];
+
+export const statusOptions = Object.entries(IncidentStatus)
