@@ -20,7 +20,7 @@ import { saveIncidents } from "@/redux/features/incidents/incidentsSlice";
 import type { Incident } from "@/types/Incident";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "../ui/button";
-import IncidentFormModal from "./IncidentsPage/IncidentFormModal";
+import UpdateIncidentModal from "./IncidentsPage/UpdateIncidentModal";
 
 
 const IncidentsTable: React.FC = () => {
@@ -166,7 +166,7 @@ const IncidentsTable: React.FC = () => {
 
                 {/* Action */}
                 <TableCell>
-                  <IncidentFormModal isEditing={true} incident={incident}/>
+                  <UpdateIncidentModal incident={incident}/>
                 </TableCell>
               </TableRow>
             ))}
