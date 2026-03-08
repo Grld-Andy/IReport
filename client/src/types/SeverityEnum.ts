@@ -8,3 +8,5 @@ export const IncidentSeverity = {
 
 export type IncidentSeverity =
   (typeof IncidentSeverity)[keyof typeof IncidentSeverity];
+
+export const severityOptions = Object.entries(IncidentSeverity)

@@ -1,14 +1,20 @@
 export interface Incident{
     id: string
     subject: string
-    descrition: string
+    description: string
     status: "Open" | "InProgress" | "Resolved" | "Closed"
     category: "EquipmentFailure" | "CargoSpill" | "Fire" | "SecurityBreach" | "Injury" | "Congestion"
     severity: "Low" | "Medium" | "High" | "Critical"
-    reporterId: string
-    assignedToId: string
+    reporter: IncidentUser
+    assignedTo?: IncidentUser
     locationLng: number
     locationLat: number
-    createdAt: Date
-    updatedAt: Date
+    createdAt: string
+    updatedAt: string
+}
+
+interface IncidentUser{
+    email: string
+    name: string
+    id: string
 }

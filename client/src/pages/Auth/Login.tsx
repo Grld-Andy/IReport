@@ -13,7 +13,7 @@ import type { RegisterUser } from "./Register";
 import { apiUrl } from "@/constants";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
-import { loginStart, loginStop, loginSuccess } from "@/redux/features/auth/authSlice";
+import { loginStart, loginSuccess, loginStop } from "@/redux/features/auth/authSlice";
 
 const Login: React.FC = () => {
   const isLoading : boolean = useAppSelector((state) => state.auth.isLoading)
@@ -36,8 +36,8 @@ const Login: React.FC = () => {
       setApiError("")
       dispatch(loginStart());
       const response = await axios.post(`${apiUrl}auth/login`, data, {withCredentials: true});
-
-      if(response.status == 204){
+      
+      if(response.status == 200){
         dispatch(loginSuccess(response.data))
         navigate("/")
       }
@@ -79,7 +79,7 @@ const Login: React.FC = () => {
 
         {/* Form container */}
         <div
-          className={`w-full max-w-md flex flex-col gap-4 ${isLoading ? "select-none opacity-80 transition-all duration-100" : ""}`}
+          className={`w-full max-w-md flex flex-col gap-4 ${isLoading ? "pointer-events-none opacity-80 transition-all duration-100" : ""}`}
         >
           <div className="text-center">
             <h1 className="text-[40px] font-extrabold text-black font-serif">
@@ -99,6 +99,7 @@ const Login: React.FC = () => {
                   type="email"
                   className="h-10 bg-white"
                   id="fieldgroup-email"
+                  disabled={isLoading}
                   placeholder="Enter your email"
                   {...register("email")}
                 />
@@ -111,6 +112,7 @@ const Login: React.FC = () => {
                 <Input
                   id="fieldgroup-password"
                   type="password"
+                  disabled={isLoading}
                   className="h-10 bg-white"
                   placeholder="***************"
                   {...register("password")}

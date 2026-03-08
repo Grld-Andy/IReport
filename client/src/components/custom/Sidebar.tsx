@@ -32,7 +32,10 @@ const Sidebar: React.FC = () => {
         {/* navitems */}
         <div className="flex flex-col gap-3">
           {sidebarItems.map((item, index) => {
-            const isActive = location.pathname === item.path;
+            
+            const isActive =
+              location.pathname === item.path ||
+              location.pathname.startsWith(`${item.path}/`);
             const Icon = isActive ? item.activeIcon : item.icon;
 
             return (

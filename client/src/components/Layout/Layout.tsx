@@ -5,8 +5,8 @@ import Navbar from "../custom/Navbar";
 import axios from "axios";
 import { apiUrl } from "@/constants";
 import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
-import { loginSuccess, logout } from "@/redux/features/auth/authSlice";
 import type { User } from "@/types/User";
+import { loginSuccess, logout } from "@/redux/features/auth/authSlice";
 
 const Layout: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -33,7 +33,6 @@ const Layout: React.FC = () => {
     setUser();
   }, [dispatch]);
 
-  console.log("current user is : ", user)
   if (!user) {
     return <Navigate to="/auth/login" replace />;
   }

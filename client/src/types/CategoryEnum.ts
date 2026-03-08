@@ -9,3 +9,5 @@ export const IncidentCategory = {
 
 export type IncidentCategory =
   (typeof IncidentCategory)[keyof typeof IncidentCategory];
+
+export const categoryOptions = Object.entries(IncidentCategory)

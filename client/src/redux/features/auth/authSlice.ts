@@ -6,8 +6,9 @@ interface AuthState{
     isLoading: boolean
 }
 
+const userString = localStorage.getItem("__safezone_user")
 const initialState : AuthState = {
-    user: null,
+    user: userString ? JSON.parse(userString) : null,
     isLoading: false
 }
 
@@ -19,15 +20,17 @@ const authSlice = createSlice({
             state.isLoading = true;
         },
         loginStop(state){
-            state.isLoading = true;
+            state.isLoading = false;
         },
         loginSuccess(state, action: PayloadAction<User>){
             state.user = action.payload
             state.isLoading = false
+            localStorage.setItem("__safezone_user", JSON.stringify(action.payload))
         },
         logout(state){
             state.user = null
             state.isLoading = false
+            localStorage.removeItem("__safezone_user")
         }
     }
 })

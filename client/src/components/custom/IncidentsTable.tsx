@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -7,117 +7,54 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import { incidents } from "@/constants/incidents";
 import SortButton from "./IncidentsPage/SortButton";
 import FilterButton from "./IncidentsPage/FilterButton";
 import { Input } from "@/components/ui/input";
 import { CiSearch } from "react-icons/ci";
-import { getSeverityColor } from "@/constants/getColors";
+import Badge from "./Badge";
+import { severityConfig, statusConfig } from "@/constants/getColors";
+import { incidentColumns } from "@/constants/incidentColumns";
+import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
+import { getIncidents } from "@/services/getIncidents";
+import { saveIncidents } from "@/redux/features/incidents/incidentsSlice";
+import type { Incident } from "@/types/Incident";
+import { useNavigate, useParams } from "react-router-dom";
+import { Button } from "../ui/button";
 
-const severityConfig: Record<string, { label: string; className: string }> = {
-  low: {
-    label: "Low",
-    className: getSeverityColor("Low"),
-  },
-  medium: {
-    label:"Medium",
-    className: getSeverityColor("Medium"),
-  },
-  high: {
-    label: "High",
-    className: getSeverityColor("High"),
-  },
-  critical: {
-    label: "Critical",
-    className: getSeverityColor("Critical"),
-  },
-};
-
-const statusConfig: Record<
-  string,
-  { label: string; dot: string; className: string }
-> = {
-  open: {
-    label: "Open",
-    dot: "bg-blue-400",
-    className: "bg-blue-50 text-blue-700 ring-1 ring-blue-200",
-  },
-  in_progress: {
-    label: "In Progress",
-    dot: "bg-amber-400",
-    className: "bg-amber-50 text-amber-700 ring-1 ring-amber-200",
-  },
-  resolved: {
-    label: "Resolved",
-    dot: "bg-emerald-400",
-    className: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200",
-  },
-  closed: {
-    label: "Closed",
-    dot: "bg-gray-400",
-    className: "bg-gray-100 text-gray-600 ring-1 ring-gray-200",
-  },
-};
-
-function Badge({
-  value,
-  config,
-}: {
-  value: string;
-  config: Record<string, { label: string; className: string; dot?: string }>;
-}) {
-  const key = value?.toLowerCase().replace(" ", "_");
-  const cfg = config[key] ?? {
-    label: value,
-    className: "bg-gray-100 text-gray-600 ring-1 ring-gray-200",
-  };
-  return (
-    <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold tracking-wide whitespace-nowrap ${cfg.className}`}
-    >
-      {"dot" in cfg && cfg.dot && (
-        <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-      )}
-      {cfg.label}
-    </span>
-  );
-}
 
 const IncidentsTable: React.FC = () => {
+  const dispatch = useAppDispatch()
+  const incidents = useAppSelector((state) => state.incidents.incidents)
+  const totalIncidents = useAppSelector((state) => state.incidents.totalIncidents)
+  const navigate = useNavigate()
+  const { page } = useParams();
+  const totalPages = Math.ceil(totalIncidents / 10);
+  const currentPage = !page || isNaN(Number(page)) ? 1 : Number(page) > totalPages ? totalPages : Number(page);
+
+  useEffect(() => {
+    const fetchIncidents = async() => {
+      console.log("fetching incidents")
+      const result = await getIncidents(currentPage);
+      dispatch(saveIncidents(result))
+    }
+    fetchIncidents()
+  }, [dispatch, currentPage])
+
+  const changePage = async (pageTo: number) => {
+    pageTo = pageTo < 1 ? 1 : pageTo
+    navigate(`/incidents/${pageTo}`)
+  }
+
   const [search, setSearch] = useState("");
 
-  const filtered = incidents.filter(
-    (i) =>
-      i.subject?.toLowerCase().includes(search.toLowerCase()) ||
-      i.descrition?.toLowerCase().includes(search.toLowerCase()),
-  );
-
   return (
-    <div
-      className="flex flex-col bg-white rounded-2xl overflow-hidden"
-      style={{
-        boxShadow:
-          "0 0 0 1px rgba(0,0,0,0.06), 0 4px 6px -1px rgba(0,0,0,0.04), 0 12px 32px -4px rgba(0,0,0,0.08)",
-        fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif",
-      }}
-    >
+    <div className="flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
       {/* Header */}
-      <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between gap-4 flex-wrap">
+      <div className="px-6 py-4 border-b flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1
-            className="text-xl font-bold text-gray-900 tracking-tight"
-            style={{
-              letterSpacing: "-0.02em",
-            }}
-          >
-            Incidents
-          </h1>
-          <p className="text-sm text-gray-400 mt-0.5">
-            <span className="font-semibold text-gray-700">
-              {incidents.length}
-            </span>{" "}
-            total records
+          <h1 className="text-lg font-semibold text-gray-900">Incidents</h1>
+          <p className="text-sm text-gray-500">
+            {totalIncidents} total records
           </p>
         </div>
 
@@ -125,16 +62,17 @@ const IncidentsTable: React.FC = () => {
           {/* Search */}
           <div className="relative">
             <CiSearch
-              size={17}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
             />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search incidents…"
-              className="pl-9 h-9 text-sm bg-gray-50 border-gray-200 rounded-lg w-56 focus-visible:ring-1 focus-visible:ring-gray-300 focus-visible:border-gray-300 placeholder:text-gray-400"
+              placeholder="Search..."
+              className="pl-8 h-9 w-56"
             />
           </div>
+
           <SortButton />
           <FilterButton />
         </div>
@@ -144,21 +82,11 @@ const IncidentsTable: React.FC = () => {
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50/80 hover:bg-gray-50/80 border-b border-gray-100">
-              {[
-                "Incident",
-                "Description",
-                "Severity",
-                "Category",
-                "Status",
-                "Assigned To",
-                "Date Assigned",
-                "Last Updated",
-                "Action",
-              ].map((col) => (
+            <TableRow className="bg-gray-50">
+              {incidentColumns.map((col) => (
                 <TableHead
                   key={col}
-                  className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest py-3 whitespace-nowrap"
+                  className="text-xs text-gray-500 font-medium"
                 >
                   {col}
                 </TableHead>
@@ -167,24 +95,21 @@ const IncidentsTable: React.FC = () => {
           </TableHeader>
 
           <TableBody>
-            {filtered.map((incident, index) => (
-              <TableRow
-                key={index}
-                className="group border-b border-gray-50 hover:bg-indigo-50/30 transition-colors duration-150"
-              >
-                {/* Incident subject + time */}
-                <TableCell className="py-4 min-w-[160px]">
-                  <p className="font-semibold text-gray-900 text-sm leading-tight">
+            {incidents.map((incident: Incident, index) => (
+              <TableRow key={index} className="hover:bg-gray-50 transition">
+                {/* Incident */}
+                <TableCell>
+                  <p className="font-medium text-gray-900">
                     {incident.subject}
                   </p>
-                  <p className="text-[11px] text-gray-400 mt-1 tabular-nums">
-                    {incident.createdAt.toLocaleDateString("en-GB", {
+                  <p className="text-xs text-gray-500 text-nowrap">
+                    {new Date(incident.createdAt).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "short",
                       year: "numeric",
                     })}
                     <span className="mx-1 text-gray-300">·</span>
-                    {incident.createdAt.toLocaleTimeString([], {
+                    {new Date(incident.createdAt).toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
@@ -192,10 +117,8 @@ const IncidentsTable: React.FC = () => {
                 </TableCell>
 
                 {/* Description */}
-                <TableCell className="text-sm text-gray-500 max-w-[220px]">
-                  <p className="line-clamp-2 leading-relaxed">
-                    {incident.descrition}
-                  </p>
+                <TableCell className="text-sm text-gray-600 min-w-[220px]">
+                  <p className="line-clamp-2">{incident.description}</p>
                 </TableCell>
 
                 {/* Severity */}
@@ -204,10 +127,8 @@ const IncidentsTable: React.FC = () => {
                 </TableCell>
 
                 {/* Category */}
-                <TableCell>
-                  <span className="text-sm text-gray-600 font-medium">
-                    {incident.category}
-                  </span>
+                <TableCell className="text-sm text-gray-700">
+                  {incident.category}
                 </TableCell>
 
                 {/* Status */}
@@ -216,51 +137,48 @@ const IncidentsTable: React.FC = () => {
                 </TableCell>
 
                 {/* Assigned To */}
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
-                      {String(incident.assignedToId ?? "?")[0]?.toUpperCase()}
+                <TableCell className="min-w-[150px]">
+                  {
+                    incident.assignedTo ?
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center text-xs font-semibold text-gray-700">
+                        {String(incident.assignedTo.name ?? "?")[0]?.toUpperCase()}
+                      </div>
+                      <div className="text-sm text-gray-700">
+                        {incident.assignedTo.name}
+                      </div>
                     </div>
-                    <span className="text-sm text-gray-700 font-medium">
-                      {incident.assignedToId}
-                    </span>
-                  </div>
+                    : <div className="text-sm text-gray-700">Not Assigned</div>
+                  }
+                  
                 </TableCell>
 
                 {/* Date Assigned */}
-                <TableCell className="text-sm text-gray-500 tabular-nums whitespace-nowrap">
-                  {incident.updatedAt.toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })}
+                <TableCell className="text-sm text-gray-500 whitespace-nowrap">
+                  {new Date(incident.updatedAt).toLocaleDateString()}
                 </TableCell>
 
                 {/* Last Updated */}
-                <TableCell className="text-sm text-gray-500 tabular-nums whitespace-nowrap">
-                  {incident.updatedAt.toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })}
+                <TableCell className="text-sm text-gray-500 whitespace-nowrap">
+                  {new Date(incident.updatedAt).toLocaleDateString()}
                 </TableCell>
 
                 {/* Action */}
                 <TableCell>
-                  <button className="text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors duration-150 whitespace-nowrap">
-                    View →
+                  <button className="text-sm text-indigo-600 hover:underline">
+                    View
                   </button>
                 </TableCell>
               </TableRow>
             ))}
 
-            {filtered.length === 0 && (
+            {totalIncidents === 0 && (
               <TableRow>
                 <TableCell
                   colSpan={10}
-                  className="text-center py-16 text-gray-400 text-sm"
+                  className="text-center py-12 text-gray-500"
                 >
-                  No incidents match your search.
+                  No incidents found
                 </TableCell>
               </TableRow>
             )}
@@ -269,26 +187,27 @@ const IncidentsTable: React.FC = () => {
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-3 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between">
-        <p className="text-xs text-gray-400">
-          Showing{" "}
-          <span className="font-semibold text-gray-600">{filtered.length}</span>{" "}
-          of{" "}
-          <span className="font-semibold text-gray-600">
-            {incidents.length}
-          </span>{" "}
-          incidents
+      <div className="px-6 py-3 border-t flex items-center justify-between text-sm text-gray-500">
+        <p>
+          Showing {currentPage} of {totalPages}
         </p>
-        <div className="flex gap-1">
-          <button className="text-xs px-3 py-1.5 rounded-lg text-gray-500 hover:bg-gray-200 transition-colors">
-            ← Prev
-          </button>
-          <button className="text-xs px-3 py-1.5 rounded-lg bg-gray-900 text-white font-semibold">
-            1
-          </button>
-          <button className="text-xs px-3 py-1.5 rounded-lg text-gray-500 hover:bg-gray-200 transition-colors">
-            Next →
-          </button>
+
+        <div className="flex gap-2">
+          <Button
+            onClick={() => {changePage(currentPage - 1)}}
+            className={`px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded border  ${currentPage <= 1 ? "opacity-50 pointer-events-none" : ""}`} disabled={currentPage == 0}>
+            Prev
+          </Button>
+          <Button
+            onClick={() => {changePage(currentPage)}}
+            className="px-3 py-1 rounded border-black/20 bg-white border-[1px] hover:bg-gray-200 text-black">
+            {page || 1}
+          </Button>
+          <Button
+            onClick={() => {changePage(currentPage + 1)}}
+            className={`px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded border  ${currentPage >= totalPages ? "opacity-50 pointer-events-none" : ""}`} disabled={Number(page) == totalPages}>
+            Next
+          </Button>
         </div>
       </div>
     </div>
