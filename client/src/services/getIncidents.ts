@@ -8,3 +8,9 @@ export const getIncidents = async (page:number): Promise<IncidentsState> => {
   const result: Array<Incident> = response.data.items
   return {incidents: result, totalIncidents: response.data.totalResults}
 }
+
+export const getAllIncidents = async () => {
+  const response = await axios.get(`${apiUrl}incidents?results=100`)
+  const result: Array<Incident> = response.data.items
+  return result
+}

@@ -12,6 +12,25 @@ export const statusOptions = Object.entries(IncidentStatus)
 export const statusArray = Object.entries(IncidentStatus).map((i) => {return i[0]})
 export const statusIdx = Object.entries(IncidentStatus).map((i) => {return i[1]})
 
-console.log(statusOptions)
-console.log(statusArray)
-console.log(statusIdx)
+export const getStatusEnum = (val: string) => {
+  console.log("======================= ", val)
+  if(val == "Open" || val == "1"){
+    return IncidentStatus.Open
+  }else if(val == "InProgress" || val == "2"){
+    return IncidentStatus.InProgress
+  }else if(val == "Resolved" || val == "3"){
+    return IncidentStatus.Resolved
+  }
+  return IncidentStatus.Closed
+}
+
+export const getStatusNum = (val: string) => {
+  if(val == "Open" || val == "1"){
+    return 1
+  }else if(val == "InProgress" || val == "2"){
+    return 2
+  }else if(val == "Resolved" || val == "3"){
+    return 3
+  }
+  return 4
+}
