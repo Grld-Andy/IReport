@@ -20,7 +20,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "../ui/button";
 import UpdateIncidentModal from "./IncidentsPage/UpdateIncidentModal";
 import DeleteIncidentModal from "./IncidentsPage/DeleteIncidentModal";
-import { useAppDispatch } from "@/redux/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
 import {
   deleteIncidentState,
   udpateIncidentState,
@@ -32,6 +32,7 @@ const IncidentsTable: React.FC = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [search, setSearch] = useState("");
+  const stateTotalIncidents = useAppSelector((state) => state.incidents.totalIncidents)
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ const IncidentsTable: React.FC = () => {
 
   useEffect(() => {
     fetchIncidents();
-  }, [fetchIncidents]);
+  }, [fetchIncidents, stateTotalIncidents]);
 
   const changePage = (pageTo: number) => {
     if (pageTo < 1 || pageTo > totalPages) return;

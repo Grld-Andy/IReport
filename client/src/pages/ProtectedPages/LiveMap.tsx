@@ -12,7 +12,7 @@ const LiveMap: React.FC = () => {
   useEffect(() => {
     const fetchIncidents = async () => {
       const result = await getAllIncidents();
-      setIncidents(result);
+      setIncidents(result.incidents);
     };
     fetchIncidents();
   }, []);

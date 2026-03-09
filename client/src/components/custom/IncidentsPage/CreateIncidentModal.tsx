@@ -23,20 +23,23 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { severityOptions } from "@/types/SeverityEnum";
-import { categoryOptions } from "@/types/CategoryEnum";
-import { apiUrl } from "@/constants";
+import { severityArray, severityOptions } from "@/types/SeverityEnum";
+import { categoryArray, categoryOptions } from "@/types/CategoryEnum";
 import { incidentSchema } from "@/types/Incident";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import axios from "axios";
+import { createIncidentService } from "@/services/createInicident";
+import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
+import { addIncidentState } from "@/redux/features/incidents/incidentsSlice";
+import { statusArray } from "@/types/StatusEnum";
 
 export type IncidentForm = z.infer<typeof incidentSchema>;
 
-
 export default function CreateIncidentModal() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user)
 
   const {
     register,
@@ -63,21 +66,26 @@ export default function CreateIncidentModal() {
 
   const onSubmit = async (data: IncidentForm) => {
     try {
-      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-        if (!navigator.geolocation) {
-          reject(new Error("Geolocation is not supported by your browser"));
-        } else {
-          navigator.geolocation.getCurrentPosition(resolve, reject);
+      const response = await createIncidentService(data);
+      const createdIncident = {
+        id: response.id,
+        subject: data.subject,
+        description: data.description,
+        locationDetails: data.locationDetails || "",
+        status: statusArray[data.status ? data.status - 1 : 1],
+        category: categoryArray[data.category ? data.category - 1 : 1],
+        severity: severityArray[data.severity ? data.severity - 1 : 1],
+        latitude: response.latitude,
+        longitude: response.longitude,
+        updatedAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        reporter: {
+          email: user?.email || "",
+          name: user?.name || "",
+          id: user?.id || ""
         }
-      });
-
-      const { latitude, longitude } = position.coords;
-
-      const response = await axios.post(
-        `${apiUrl}incidents`,
-        { ...data, latitude, longitude },
-        { withCredentials: true }
-      );
+      };
+      dispatch(addIncidentState({ ...createdIncident }));
 
       console.log("Created incident successfully", response);
       reset();
@@ -111,7 +119,9 @@ export default function CreateIncidentModal() {
                   placeholder="Brief summary of the incident"
                 />
                 {errors.subject && (
-                  <p className="text-red-500 text-xs">{errors.subject.message}</p>
+                  <p className="text-red-500 text-xs">
+                    {errors.subject.message}
+                  </p>
                 )}
               </Field>
 
@@ -123,7 +133,9 @@ export default function CreateIncidentModal() {
                   placeholder="Provide as much detail as possible"
                 />
                 {errors.description && (
-                  <p className="text-red-500 text-xs">{errors.description.message}</p>
+                  <p className="text-red-500 text-xs">
+                    {errors.description.message}
+                  </p>
                 )}
               </Field>
 
@@ -149,7 +161,9 @@ export default function CreateIncidentModal() {
                     </SelectContent>
                   </Select>
                   {errors.category && (
-                    <p className="text-red-500 text-xs">{errors.category.message}</p>
+                    <p className="text-red-500 text-xs">
+                      {errors.category.message}
+                    </p>
                   )}
                 </Field>
 
@@ -174,7 +188,9 @@ export default function CreateIncidentModal() {
                     </SelectContent>
                   </Select>
                   {errors.severity && (
-                    <p className="text-red-500 text-xs">{errors.severity.message}</p>
+                    <p className="text-red-500 text-xs">
+                      {errors.severity.message}
+                    </p>
                   )}
                 </Field>
               </div>

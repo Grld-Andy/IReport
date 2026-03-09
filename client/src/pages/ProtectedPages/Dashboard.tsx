@@ -5,12 +5,17 @@ import PageHeader from "@/components/custom/PageHeader";
 import { activityFeeds } from "@/constants/activityFeeds";
 import { generateDashboardCards } from "@/constants/incidentAnalyticsFunc";
 import { useAppSelector } from "@/redux/app/hooks";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
   const {incidents} = useAppSelector((state) => state.incidents)
-  const cardsData = generateDashboardCards(incidents)
+
+  const [cardsData, setCardsData] = useState(generateDashboardCards(incidents))
+
+  useEffect(() => {
+    setCardsData(generateDashboardCards(incidents))
+  }, [incidents])
 
   return (
     <div>

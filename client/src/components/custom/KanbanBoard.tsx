@@ -13,7 +13,7 @@ const KanbanBoard: React.FC = () => {
   useEffect(() => {
     const fetchIncidents = async () => {
       const result = await getAllIncidents();
-      setIncidents(result);
+      setIncidents(result.incidents);
     };
     fetchIncidents();
   }, []);
@@ -30,7 +30,7 @@ const KanbanBoard: React.FC = () => {
       const updated = prev.map((incident) => {
         const moved = newList.find((i) => i.id === incident.id);
 
-        if (moved && incident.status !== columnStatus) {
+        if (moved && incident.status != columnStatus) {
           console.log("column status: ", columnStatus);
           updateIncidentStatus(
             incident.id,

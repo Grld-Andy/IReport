@@ -16,7 +16,9 @@ interface Props {
   myLocation: { lat: number; lng: number } | null;
 }
 
-const FlyToLocation: React.FC<{ location: { lat: number; lng: number } | null }> = ({ location }) => {
+const FlyToLocation: React.FC<{
+  location: { lat: number; lng: number } | null;
+}> = ({ location }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -41,7 +43,7 @@ const MapComponent: React.FC<Props> = ({ incidents, myLocation }) => {
       />
 
       <Marker position={persolCenter}>
-        <Popup>Default Location</Popup>
+        <Popup className="">Default Location</Popup>
       </Marker>
 
       {incidents?.map((incident, index) => (

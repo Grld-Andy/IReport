@@ -110,15 +110,11 @@ export default function UpdateIncidentModal({
 
       const { latitude, longitude } = position.coords;
 
-      const response = await axios.put(
+      await axios.put(
         `${apiUrl}incidents/${incident.id}`,
         { ...data, latitude, longitude },
         { withCredentials: true },
       );
-
-      console.log("incident before updating: ", incident)
-      console.log("incident to updated: ", data);
-      console.log("Updated incident successfully", response);
 
       const updatedIncident = {
         id: incident.id,
@@ -128,7 +124,7 @@ export default function UpdateIncidentModal({
         status: statusArray[data.status ? data.status - 1 : 1],
         category: categoryArray[data.category ? data.category - 1 : 1],
         severity: severityArray[data.severity ? data.severity - 1 : 1],
-        updatedAt: new Date().toString(),
+        updatedAt: new Date().toISOString(),
       };
       updateIncident({ ...incident, ...updatedIncident });
       setIsOpen(false)
