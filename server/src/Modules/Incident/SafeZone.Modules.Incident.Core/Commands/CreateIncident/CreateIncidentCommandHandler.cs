@@ -5,11 +5,12 @@ using SafeZone.Shared.Abstractions.Modules;
 namespace SafeZone.Modules.Incident.Core.Commands.CreateIncident;
 
 internal sealed class CreateIncidentHandler
-    (IIncidentRepository _repository, IMessageBroker _messageBroker)
+    (IIncidentRepository _repository, IMessageBroker _messageBroker, IUserApiClient _userApiClient)
     : ICommandHandler<CreateIncidentCommand, Guid>
 {
     private readonly IIncidentRepository repository = _repository;
     private readonly IMessageBroker messageBroker = _messageBroker;
+    private readonly IUserApiClient userApiClient = _userApiClient;
 
     public async Task<Guid> HandleAsync(CreateIncidentCommand command, CancellationToken cancellationToken = default)
     {
@@ -29,7 +30,10 @@ internal sealed class CreateIncidentHandler
         await repository.AddAsync(incident, cancellationToken);
         await repository.SaveAsync(cancellationToken);
 
-        await messageBroker.PublishAsync(new IncidentAddedEvent(incident.Id, incident.Subject, incident.Status.ToString()), cancellationToken);
+        var users = await userApiClient.GetUsersByIds([incident.ReporterId]);
+        var usersDict = users.ToDictionary(u => u.Id);
+
+        await messageBroker.PublishAsync(new IncidentAddedEvent(IncidentMapper.FromEntity(incident, usersDict)), cancellationToken);
         return incident.Id;
     }
 }
