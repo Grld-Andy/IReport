@@ -8,39 +8,8 @@ import {
   YAxis,
 } from "recharts";
 import { RechartsDevtools } from "@recharts/devtools";
-
-const data = [
-  {
-    name: "Monday",
-    uv: 0,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Tuesday",
-    uv: 300,
-    pv: 4567,
-    amt: 2400,
-  },
-  {
-    name: "Wednesday",
-    uv: 320,
-    pv: 1398,
-    amt: 2400,
-  },
-  {
-    name: "Thursday",
-    uv: 200,
-    pv: 9800,
-    amt: 2400,
-  },
-  {
-    name: "Friday",
-    uv: 278,
-    pv: 3908,
-    amt: 2400,
-  },
-];
+import { useAppSelector } from "@/redux/app/hooks";
+import { generateChartData } from "@/constants/incidentAnalyticsFunc";
 
 const renderCustomAxisTick = ({
   x,
@@ -98,22 +67,20 @@ const renderCustomAxisTick = ({
 
 // #endregion
 export default function DashboardChart() {
+  const { incidents } = useAppSelector((state) => state.incidents);
+
+  const data = generateChartData(incidents);
+
   return (
     <LineChart
       style={{ width: "100%", aspectRatio: 1.618 }}
-      responsive
       data={data}
-      margin={{
-        top: 20,
-        right: 20,
-        bottom: 5,
-        left: 0,
-      }}
+      margin={{ top: 20, right: 20, bottom: 5, left: 0 }}
     >
       <CartesianGrid stroke="#aaa" strokeDasharray="5 5" />
       <Line
         type="monotone"
-        dataKey="uv"
+        dataKey="incidentNumber"
         stroke="green"
         strokeWidth={2}
         name="Days of the week"
@@ -121,7 +88,7 @@ export default function DashboardChart() {
       <XAxis dataKey="name" tick={renderCustomAxisTick} />
       <YAxis
         width="auto"
-        label={{ value: "Incidents", position: {x:10, y:50}, angle: -90 }}
+        label={{ value: "Incidents", position: { x: 10, y: 50 }, angle: -90 }}
       />
       <Legend align="center" />
       <Tooltip />

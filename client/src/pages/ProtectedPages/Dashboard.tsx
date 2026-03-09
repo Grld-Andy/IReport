@@ -3,10 +3,14 @@ import DashboardActivityFeed from "@/components/custom/Dashboard/DashboardActivi
 import StatsCard from "@/components/custom/Dashboard/StatsCard";
 import PageHeader from "@/components/custom/PageHeader";
 import { activityFeeds } from "@/constants/activityFeeds";
-import { dashboardCardDetails } from "@/constants/dashboardCardDetails";
+import { generateDashboardCards } from "@/constants/incidentAnalyticsFunc";
+import { useAppSelector } from "@/redux/app/hooks";
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
+  const {incidents} = useAppSelector((state) => state.incidents)
+  const cardsData = generateDashboardCards(incidents)
 
   return (
     <div>
@@ -24,7 +28,7 @@ const Dashboard: React.FC = () => {
 
       {/* stats cards */}
       <div className="flex gap-3 overflow-x-scroll hide-scrollbar py-3 px-1">
-        {dashboardCardDetails.map((item, index) => (
+        {cardsData.map((item, index) => (
           <StatsCard cardDetails={item} key={index} />
         ))}
       </div>
@@ -34,7 +38,9 @@ const Dashboard: React.FC = () => {
         <div className="flex flex-col gap-2 w-full">
           <div className="flex justify-between items-center">
             <h1 className="font-bold text-[18px]">Weekly Analytics</h1>
-            <p className="text-blue-700 font-semibold cursor-pointer">See More</p>
+            <p className="text-blue-700 font-semibold cursor-pointer">
+              <Link to="/reports">See More</Link>
+            </p>
           </div>
           <div className="bg-gray-50 p-5 flex flex-col gap-5 rounded-2xl border-[1px] border-black/10 shadow-sm">
             <DashboardChart/>
@@ -44,7 +50,7 @@ const Dashboard: React.FC = () => {
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <h1 className="font-bold text-[18px]">Activity Feed</h1>
-            <p className="text-blue-700 font-semibold cursor-pointer">See More</p>
+            {/* <p className="text-blue-700 font-semibold cursor-pointer">See More</p> */}
           </div>
           <div className="bg-gray-50 p-5 flex flex-col gap-5 rounded-2xl border-[1px] border-black/10 shadow-sm">
             {
