@@ -11,6 +11,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -23,8 +31,16 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { IncidentSeverity, severityArray, severityOptions } from "@/types/SeverityEnum";
-import { categoryArray, categoryOptions, IncidentCategory } from "@/types/CategoryEnum";
+import {
+  IncidentSeverity,
+  severityArray,
+  severityOptions,
+} from "@/types/SeverityEnum";
+import {
+  categoryArray,
+  categoryOptions,
+  IncidentCategory,
+} from "@/types/CategoryEnum";
 import { IncidentStatus, statusArray, statusOptions } from "@/types/StatusEnum";
 import { apiUrl } from "@/constants";
 import { incidentSchema, type Incident } from "@/types/Incident";
@@ -33,6 +49,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { CiEdit } from "react-icons/ci";
+import { useAppSelector } from "@/redux/app/hooks";
 
 export type IncidentForm = z.infer<typeof incidentSchema>;
 
@@ -45,7 +62,7 @@ export default function UpdateIncidentModal({
   incident,
   updateIncident,
 }: IncidentUpdateModalProps) {
-  console.log("Opening incident modal: ", incident)
+  const users = useAppSelector((state) => state.users.users);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const {
@@ -127,7 +144,7 @@ export default function UpdateIncidentModal({
         updatedAt: new Date().toISOString(),
       };
       updateIncident({ ...incident, ...updatedIncident });
-      setIsOpen(false)
+      setIsOpen(false);
       reset();
     } catch (err) {
       console.error("Failed to update incident", err);
@@ -263,11 +280,30 @@ export default function UpdateIncidentModal({
 
                 <Field>
                   <Label htmlFor="assignedTo">Assigned To</Label>
-                  <Input
-                    id="assignedTo"
-                    {...register("assignedTo")}
-                    placeholder="Not Assigned"
-                  />
+
+                  <Combobox
+                    items={users.map((u) => u.email)}
+                    value={getValues("assignedTo")}
+                    onValueChange={(val) => setValue("assignedTo", val || "")}
+                  >
+                    <ComboboxInput
+                      className="w-full h-[36px] shadow-sm"
+                      placeholder="Select a user to assign incident"
+                    />
+
+                    <ComboboxContent>
+                      <ComboboxEmpty>No users found.</ComboboxEmpty>
+
+                      <ComboboxList>
+                        {(item) => (
+                          <ComboboxItem key={item} value={item}>
+                            {item}
+                          </ComboboxItem>
+                        )}
+                      </ComboboxList>
+                    </ComboboxContent>
+                  </Combobox>
+
                   {errors.assignedTo && (
                     <p className="text-red-500 text-xs">
                       {errors.assignedTo.message}
