@@ -6,5 +6,3 @@ namespace SafeZone.Shared.Abstractions.Events;
 public interface IEvent : IMessage
 {
 }
-
-

@@ -7,6 +7,10 @@ import { apiUrl } from "@/constants";
 import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
 import type { User } from "@/types/User";
 import { loginSuccess, logout } from "@/redux/features/auth/authSlice";
+import { getAllIncidents } from "@/services/getIncidents";
+import { getAllUsers } from "@/services/getUsers";
+import { saveIncidentsState } from "@/redux/features/incidents/incidentsSlice";
+import { saveUsers } from "@/redux/features/users/usersSlice";
 
 const Layout: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -23,6 +27,11 @@ const Layout: React.FC = () => {
           dispatch(logout());
         } else {
           dispatch(loginSuccess(response.data))
+
+          const incidentsResult = await getAllIncidents()
+          const usersResult = await getAllUsers()
+          dispatch(saveIncidentsState(incidentsResult))
+          dispatch(saveUsers(usersResult))
         }
       } catch (e) {
         console.error(e);

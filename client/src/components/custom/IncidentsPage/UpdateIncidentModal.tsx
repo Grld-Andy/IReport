@@ -23,9 +23,9 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { IncidentSeverity, severityOptions } from "@/types/SeverityEnum";
-import { categoryOptions, IncidentCategory } from "@/types/CategoryEnum";
-import { IncidentStatus, statusOptions } from "@/types/StatusEnum";
+import { IncidentSeverity, severityArray, severityOptions } from "@/types/SeverityEnum";
+import { categoryArray, categoryOptions, IncidentCategory } from "@/types/CategoryEnum";
+import { IncidentStatus, statusArray, statusOptions } from "@/types/StatusEnum";
 import { apiUrl } from "@/constants";
 import { incidentSchema, type Incident } from "@/types/Incident";
 import { useForm } from "react-hook-form";
@@ -38,15 +38,21 @@ export type IncidentForm = z.infer<typeof incidentSchema>;
 
 interface IncidentUpdateModalProps {
   incident: Incident;
+  updateIncident: (incident: Incident) => void;
 }
 
-export default function UpdateIncidentModal({ incident }: IncidentUpdateModalProps) {
+export default function UpdateIncidentModal({
+  incident,
+  updateIncident,
+}: IncidentUpdateModalProps) {
+  console.log("Opening incident modal: ", incident)
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const {
     register,
     handleSubmit,
-    setValue,getValues,
+    setValue,
+    getValues,
     formState: { errors, isSubmitting },
     reset,
   } = useForm<IncidentForm>({
@@ -67,9 +73,18 @@ export default function UpdateIncidentModal({ incident }: IncidentUpdateModalPro
     reset({
       subject: incident.subject || "",
       description: incident.description || "",
-      category: IncidentCategory[incident.category as unknown as keyof typeof IncidentCategory] || 0,
-      severity: IncidentSeverity[incident.severity as unknown as keyof typeof IncidentSeverity] || 0,
-      status: IncidentStatus[incident.status as unknown as keyof typeof IncidentStatus] || 0,
+      category:
+        IncidentCategory[
+          incident.category as unknown as keyof typeof IncidentCategory
+        ] || 0,
+      severity:
+        IncidentSeverity[
+          incident.severity as unknown as keyof typeof IncidentSeverity
+        ] || 0,
+      status:
+        IncidentStatus[
+          incident.status as unknown as keyof typeof IncidentStatus
+        ] || 0,
       assignedTo: incident.assignedTo?.name || "",
       locationDetails: incident.locationDetails || "",
     });
@@ -77,29 +92,46 @@ export default function UpdateIncidentModal({ incident }: IncidentUpdateModalPro
 
   const onError = (errors: unknown) => {
     console.error("Validation errors:", errors);
-  const currentData = getValues();
-  console.log("Current form data:", currentData);
+    const currentData = getValues();
+    console.log("Current form data:", currentData);
   };
 
   const onSubmit = async (data: IncidentForm) => {
     try {
-      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-        if (!navigator.geolocation) {
-          reject(new Error("Geolocation is not supported by your browser"));
-        } else {
-          navigator.geolocation.getCurrentPosition(resolve, reject);
-        }
-      });
+      const position = await new Promise<GeolocationPosition>(
+        (resolve, reject) => {
+          if (!navigator.geolocation) {
+            reject(new Error("Geolocation is not supported by your browser"));
+          } else {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+          }
+        },
+      );
 
       const { latitude, longitude } = position.coords;
 
       const response = await axios.put(
         `${apiUrl}incidents/${incident.id}`,
         { ...data, latitude, longitude },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
+      console.log("incident before updating: ", incident)
+      console.log("incident to updated: ", data);
       console.log("Updated incident successfully", response);
+
+      const updatedIncident = {
+        id: incident.id,
+        subject: data.subject,
+        description: data.description,
+        locationDetails: data.locationDetails || incident.locationDetails,
+        status: statusArray[data.status ? data.status - 1 : 1],
+        category: categoryArray[data.category ? data.category - 1 : 1],
+        severity: severityArray[data.severity ? data.severity - 1 : 1],
+        updatedAt: new Date().toString(),
+      };
+      updateIncident({ ...incident, ...updatedIncident });
+      setIsOpen(false)
       reset();
     } catch (err) {
       console.error("Failed to update incident", err);
@@ -110,7 +142,7 @@ export default function UpdateIncidentModal({ incident }: IncidentUpdateModalPro
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="bg-amber-500 hover:bg-amber-600 text-white">
-          <CiEdit/>
+          <CiEdit />
         </Button>
       </DialogTrigger>
 
@@ -126,14 +158,20 @@ export default function UpdateIncidentModal({ incident }: IncidentUpdateModalPro
               <Field>
                 <Label htmlFor="subject">Subject</Label>
                 <Input id="subject" {...register("subject")} />
-                {errors.subject && <p className="text-red-500 text-xs">{errors.subject.message}</p>}
+                {errors.subject && (
+                  <p className="text-red-500 text-xs">
+                    {errors.subject.message}
+                  </p>
+                )}
               </Field>
 
               <Field>
                 <Label htmlFor="description">Description</Label>
                 <Textarea id="description" {...register("description")} />
                 {errors.description && (
-                  <p className="text-red-500 text-xs">{errors.description.message}</p>
+                  <p className="text-red-500 text-xs">
+                    {errors.description.message}
+                  </p>
                 )}
               </Field>
 
@@ -141,7 +179,9 @@ export default function UpdateIncidentModal({ incident }: IncidentUpdateModalPro
                 <Field>
                   <Label htmlFor="category">Category</Label>
                   <Select
-                    defaultValue={IncidentCategory[incident.category as unknown as keyof typeof IncidentCategory].toString()}
+                    defaultValue={IncidentCategory[
+                      incident.category as unknown as keyof typeof IncidentCategory
+                    ].toString()}
                     onValueChange={(val) => setValue("category", Number(val))}
                   >
                     <SelectTrigger className="w-full">
@@ -158,13 +198,19 @@ export default function UpdateIncidentModal({ incident }: IncidentUpdateModalPro
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                {errors.category && <p className="text-red-500 text-xs">{errors.category.message}</p>}
+                  {errors.category && (
+                    <p className="text-red-500 text-xs">
+                      {errors.category.message}
+                    </p>
+                  )}
                 </Field>
 
                 <Field>
                   <Label htmlFor="severity">Severity</Label>
                   <Select
-                    defaultValue={IncidentSeverity[incident.severity as unknown as keyof typeof IncidentSeverity].toString()}
+                    defaultValue={IncidentSeverity[
+                      incident.severity as unknown as keyof typeof IncidentSeverity
+                    ].toString()}
                     onValueChange={(val) => setValue("severity", Number(val))}
                   >
                     <SelectTrigger className="w-full">
@@ -181,7 +227,11 @@ export default function UpdateIncidentModal({ incident }: IncidentUpdateModalPro
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                {errors.severity && <p className="text-red-500 text-xs">{errors.severity.message}</p>}
+                  {errors.severity && (
+                    <p className="text-red-500 text-xs">
+                      {errors.severity.message}
+                    </p>
+                  )}
                 </Field>
               </div>
 
@@ -189,7 +239,9 @@ export default function UpdateIncidentModal({ incident }: IncidentUpdateModalPro
                 <Field>
                   <Label htmlFor="status">Status</Label>
                   <Select
-                    defaultValue={IncidentStatus[incident.status as unknown as keyof typeof IncidentStatus].toString()}
+                    defaultValue={IncidentStatus[
+                      incident.status as unknown as keyof typeof IncidentStatus
+                    ].toString()}
                     onValueChange={(val) => setValue("status", Number(val))}
                   >
                     <SelectTrigger className="w-full">
@@ -206,19 +258,34 @@ export default function UpdateIncidentModal({ incident }: IncidentUpdateModalPro
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                {errors.status && <p className="text-red-500 text-xs">{errors.status.message}</p>}
+                  {errors.status && (
+                    <p className="text-red-500 text-xs">
+                      {errors.status.message}
+                    </p>
+                  )}
                 </Field>
 
                 <Field>
                   <Label htmlFor="assignedTo">Assigned To</Label>
-                  <Input id="assignedTo" {...register("assignedTo")} placeholder="Not Assigned"/>
-                {errors.assignedTo && <p className="text-red-500 text-xs">{errors.assignedTo.message}</p>}
+                  <Input
+                    id="assignedTo"
+                    {...register("assignedTo")}
+                    placeholder="Not Assigned"
+                  />
+                  {errors.assignedTo && (
+                    <p className="text-red-500 text-xs">
+                      {errors.assignedTo.message}
+                    </p>
+                  )}
                 </Field>
               </div>
 
               <Field>
                 <Label htmlFor="locationDetails">Location Details</Label>
-                <Textarea id="locationDetails" {...register("locationDetails")} />
+                <Textarea
+                  id="locationDetails"
+                  {...register("locationDetails")}
+                />
               </Field>
             </FieldGroup>
 

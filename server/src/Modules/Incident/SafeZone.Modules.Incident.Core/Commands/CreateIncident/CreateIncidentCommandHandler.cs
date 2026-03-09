@@ -1,11 +1,15 @@
+using SafeZone.Modules.Incident.Core.Events;
+using SafeZone.Shared.Abstractions.Messaging;
+using SafeZone.Shared.Abstractions.Modules;
+
 namespace SafeZone.Modules.Incident.Core.Commands.CreateIncident;
 
 internal sealed class CreateIncidentHandler
-    (IIncidentRepository _repository, IncidentDbContext _context)
+    (IIncidentRepository _repository, IMessageBroker _messageBroker)
     : ICommandHandler<CreateIncidentCommand, Guid>
 {
     private readonly IIncidentRepository repository = _repository;
-    private readonly IncidentDbContext context = _context;
+    private readonly IMessageBroker messageBroker = _messageBroker;
 
     public async Task<Guid> HandleAsync(CreateIncidentCommand command, CancellationToken cancellationToken = default)
     {
@@ -23,8 +27,9 @@ internal sealed class CreateIncidentHandler
             location);
 
         await repository.AddAsync(incident, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
+        await repository.SaveAsync(cancellationToken);
 
+        await messageBroker.PublishAsync(new IncidentAddedEvent(incident.Id, incident.Subject, incident.Status.ToString()), cancellationToken);
         return incident.Id;
     }
 }

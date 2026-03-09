@@ -1,13 +1,10 @@
-using Microsoft.AspNetCore.Http.HttpResults;
-
 namespace SafeZone.Modules.Incident.Core.Commands.UpdateIncident;
 
 internal sealed class UpdateIncidentHandler
-    (IIncidentRepository _repository, IncidentDbContext _context)
+    (IIncidentRepository _repository)
     : ICommandHandler<UpdateIncidentCommand>
 {
     private readonly IIncidentRepository repository = _repository;
-    private readonly IncidentDbContext context = _context;
 
     public async Task HandleAsync(
         UpdateIncidentCommand command,
@@ -15,8 +12,8 @@ internal sealed class UpdateIncidentHandler
     {
         var incident = await repository.GetByIdAsync(
             command.IncidentId, cancellationToken) ?? throw new NotFoundException("Incident", command.IncidentId);
-        incident.ChangeSeverity(command.Severity);
+        incident.UpdateIncident(command);
 
-        await context.SaveChangesAsync(cancellationToken);
+        await repository.SaveAsync(cancellationToken);
     }
 }

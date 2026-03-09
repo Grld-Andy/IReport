@@ -1,16 +1,16 @@
 import { apiUrl } from "@/constants"
-import type { IncidentsState } from "@/redux/features/incidents/incidentsSlice"
 import type { Incident } from "@/types/Incident"
 import axios from "axios"
 
-export const getIncidents = async (page:number): Promise<IncidentsState> => {
+export const getIncidents = async (page:number) => {
   const response = await axios.get(`${apiUrl}incidents?page=${page}`)
   const result: Array<Incident> = response.data.items
-  return {incidents: result, totalIncidents: response.data.totalResults}
+  return {incidents: result, totalIncidents: response.data.totalResults, totalPages: response.data.totalPages}
 }
 
 export const getAllIncidents = async () => {
   const response = await axios.get(`${apiUrl}incidents?results=100`)
-  const result: Array<Incident> = response.data.items
-  return result
+  const incidents: Array<Incident> = response.data.items
+  const totalIncidents: number = response.data.totalResults
+  return {incidents, totalIncidents}
 }

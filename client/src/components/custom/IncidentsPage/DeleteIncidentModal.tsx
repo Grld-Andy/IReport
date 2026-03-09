@@ -11,21 +11,27 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
 import { MdOutlineDelete } from 'react-icons/md';
-import { deleteIncident } from '@/services/deleteIncident';
+import { deleteIncident as deleteIncidentService } from '@/services/deleteIncident';
 
 interface Props{
     id: string
+    deleteIncident: (id: string) => void
 }
 
-const DeleteIncidentModal: React.FC<Props> = ({id}) => {
+const DeleteIncidentModal: React.FC<Props> = ({id, deleteIncident}) => {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
     const submitDelete = () => {
+      try{
         setIsSubmitting(true)
+        deleteIncidentService(id)
         deleteIncident(id)
         setIsSubmitting(false)
         setIsOpen(false)
+      }catch(e){
+        console.log("error deleting incident: ", e)
+      }
     }
 
   return (

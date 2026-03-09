@@ -26,30 +26,36 @@ const KanbanBoard: React.FC = () => {
   ];
 
   const updateColumn = (columnStatus: IncidentStatus, newList: Incident[]) => {
-  setIncidents((prev) => {
-    const updated = prev.map((incident) => {
-      const moved = newList.find((i) => i.id === incident.id);
+    setIncidents((prev) => {
+      const updated = prev.map((incident) => {
+        const moved = newList.find((i) => i.id === incident.id);
 
-      if (moved && incident.status !== columnStatus) {
-        console.log("column status: ", columnStatus)
-        updateIncidentStatus(incident.id, getStatusNum(columnStatus.toString()));
+        if (moved && incident.status !== columnStatus) {
+          console.log("column status: ", columnStatus);
+          updateIncidentStatus(
+            incident.id,
+            getStatusNum(columnStatus.toString()),
+          ).then(() => {
+            return { ...incident, status: columnStatus };
+          }).catch(() => {
+            return incident;
+          });
+          
+        }
 
-        return { ...incident, status: columnStatus };
-      }
+        return incident;
+      });
 
-      return incident;
+      return updated;
     });
-
-    return updated;
-  });
-};
+  };
 
   return (
     <div className="py-2 rounded-lg">
       <div className="flex gap-2 overflow-x-auto hide-scrollbar">
         {statusColumns.map((column) => {
           const columnIncidents = incidents.filter(
-            (i) => i.status.toString() == column.value
+            (i) => i.status.toString() == column.value,
           );
 
           return (
@@ -63,10 +69,14 @@ const KanbanBoard: React.FC = () => {
               </div>
 
               <div className="px-1 py-3 relative overflow-y-scroll max-h-[395px] h-full hide-scrollbar">
-
                 <ReactSortable
                   list={columnIncidents}
-                  setList={(newList) => updateColumn(column.value as unknown as IncidentStatus, newList)}
+                  setList={(newList) =>
+                    updateColumn(
+                      column.value as unknown as IncidentStatus,
+                      newList,
+                    )
+                  }
                   group="kanban"
                   animation={150}
                   className="flex min-h-full flex-col gap-2"
@@ -78,7 +88,7 @@ const KanbanBoard: React.FC = () => {
                     >
                       <div
                         className={`${getSeverityColor(
-                          incident.severity.toString()
+                          incident.severity.toString(),
                         )} border-[1px] font-semibold w-min rounded-full px-2 text-sm`}
                       >
                         {incident.severity}

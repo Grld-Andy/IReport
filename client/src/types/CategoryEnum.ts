@@ -11,3 +11,4 @@ export type IncidentCategory =
   (typeof IncidentCategory)[keyof typeof IncidentCategory];
 
 export const categoryOptions = Object.entries(IncidentCategory)
+export const categoryArray = Object.entries(IncidentCategory).map((i) => {return i[0]})

@@ -10,3 +10,4 @@ export type IncidentSeverity =
   (typeof IncidentSeverity)[keyof typeof IncidentSeverity];
 
 export const severityOptions = Object.entries(IncidentSeverity)
+export const severityArray = Object.entries(IncidentSeverity).map((i) => {return i[0]})

@@ -65,10 +65,14 @@ public static class Extensions
                         corsBuilder.DisallowCredentials();
                     }
 
-                    corsBuilder.WithHeaders(allowedHeaders.ToArray())
-                        .WithMethods(allowedMethods.ToArray())
-                        .WithOrigins(origins.ToArray())
-                        .WithExposedHeaders(exposedHeaders.ToArray());
+                    // corsBuilder.WithHeaders(allowedHeaders.ToArray())
+                    //     .WithMethods(allowedMethods.ToArray())
+                    //     .WithOrigins(origins.ToArray())
+                    //     .WithExposedHeaders(exposedHeaders.ToArray());
+                    corsBuilder.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .WithOrigins("http://localhost:5173")
+                        .AllowCredentials();
                 });
             });
     }

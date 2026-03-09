@@ -13,7 +13,6 @@ export const statusArray = Object.entries(IncidentStatus).map((i) => {return i[0
 export const statusIdx = Object.entries(IncidentStatus).map((i) => {return i[1]})
 
 export const getStatusEnum = (val: string) => {
-  console.log("======================= ", val)
   if(val == "Open" || val == "1"){
     return IncidentStatus.Open
   }else if(val == "InProgress" || val == "2"){

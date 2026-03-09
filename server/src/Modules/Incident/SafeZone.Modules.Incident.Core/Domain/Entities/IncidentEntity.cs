@@ -1,3 +1,4 @@
+using SafeZone.Modules.Incident.Core.Commands.UpdateIncident;
 using SafeZone.Modules.Incident.Core.Domain.Enums;
 using SafeZone.Modules.Incident.Core.Domain.ValueObjects;
 using SafeZone.Shared.Abstractions.Exceptions.ExceptionClasses;
@@ -83,6 +84,15 @@ internal class IncidentEntity
     public void UpdateLocation(IncidentLocation location)
     {
         Location = location;
+        Touch();
+    }
+
+    public void UpdateIncident(UpdateIncidentCommand updateDto)
+    {
+        Subject = updateDto.Subject;
+        Description = updateDto.Description;
+        Severity = updateDto.Severity;
+        Category = updateDto.Category;
         Touch();
     }
 

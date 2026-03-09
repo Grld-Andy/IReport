@@ -69,6 +69,7 @@ public static class Extensions
 
         services.AddCorsPolicy(configuration);
         services.AddEndpointsApiExplorer();
+        services.AddSignalR();
         services.AddSwaggerGen(options =>
         {
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
@@ -149,6 +150,15 @@ public static class Extensions
         app.UseCors("cors");
         app.UseCorrelationId();
         app.UseErrorHandling();
+
+        // var webSocketOptions = new WebSocketOptions
+        // {
+        //     KeepAliveInterval = TimeSpan.FromMinutes(2)
+        // };
+        // webSocketOptions.AllowedOrigins.Add("http://localhost:3000");
+        // webSocketOptions.AllowedOrigins.Add("http://www.localhost:3000");
+        // app.UseWebSockets(webSocketOptions);
+
         app.UseSwagger();
         app.UseSwaggerUI();
         app.UseReDoc(reDoc =>

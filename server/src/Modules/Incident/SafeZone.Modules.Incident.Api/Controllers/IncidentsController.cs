@@ -32,9 +32,9 @@ internal class IncidentsController(IDispatcher _dispatcher, IContext _context) :
     }
     
     [HttpGet]
-    public async Task<ActionResult<Paged<IncidentDto>>> GetAllIncidents()
+    public async Task<ActionResult<Paged<IncidentDto>>> GetAllIncidents([FromQuery] GetIncidentsQuery query)
     {
-        var result = await dispatcher.QueryAsync(new GetIncidentsQuery());
+        var result = await dispatcher.QueryAsync(query);
         return Ok(result);
     }
 
@@ -54,11 +54,12 @@ internal class IncidentsController(IDispatcher _dispatcher, IContext _context) :
         return Ok(result);
     }
 
-    [HttpPatch("{id:guid}")]
+    [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateIncident([FromRoute] Guid id, [FromBody] UpdateIncidentCommand command)
     {
         command = command with { IncidentId = id };
         await dispatcher.SendAsync(command);
+        Console.WriteLine($"============= Executed successfully {command.IncidentId}");
         return NoContent();
     }
 

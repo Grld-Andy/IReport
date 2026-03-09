@@ -1,5 +1,5 @@
 import z from "zod"
-import { categoryOptions, IncidentCategory } from "./CategoryEnum"
+import { categoryOptions } from "./CategoryEnum"
 import { IncidentSeverity, severityOptions } from "./SeverityEnum"
 import { IncidentStatus, statusOptions } from "./StatusEnum"
 
@@ -7,9 +7,9 @@ export interface Incident{
     id: string
     subject: string
     description: string
-    status: IncidentStatus
-    category: IncidentCategory
-    severity: IncidentSeverity
+    status: string
+    category: string
+    severity: string
     reporter: IncidentUser
     assignedTo?: IncidentUser
     latitude: number
@@ -23,6 +23,12 @@ interface IncidentUser{
     email: string
     name: string
     id: string
+}
+
+export interface IncidentAddedEvent {
+  id: string;
+  title: string;
+  status: string;
 }
 
 export const incidentSchema = z.object({

@@ -37,8 +37,8 @@ public static class Extensions
             _ => results
         };
 
-        var totalResults = await data.CountAsync();
-        var totalPages = totalResults <= results ? 1 : (int) Math.Floor((double) totalResults / results);
+        var totalResults = await data.CountAsync(cancellationToken: cancellationToken);
+        var totalPages = totalResults <= results ? 1 : (int) Math.Ceiling((double) totalResults / results);
         var result = await data.Skip((page - 1) * results).Take(results).ToListAsync(cancellationToken);
 
         return new Paged<T>(result, page, results, totalPages, totalResults);
