@@ -10,11 +10,9 @@ import { Link } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
   const { incidents } = useAppSelector((state) => state.incidents)
-
   const [cardsData, setCardsData] = useState(generateDashboardCards(incidents))
 
   useEffect(() => {
-    console.log("refreshing dashboard")
     setCardsData(generateDashboardCards(incidents))
   }, [incidents])
 
@@ -34,8 +32,8 @@ const Dashboard: React.FC = () => {
 
       {/* stats cards */}
       <div className="flex gap-3 overflow-x-scroll hide-scrollbar py-3 px-1">
-        {cardsData.map((item, index) => (
-          <StatsCard cardDetails={item} key={index} />
+        {cardsData.map((item) => (
+          <StatsCard cardDetails={item} key={item.title} />
         ))}
       </div>
 
@@ -56,7 +54,6 @@ const Dashboard: React.FC = () => {
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <h1 className="font-bold text-[18px]">Activity Feed</h1>
-            {/* <p className="text-blue-700 font-semibold cursor-pointer">See More</p> */}
           </div>
           <div className="bg-gray-50 p-5 flex flex-col gap-5 rounded-2xl border-[1px] border-black/10 shadow-sm">
             {

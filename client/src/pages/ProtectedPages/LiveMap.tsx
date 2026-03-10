@@ -1,21 +1,13 @@
 import MapComponent from "@/components/custom/MapComponent";
 import PageHeader from "@/components/custom/PageHeader";
 import { Button } from "@/components/ui/button";
-import { getAllIncidents } from "@/services/getIncidents";
-import type { Incident } from "@/types/Incident";
-import React, { useEffect, useState } from "react";
+import { useAppSelector } from "@/redux/app/hooks";
+import React, { useState } from "react";
 
 const LiveMap: React.FC = () => {
-  const [incidents, setIncidents] = useState<Incident[]>([]);
+  const {incidents} = useAppSelector((state) => state.incidents)
   const [myLocation, setMyLocation] = useState<{ lat: number; lng: number } | null>(null);
 
-  useEffect(() => {
-    const fetchIncidents = async () => {
-      const result = await getAllIncidents();
-      setIncidents(result.incidents);
-    };
-    fetchIncidents();
-  }, []);
 
   const handleGetLocation = () => {
     if (navigator.geolocation) {

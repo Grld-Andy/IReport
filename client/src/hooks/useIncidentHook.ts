@@ -18,7 +18,6 @@ export function useIncidentHub() {
       .catch((err) => console.error("SignalR connection error: ", err));
 
     hubConnection.on("IncidentAdded", ({incident}) => {
-      console.log("Incident added:", incident);
       dispatch(addIncidentState(incident));
     });
 

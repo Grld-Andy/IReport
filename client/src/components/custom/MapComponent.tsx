@@ -10,6 +10,8 @@ import {
 import { persolArea, persolCenter } from "@/constants/cordinates";
 import "leaflet/dist/leaflet.css";
 import type { Incident } from "@/types/Incident";
+import { severityConfig, statusConfig } from "@/constants/getColors";
+import Badge from "./Badge";
 
 interface Props {
   incidents: Array<Incident>;
@@ -46,12 +48,31 @@ const MapComponent: React.FC<Props> = ({ incidents, myLocation }) => {
         <Popup className="">Default Location</Popup>
       </Marker>
 
-      {incidents?.map((incident, index) => (
+      {incidents?.map((incident) => (
         <Marker
-          key={index}
+          key={incident.id}
           position={{ lat: incident.latitude, lng: incident.longitude }}
         >
-          <Popup>{incident.subject}</Popup>
+          <Popup>
+            <div className="">
+              <h1 className="text-lg font-semibold">{incident.subject}</h1>
+              <p className="text-md text-gray-700">{incident.description}</p>
+              <p className="text-gray-700">Category: {incident.category}</p>
+              <p>
+                Severity:{" "}
+                <Badge value={incident.severity} config={severityConfig} />
+              </p>
+              <p>
+                Status:{" "}
+                <Badge
+                  value={incident.status.toString()}
+                  config={statusConfig}
+                />
+              </p>
+              <p>Date Created: {new Date(incident.createdAt).toDateString()}</p>
+              <p>Created By: {incident.reporter.name}</p>
+            </div>
+          </Popup>
         </Marker>
       ))}
 
