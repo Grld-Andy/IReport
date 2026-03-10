@@ -59,7 +59,6 @@ internal class IncidentsController(IDispatcher _dispatcher, IContext _context) :
     {
         command = command with { IncidentId = id };
         await dispatcher.SendAsync(command);
-        Console.WriteLine($"============= Executed successfully {command.IncidentId}");
         return NoContent();
     }
 

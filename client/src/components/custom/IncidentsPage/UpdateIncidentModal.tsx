@@ -11,14 +11,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  Combobox,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-} from "@/components/ui/combobox";
-import {
   Select,
   SelectContent,
   SelectGroup,
@@ -50,6 +42,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { CiEdit } from "react-icons/ci";
 import { useAppSelector } from "@/redux/app/hooks";
+import UserCombobox from "./UserCombobox";
 
 export type IncidentForm = z.infer<typeof incidentSchema>;
 
@@ -102,7 +95,7 @@ export default function UpdateIncidentModal({
         IncidentStatus[
           incident.status as unknown as keyof typeof IncidentStatus
         ] || 0,
-      assignedTo: incident.assignedTo?.name || "",
+      assignedTo: incident.assignedTo?.id || "",
       locationDetails: incident.locationDetails || "",
     });
   }, [incident, reset]);
@@ -281,28 +274,10 @@ export default function UpdateIncidentModal({
                 <Field>
                   <Label htmlFor="assignedTo">Assigned To</Label>
 
-                  <Combobox
-                    items={users.map((u) => u.email)}
-                    value={getValues("assignedTo")}
-                    onValueChange={(val) => setValue("assignedTo", val || "")}
-                  >
-                    <ComboboxInput
-                      className="w-full h-[36px] shadow-sm"
-                      placeholder="Select a user to assign incident"
-                    />
-
-                    <ComboboxContent>
-                      <ComboboxEmpty>No users found.</ComboboxEmpty>
-
-                      <ComboboxList>
-                        {(item) => (
-                          <ComboboxItem key={item} value={item}>
-                            {item}
-                          </ComboboxItem>
-                        )}
-                      </ComboboxList>
-                    </ComboboxContent>
-                  </Combobox>
+                  <UserCombobox
+                    users={users}
+                    onChange={(id) => setValue("assignedTo", id)}
+                  />
 
                   {errors.assignedTo && (
                     <p className="text-red-500 text-xs">

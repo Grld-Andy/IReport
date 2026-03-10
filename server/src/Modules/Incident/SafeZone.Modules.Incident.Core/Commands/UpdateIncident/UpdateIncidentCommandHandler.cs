@@ -23,7 +23,6 @@ internal sealed class UpdateIncidentHandler
         var usersDict = users.ToDictionary(u => u.Id);
 
         await messageBroker.PublishAsync(new IncidentUpdatedEvent(IncidentMapper.FromEntity(incident, usersDict)), cancellationToken);
-
         await repository.SaveAsync(cancellationToken);
     }
 }

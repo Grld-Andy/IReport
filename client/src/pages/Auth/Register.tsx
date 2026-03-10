@@ -62,7 +62,7 @@ const Register: React.FC = () => {
           <span className="text-[30px] font-bold font-serif">SafeZone</span>
         </div>
 
-        <div className={`w-full max-w-md flex flex-col gap-6 ${isSubmitting ? "select-none opacity-80 transition-all duration-100" : ""}`}>
+        <div className={`w-full max-w-md flex flex-col gap-6 ${isSubmitting ? "pointer-events-none transition-all duration-100" : ""}`}>
           <div className="text-center">
             <h1 className="text-[40px] font-extrabold text-black font-serif">
               Welcome!
@@ -140,7 +140,7 @@ const Register: React.FC = () => {
 
               <Field>
                 <Button type="submit" className="w-full h-10">
-                  Sign Up
+                  {isSubmitting ? <div className="loader bg-white w-[25px]"></div> : <span>Sign Up</span>}
                 </Button>
               </Field>
             </FieldGroup>

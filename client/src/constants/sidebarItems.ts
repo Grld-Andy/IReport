@@ -1,6 +1,6 @@
 import type { NavItem } from "@/types/NavItem";
 import { HiOutlineUsers, HiUsers } from "react-icons/hi2";
-import { IoMapOutline, IoMap, IoBarChartOutline, IoBarChartSharp } from "react-icons/io5";
+import { IoMapOutline, IoMap } from "react-icons/io5";
 import { MdOutlineDashboard, MdDashboard, MdOutlineViewKanban, MdViewKanban } from "react-icons/md";
 import { RiErrorWarningLine, RiErrorWarningFill } from "react-icons/ri";
 
@@ -24,12 +24,12 @@ export const sidebarItems: Array<NavItem> = [
       name: "Kanban Board",
       path: "/kanban",
     },
-    {
-      icon: IoBarChartOutline,
-      activeIcon: IoBarChartSharp,
-      name: "Reports",
-      path: "/reports",
-    },
+    // {
+    //   icon: IoBarChartOutline,
+    //   activeIcon: IoBarChartSharp,
+    //   name: "Reports",
+    //   path: "/reports",
+    // },
     {
       icon: HiOutlineUsers,
       activeIcon: HiUsers,

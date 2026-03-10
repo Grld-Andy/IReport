@@ -16,7 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
 import { loginStart, loginSuccess, loginStop } from "@/redux/features/auth/authSlice";
 
 const Login: React.FC = () => {
-  const isLoading : boolean = useAppSelector((state) => state.auth.isLoading)
+  const isSubmitting : boolean = useAppSelector((state) => state.auth.isLoading)
   const dispatch = useAppDispatch()
   const [apiError, setApiError] = useState<string>("");
   const navigate = useNavigate();
@@ -79,7 +79,7 @@ const Login: React.FC = () => {
 
         {/* Form container */}
         <div
-          className={`w-full max-w-md flex flex-col gap-4 ${isLoading ? "pointer-events-none opacity-80 transition-all duration-100" : ""}`}
+          className={`w-full max-w-md flex flex-col gap-4 ${isSubmitting ? "pointer-events-none transition-all duration-100" : ""}`}
         >
           <div className="text-center">
             <h1 className="text-[40px] font-extrabold text-black font-serif">
@@ -99,7 +99,7 @@ const Login: React.FC = () => {
                   type="email"
                   className="h-10 bg-white"
                   id="fieldgroup-email"
-                  disabled={isLoading}
+                  disabled={isSubmitting}
                   placeholder="Enter your email"
                   {...register("email")}
                 />
@@ -112,7 +112,7 @@ const Login: React.FC = () => {
                 <Input
                   id="fieldgroup-password"
                   type="password"
-                  disabled={isLoading}
+                  disabled={isSubmitting}
                   className="h-10 bg-white"
                   placeholder="***************"
                   {...register("password")}
@@ -126,7 +126,7 @@ const Login: React.FC = () => {
               {apiError && <p className="text-red-500 text-sm">{apiError}</p>}
               <Field>
                 <Button type="submit" className="w-full h-10">
-                  Sign In
+                  {isSubmitting ? <div className="loader bg-white w-[25px]"></div> : <span>Sign In</span>}
                 </Button>
               </Field>
             </FieldGroup>
