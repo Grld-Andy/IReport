@@ -23,7 +23,7 @@ internal sealed class UpdateIncidentHandler
         if (incident.AssignedToId.HasValue)
         {
             userIds.Add(incident.AssignedToId.Value);
-            incident.AssignTo(userId);
+            incident.AssignTo(incident.ReporterId);
         }
         var users = await userApiClient.GetUsersByIds(userIds);
         var usersDict = users.ToDictionary(u => u.Id);
