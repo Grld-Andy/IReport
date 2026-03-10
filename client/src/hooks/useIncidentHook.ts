@@ -26,7 +26,7 @@ export function useIncidentHub() {
     })
 
     hubConnection.on("IncidentUpdated", ({incident}) => {
-      console.log("Incident added:", incident);
+      console.log("Incident updated:", incident);
       dispatch(updateIncidentState(incident));
     })
 

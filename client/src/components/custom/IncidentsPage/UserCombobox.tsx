@@ -1,13 +1,16 @@
+import type { IncidentUser } from "@/types/Incident";
 import type { User } from "@/types/User";
 import { Input } from "@base-ui/react";
 import React, { useState } from "react";
 
 interface Props {
   users: Array<User>;
+  value?: string
   onChange?: (userId: string) => void;
+  initialUser?: IncidentUser|null;
 }
 
-const UserCombobox: React.FC<Props> = ({ users, onChange }) => {
+const UserCombobox: React.FC<Props> = ({ users, initialUser, onChange }) => {
   const [query, setQuery] = useState("");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [open, setOpen] = useState(false);
@@ -25,7 +28,7 @@ const UserCombobox: React.FC<Props> = ({ users, onChange }) => {
     setOpen(false);
 
     if (onChange) {
-      onChange(user.id); // 🔥 send id to form
+      onChange(user.id);
     }
   };
 
@@ -34,12 +37,13 @@ const UserCombobox: React.FC<Props> = ({ users, onChange }) => {
       <Input
         type="text"
         value={selectedUser ? selectedUser.name : query}
+        defaultValue={initialUser ? initialUser.name : ""}
         onChange={(e) => {
           setQuery(e.target.value);
           setSelectedUser(null);
           setOpen(true);
 
-          if (onChange) onChange(""); // clear form value if typing
+          if (onChange) onChange("");
         }}
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}

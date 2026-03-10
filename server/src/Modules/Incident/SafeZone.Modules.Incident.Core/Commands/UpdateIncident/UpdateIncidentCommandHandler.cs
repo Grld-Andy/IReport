@@ -19,7 +19,13 @@ internal sealed class UpdateIncidentHandler
             command.IncidentId, cancellationToken) ?? throw new NotFoundException("Incident", command.IncidentId);
         incident.UpdateIncident(command);
 
-        var users = await userApiClient.GetUsersByIds([incident.ReporterId]);
+        List<Guid> userIds = [incident.ReporterId];
+        if (incident.AssignedToId.HasValue)
+        {
+            userIds.Add(incident.AssignedToId.Value);
+            incident.AssignTo(userId);
+        }
+        var users = await userApiClient.GetUsersByIds(userIds);
         var usersDict = users.ToDictionary(u => u.Id);
 
         await messageBroker.PublishAsync(new IncidentUpdatedEvent(IncidentMapper.FromEntity(incident, usersDict)), cancellationToken);

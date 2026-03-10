@@ -192,7 +192,7 @@ export default function CreateIncidentModal() {
                 className="w-full bg-green-500 hover:bg-green-600 text-white"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Saving..." : "Create Incident"}
+                {isSubmitting ? <div className='loader'></div> : "Create Incident"}
               </Button>
             </DialogFooter>
           </form>

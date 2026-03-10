@@ -19,7 +19,7 @@ export interface Incident{
     updatedAt: string
 }
 
-interface IncidentUser{
+export interface IncidentUser{
     email: string
     name: string
     id: string

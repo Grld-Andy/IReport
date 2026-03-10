@@ -119,10 +119,11 @@ export default function UpdateIncidentModal({
       );
 
       const { latitude, longitude } = position.coords;
+      console.log("data being updated: ", data)
 
       await axios.put(
         `${apiUrl}incidents/${incident.id}`,
-        { ...data, latitude, longitude },
+        { ...data, latitude, longitude, assignedToId: data.assignedTo },
         { withCredentials: true },
       );
 
@@ -276,6 +277,8 @@ export default function UpdateIncidentModal({
 
                   <UserCombobox
                     users={users}
+                    value={getValues("assignedTo")}
+                    initialUser={incident.assignedTo}
                     onChange={(id) => setValue("assignedTo", id)}
                   />
 
@@ -307,7 +310,7 @@ export default function UpdateIncidentModal({
                 className="w-full bg-amber-500 hover:bg-amber-600 text-white"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Saving..." : "Update Incident"}
+                {isSubmitting ?<div className="loader"></div> : "Update Incident"}
               </Button>
             </DialogFooter>
           </form>

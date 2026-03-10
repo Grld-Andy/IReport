@@ -93,7 +93,6 @@ internal class IncidentEntity
         Description = updateDto.Description;
         Severity = updateDto.Severity;
         Category = updateDto.Category;
-        AssignedToId = updateDto.AssignedToId;
         Touch();
     }
 

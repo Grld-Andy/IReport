@@ -44,7 +44,6 @@ const Register: React.FC = () => {
       navigate("/auth/login")
     }catch(e){
       console.error(e);
-    }finally{
       setIsSubmitting(false)
     }
   };

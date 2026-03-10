@@ -5,7 +5,6 @@ export const incidentColumns = [
   "Category",
   "Status",
   "Assigned To",
-  "Date Assigned",
   "Last Updated",
   "Action",
 ];

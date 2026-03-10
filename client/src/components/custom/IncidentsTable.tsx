@@ -221,11 +221,6 @@ const IncidentsTable: React.FC = () => {
                     )}
                   </TableCell>
 
-                  {/* Date Assigned */}
-                  <TableCell className="text-sm text-gray-500 whitespace-nowrap">
-                    {new Date(incident.updatedAt).toLocaleDateString()}
-                  </TableCell>
-
                   {/* Last Updated */}
                   <TableCell className="text-sm text-gray-500 whitespace-nowrap">
                     {new Date(incident.updatedAt).toLocaleDateString()}
