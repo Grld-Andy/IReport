@@ -19,12 +19,10 @@ const incidentsSlice = createSlice({
             state.totalIncidents = action.payload.totalIncidents
         },
         deleteIncidentState(state, action: PayloadAction<string>){
-            const initialLength = state.incidents.length
             state.incidents = state.incidents.filter((i) => i.id != action.payload)
-            const currentLength = state.incidents.length
-            state.totalIncidents = currentLength != initialLength ? currentLength : initialLength
+            state.totalIncidents = state.incidents.length;
         },
-        udpateIncidentState(state, action: PayloadAction<Incident>){
+        updateIncidentState(state, action: PayloadAction<Incident>){
             state.incidents = state.incidents.map((i) => {
                 if(i.id != action.payload.id){
                     return i;
@@ -40,5 +38,5 @@ const incidentsSlice = createSlice({
     }
 })
 
-export const { saveIncidentsState, udpateIncidentState, deleteIncidentState, addIncidentState } = incidentsSlice.actions
+export const { saveIncidentsState, updateIncidentState, deleteIncidentState, addIncidentState } = incidentsSlice.actions
 export default incidentsSlice.reducer

@@ -9,11 +9,12 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
-  const {incidents} = useAppSelector((state) => state.incidents)
+  const { incidents } = useAppSelector((state) => state.incidents)
 
   const [cardsData, setCardsData] = useState(generateDashboardCards(incidents))
 
   useEffect(() => {
+    console.log("refreshing dashboard")
     setCardsData(generateDashboardCards(incidents))
   }, [incidents])
 

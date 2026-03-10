@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import * as signalR from "@microsoft/signalr";
-import type { IncidentAddedEvent } from "@/types/Incident";
+import { useAppDispatch } from "@/redux/app/hooks";
+import { addIncidentState, deleteIncidentState, updateIncidentState } from "@/redux/features/incidents/incidentsSlice";
 
 export function useIncidentHub() {
-  const [incidents, setIncidents] = useState<IncidentAddedEvent[]>([]);
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
@@ -16,15 +17,24 @@ export function useIncidentHub() {
       .then(() => console.log("Connected to IncidentHub"))
       .catch((err) => console.error("SignalR connection error: ", err));
 
-    hubConnection.on("IncidentAdded", (incident: IncidentAddedEvent) => {
+    hubConnection.on("IncidentAdded", ({incident}) => {
       console.log("Incident added:", incident);
-      setIncidents((prev) => [...prev, incident]);
+      dispatch(addIncidentState(incident));
     });
+
+    hubConnection.on("IncidentDeleted", ({id}) => {
+      dispatch(deleteIncidentState(id))
+    })
+
+    hubConnection.on("IncidentUpdated", ({incident}) => {
+      console.log("Incident added:", incident);
+      dispatch(updateIncidentState(incident));
+    })
 
     return () => {
       hubConnection.stop();
     };
-  }, []);
+  }, [dispatch]);
 
-  return { incidents };
+  return { };
 }

@@ -25,12 +25,6 @@ interface IncidentUser{
     id: string
 }
 
-export interface IncidentAddedEvent {
-  id: string;
-  title: string;
-  status: string;
-}
-
 export const incidentSchema = z.object({
   subject: z.string().min(1, "Please provide the subject"),
   description: z.string().min(1, "Please provide a description"),

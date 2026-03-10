@@ -23,23 +23,18 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { severityArray, severityOptions } from "@/types/SeverityEnum";
-import { categoryArray, categoryOptions } from "@/types/CategoryEnum";
+import { severityOptions } from "@/types/SeverityEnum";
+import { categoryOptions } from "@/types/CategoryEnum";
 import { incidentSchema } from "@/types/Incident";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { createIncidentService } from "@/services/createInicident";
-import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
-import { addIncidentState } from "@/redux/features/incidents/incidentsSlice";
-import { statusArray } from "@/types/StatusEnum";
 
 export type IncidentForm = z.infer<typeof incidentSchema>;
 
 export default function CreateIncidentModal() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.auth.user)
 
   const {
     register,
@@ -67,25 +62,6 @@ export default function CreateIncidentModal() {
   const onSubmit = async (data: IncidentForm) => {
     try {
       const response = await createIncidentService(data);
-      const createdIncident = {
-        id: response.id,
-        subject: data.subject,
-        description: data.description,
-        locationDetails: data.locationDetails || "",
-        status: statusArray[data.status ? data.status - 1 : 1],
-        category: categoryArray[data.category ? data.category - 1 : 1],
-        severity: severityArray[data.severity ? data.severity - 1 : 1],
-        latitude: response.latitude,
-        longitude: response.longitude,
-        updatedAt: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        reporter: {
-          email: user?.email || "",
-          name: user?.name || "",
-          id: user?.id || ""
-        }
-      };
-      dispatch(addIncidentState({ ...createdIncident }));
 
       console.log("Created incident successfully", response);
       reset();

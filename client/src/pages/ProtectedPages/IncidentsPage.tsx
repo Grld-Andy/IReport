@@ -5,7 +5,6 @@ import { useIncidentHub } from "@/hooks/useIncidentHook";
 import React from "react";
 
 const IncidentsPage: React.FC = () => {
-  useIncidentHub();
 
   return (
     <div className="flex flex-col gap-5">

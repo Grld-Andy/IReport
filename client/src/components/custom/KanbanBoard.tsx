@@ -2,7 +2,7 @@ import { getSeverityColor } from "@/constants/getColors";
 import { getAllIncidents } from "@/services/getIncidents";
 import { updateIncidentStatus } from "@/services/updateIncidentStatus";
 import type { Incident } from "@/types/Incident";
-import { getStatusNum, IncidentStatus } from "@/types/StatusEnum";
+import { getStatusNum, IncidentStatus, statusArray } from "@/types/StatusEnum";
 import React, { useEffect, useState } from "react";
 import { FaRegCommentDots } from "react-icons/fa6";
 import { ReactSortable } from "react-sortablejs";
@@ -30,7 +30,7 @@ const KanbanBoard: React.FC = () => {
       const updated = prev.map((incident) => {
         const moved = newList.find((i) => i.id === incident.id);
 
-        if (moved && incident.status != columnStatus) {
+        if (moved && incident.status != statusArray[columnStatus - 1]) {
           console.log("column status: ", columnStatus);
           updateIncidentStatus(
             incident.id,

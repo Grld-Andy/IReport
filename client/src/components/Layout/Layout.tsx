@@ -11,10 +11,12 @@ import { getAllIncidents } from "@/services/getIncidents";
 import { getAllUsers } from "@/services/getUsers";
 import { saveIncidentsState } from "@/redux/features/incidents/incidentsSlice";
 import { saveUsers } from "@/redux/features/users/usersSlice";
+import { useIncidentHub } from "@/hooks/useIncidentHook";
 
 const Layout: React.FC = () => {
   const dispatch = useAppDispatch()
   const user : User|null = useAppSelector((state) => state.auth.user)
+  useIncidentHub()
 
   useEffect(() => {
     const setUser = async () => {

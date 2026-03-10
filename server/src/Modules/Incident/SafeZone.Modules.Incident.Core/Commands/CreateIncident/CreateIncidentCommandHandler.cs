@@ -1,6 +1,5 @@
 using SafeZone.Modules.Incident.Core.Events;
 using SafeZone.Shared.Abstractions.Messaging;
-using SafeZone.Shared.Abstractions.Modules;
 
 namespace SafeZone.Modules.Incident.Core.Commands.CreateIncident;
 

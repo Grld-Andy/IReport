@@ -22,11 +22,13 @@ const DeleteIncidentModal: React.FC<Props> = ({id, deleteIncident}) => {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
-    const submitDelete = () => {
+    const submitDelete = async () => {
       try{
         setIsSubmitting(true)
-        deleteIncidentService(id)
-        deleteIncident(id)
+        const result = await deleteIncidentService(id)
+        if(result){
+          deleteIncident(id)
+        }
         setIsSubmitting(false)
         setIsOpen(false)
       }catch(e){
@@ -45,8 +47,8 @@ const DeleteIncidentModal: React.FC<Props> = ({id, deleteIncident}) => {
             <DialogHeader className="bg-gray-50 p-5 border-b-[1px] border-black/50">
               <DialogTitle>Delete Incident</DialogTitle>
             </DialogHeader>
-            <DialogDescription className='px-5'>
-                <h1 className='font-semibold'>Are you sure you want to <span className='font-bold text-red-500'>delete</span> this incident?</h1>
+            <DialogDescription className='px-5 font-semibold'>
+              Are you sure you want to <span className='font-bold text-red-500'>delete</span> this incident?
             </DialogDescription>
             <DialogFooter className="p-5 flex gap-2">
               <DialogClose asChild>
