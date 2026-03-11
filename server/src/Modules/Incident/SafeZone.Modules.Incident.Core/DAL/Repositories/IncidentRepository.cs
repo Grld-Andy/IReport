@@ -1,3 +1,4 @@
+using SafeZone.Modules.Incident.Core.Queries.GetIncidents;
 using SafeZone.Shared.Infrastructure.Postgres;
 
 namespace SafeZone.Modules.Incident.Core.DAL.Repositories;
@@ -35,13 +36,13 @@ internal sealed class IncidentRepository(IncidentDbContext _context, IUserApiCli
             .AnyAsync(x => x.Id == id, cancellationToken);
     }
 
-    public async Task<Paged<IncidentDto>> GetAllIncidents(IPagedQuery query, Dictionary<string, string>? filters, CancellationToken cancellationToken = default)
+    public async Task<Paged<IncidentDto>> GetAllIncidents(GetIncidentsQuery query, Dictionary<string, string>? filters, CancellationToken cancellationToken = default)
     {
         var incidentsQuery = context.Incidents
             .AsNoTracking()
-            .OrderByDescending(x => x.CreatedAt)
             .AsQueryable();
         
+        // filter
         if(filters?.Count > 0)
         {
             if(filters.TryGetValue("filter", out var filter))
@@ -65,6 +66,19 @@ internal sealed class IncidentRepository(IncidentDbContext _context, IUserApiCli
                 incidentsQuery = incidentsQuery.Where(x => x.Status != incidentStatus);
             }
         }
+
+        // sort
+        var orderBy = query.OrderBy ?? "-createdAt";
+        var descending = orderBy.StartsWith("-");
+        var field = descending ? orderBy[1..] : orderBy;
+
+        incidentsQuery = field.ToLower() switch
+        {
+            "createdat" => descending ? incidentsQuery.OrderByDescending(x => x.CreatedAt) : incidentsQuery.OrderBy(x => x.CreatedAt),
+            "severity" => descending ? incidentsQuery.OrderByDescending(x => x.Severity) : incidentsQuery.OrderBy(x => x.Severity),
+            "category" => descending ? incidentsQuery.OrderByDescending(x => x.Category) : incidentsQuery.OrderBy(x => x.Category),
+            _ => incidentsQuery.OrderByDescending(x => x.CreatedAt)
+        };
 
         var incidentsPaged = await incidentsQuery.PaginateAsync(query, cancellationToken);
 

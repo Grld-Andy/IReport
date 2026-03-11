@@ -24,11 +24,11 @@ const SortButton: React.FC<Props> = ({ orderBy, setOrderBy }) => {
         <SelectGroup>
           <SelectLabel>Sort</SelectLabel>
 
-          <SelectItem value="createdAt">
+          <SelectItem value="createdat">
             Created At (Oldest)
           </SelectItem>
 
-          <SelectItem value="-createdAt">
+          <SelectItem value="-createdat">
             Created At (Newest)
           </SelectItem>
 
