@@ -1,5 +1,5 @@
 import CreateIncidentModal from "@/components/custom/IncidentsPage/CreateIncidentModal";
-import IncidentsTable from "@/components/custom/IncidentsTable";
+import IncidentsTable from "@/components/custom/IncidentsPage/IncidentsTable";
 import PageHeader from "@/components/custom/PageHeader";
 import React from "react";
 

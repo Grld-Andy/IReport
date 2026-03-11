@@ -49,12 +49,17 @@ const Layout: React.FC = () => {
   }
 
   return (
+    
     <div className="h-screen flex flex-row">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=DM+Mono:wght@400;500&display=swap');
+      `}</style>
+      
       <div className="w-[90px] md:w-[230px] h-full">
         <Sidebar />
       </div>
 
-      <div className="p-3 w-[calc(100%-90px)] md:w-[calc(100%-230px)] h-full overflow-y-scroll hide-scrollbar flex flex-col gap-5">
+      <div style={{fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif"}} className="p-3 w-[calc(100%-90px)] md:w-[calc(100%-230px)] h-full overflow-y-scroll hide-scrollbar flex flex-col gap-5">
         <Navbar />
         <Outlet />
       </div>

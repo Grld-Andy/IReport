@@ -7,22 +7,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import SortButton from "./IncidentsPage/SortButton";
-import FilterButton from "./IncidentsPage/FilterButton";
+import SortButton from "../IncidentsPage/SortButton";
+import FilterButton from "../IncidentsPage/FilterButton";
 import { Input } from "@/components/ui/input";
 import { CiSearch } from "react-icons/ci";
-import Badge from "./Badge";
+import Badge from "../Badge";
 import { severityConfig, statusConfig } from "@/constants/getColors";
 import { incidentColumns } from "@/constants/incidentColumns";
 import { getIncidents } from "@/services/getIncidents";
 import type { Incident } from "@/types/Incident";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "../ui/button";
-import UpdateIncidentModal from "./IncidentsPage/UpdateIncidentModal";
-import DeleteIncidentModal from "./IncidentsPage/DeleteIncidentModal";
+import { Button } from "../../ui/button";
+import UpdateIncidentModal from "../IncidentsPage/UpdateIncidentModal";
+import DeleteIncidentModal from "../IncidentsPage/DeleteIncidentModal";
 import { useAppSelector } from "@/redux/app/hooks";
 
-const IncidentsTable: React.FC = () => {
+const UsersTable: React.FC = () => {
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [totalIncidents, setTotalIncidents] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -279,4 +279,4 @@ const IncidentsTable: React.FC = () => {
   );
 };
 
-export default IncidentsTable;
+export default UsersTable;

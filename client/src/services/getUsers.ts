@@ -5,7 +5,7 @@ import axios from "axios"
 export const getUsers = async (page:number) => {
   const response = await axios.get(`${apiUrl}users?page=${page}`)
   const result: Array<User> = response.data.items
-  return {incidents: result, totalIncidents: response.data.totalResults}
+  return {users: result, totalUsers: response.data.totalResults, totalPages: response.data.totalPages}
 }
 
 export const getAllUsers = async () => {

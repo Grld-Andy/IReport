@@ -25,7 +25,10 @@ function App() {
         <Route path="map" element={<LiveMap />} />
         <Route path="kanban" element={<KanbanBoardPage />} />
         <Route path="reports" element={<ReportsPage />} />
-        <Route path="users" element={<UsersPage />} />
+        <Route path="users">
+          <Route index element={<UsersPage />} />
+          <Route path=":page" element={<UsersPage />} />
+        </Route>
       </Route>
       <Route path="/" element={<AuthLayout />}>
         <Route path="auth/register" element={<Register />} />
