@@ -44,6 +44,10 @@ internal sealed class IncidentRepository(IncidentDbContext _context, IUserApiCli
         
         if(filters?.Count > 0)
         {
+            if(filters.TryGetValue("filter", out var filter))
+            {
+                incidentsQuery = incidentsQuery.Where(i => EF.Functions.Like(i.Subject.Value, filter) || EF.Functions.Like(i.Description.Value, filter));
+            }
             if(filters.TryGetValue("userId", out var userId))
             {
                 incidentsQuery = incidentsQuery.Where(x => x.AssignedToId == Guid.Parse(userId));

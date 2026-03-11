@@ -12,6 +12,7 @@ import { getAllUsers } from "@/services/getUsers";
 import { saveIncidentsState } from "@/redux/features/incidents/incidentsSlice";
 import { saveUsers } from "@/redux/features/users/usersSlice";
 import { useIncidentHub } from "@/hooks/useIncidentHook";
+import NotFound from "@/pages/NotFound";
 
 const Layout: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -48,8 +49,11 @@ const Layout: React.FC = () => {
     return <Navigate to="/auth/login" replace />;
   }
 
+  if(user.role != 'admin' && location.pathname.includes("/users")){
+    return <NotFound/>
+  }
+
   return (
-    
     <div className="h-screen flex flex-row">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=DM+Mono:wght@400;500&display=swap');

@@ -1,5 +1,6 @@
 import { apiUrl } from "@/constants";
 import axios from "axios";
+import { getAxiosError } from "./getAxiosError";
 
 export const updateIncidentStatus = async (id: string, status: number) => {
   try {
@@ -15,25 +16,6 @@ export const updateIncidentStatus = async (id: string, status: number) => {
 
     return { success: false, message: "Unknown error" };
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      const axiosErr = err;
-      const status = axiosErr.response?.status;
-      // Usually the server returns an object like { errors: [...] }
-      const message =
-        axiosErr.response?.data?.errors?.map((e: {message: string}) => e.message).join(", ") ||
-        axiosErr.message;
-
-      return {
-        success: false,
-        status,
-        message,
-      };
-    } else {
-      return {
-        success: false,
-        status: null,
-        message: (err as Error)?.message || "Unknown error",
-      };
-    }
+    return getAxiosError(err)
   }
 };

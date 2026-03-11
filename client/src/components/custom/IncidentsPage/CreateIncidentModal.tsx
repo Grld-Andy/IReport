@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { IoAddCircleOutline } from "react-icons/io5";
 import {
   Select,
   SelectContent,
@@ -74,7 +75,8 @@ export default function CreateIncidentModal() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="bg-green-500 hover:bg-green-600 text-white">
-          Create New
+          <IoAddCircleOutline size={16}/>
+          Report Incident
         </Button>
       </DialogTrigger>
 

@@ -27,7 +27,9 @@ const IncidentsTable: React.FC = () => {
   const [totalIncidents, setTotalIncidents] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState<string>("");
+  const [sortOrder, setSortOrder] = useState<string>("")
+  const [orderBy, setOrderBy] = useState<string>("")
   const stateTotalIncidents = useAppSelector((state) => state.incidents.totalIncidents)
   const stateIncidents = useAppSelector((state) => state.incidents.incidents)
 
@@ -39,7 +41,7 @@ const IncidentsTable: React.FC = () => {
   const fetchIncidents = useCallback(async () => {
     try {
       setLoading(true);
-      const result = await getIncidents(currentPage);
+      const result = await getIncidents(currentPage, search, orderBy, sortOrder);
       setIncidents(result.incidents ?? []);
       setTotalIncidents(result.totalIncidents ?? 0);
       setTotalPages(result.totalPages ?? 1);
@@ -49,7 +51,7 @@ const IncidentsTable: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentPage]);
+  }, [currentPage, orderBy, search, sortOrder]);
 
   useEffect(() => {
     fetchIncidents();
@@ -72,7 +74,6 @@ const IncidentsTable: React.FC = () => {
   const deleteIncident = (id: string) => {
     setIncidents((prev) => prev.filter((i) => i.id !== id));
     setTotalIncidents((prev) => prev - 1);
-
     const currentTotalPages = Math.ceil(totalIncidents / 10);
     setTotalPages(currentTotalPages);
   };
@@ -82,6 +83,10 @@ const IncidentsTable: React.FC = () => {
       navigate(`/incidents/${currentPage - 1}`);
     }
   }, [currentPage, incidents.length, navigate]);
+
+  const searchIncidents = async () => {
+    fetchIncidents();
+  }
 
   return (
     <div className="flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -105,6 +110,7 @@ const IncidentsTable: React.FC = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search..."
+              onSubmit={searchIncidents}
               className="pl-8 h-9 w-full md:w-56 bg-white"
             />
           </div>
@@ -234,7 +240,6 @@ const IncidentsTable: React.FC = () => {
                   <TableCell className="flex gap-1">
                     <UpdateIncidentModal
                       incident={incident}
-                      // updateIncident={updateIncident}
                     />
                     <DeleteIncidentModal
                       id={incident.id}

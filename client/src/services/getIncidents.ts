@@ -2,8 +2,14 @@ import { apiUrl } from "@/constants"
 import type { Incident } from "@/types/Incident"
 import axios from "axios"
 
-export const getIncidents = async (page:number) => {
-  const response = await axios.get(`${apiUrl}incidents?page=${page}`)
+export const getIncidents = async (page:number, filter = "", orderBy?: string, sortOrder?: string) => {
+  let url = ""
+  if(filter){
+    url = `${apiUrl}incidents?page=${page}&filter=${filter}&orderBy=${orderBy}&sortOrder=${sortOrder}`
+  }else{
+    url = `${apiUrl}incidents?page=${page}&orderBy=${orderBy}&sortOrder=${sortOrder}`
+  }
+  const response = await axios.get(url)
   const result: Array<Incident> = response.data.items
   return {incidents: result, totalIncidents: response.data.totalResults, totalPages: response.data.totalPages}
 }

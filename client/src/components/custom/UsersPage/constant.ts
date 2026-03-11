@@ -1,10 +1,9 @@
-export type Role = "Admin" | "Manager" | "Responder" | "Viewer";
-export type Status = "Active" | "Inactive" | "Pending";
+export type Role = "Admin" | "Supervisor" | "User";
+export type Status = "Active" | "Inactive" | "Suspended";
 export const roleConfig: Record<string, { className: string }> = {
   "admin": { className: "bg-violet-50 text-violet-700 ring-1 ring-violet-200" },
   "supervisor": { className: "bg-blue-50 text-blue-700 ring-1 ring-blue-200" },
-  "responder": { className: "bg-amber-50 text-amber-700 ring-1 ring-amber-200" },
-  "user": { className: "bg-gray-100 text-gray-600 ring-1 ring-gray-200" },
+  "user": { className: "bg-amber-50 text-amber-700 ring-1 ring-amber-200" }
 };
 
 export const statusConfig: Record<string, { dot: string; className: string }> = {
@@ -16,7 +15,7 @@ export const statusConfig: Record<string, { dot: string; className: string }> = 
     dot: "bg-gray-300",
     className: "bg-gray-100 text-gray-500 ring-1 ring-gray-200",
   },
-  "Pending": {
+  "Suspended": {
     dot: "bg-amber-400",
     className: "bg-amber-50 text-amber-700 ring-1 ring-amber-200",
   },

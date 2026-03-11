@@ -13,6 +13,15 @@ import { BsThreeDots } from "react-icons/bs";
 import type { User } from "@/types/User";
 import { avatarHue, roleConfig, statusConfig } from "./constant";
 import { getUsers } from "@/services/getUsers";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const OldUsersTable: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -69,20 +78,35 @@ const OldUsersTable: React.FC = () => {
               />
             </div>
 
-            <select className="h-9 px-3 text-sm bg-gray-50 border border-gray-200 rounded-lg text-gray-600">
-              <option>All Roles</option>
-              <option>Admin</option>
-              <option>Manager</option>
-              <option>Responder</option>
-              <option>Viewer</option>
-            </select>
+            <Select>
+              <SelectTrigger className="h-9 px-3 w-min text-sm bg-gray-50 border border-gray-200 rounded-lg text-gray-600">
+                <SelectValue placeholder="Select Role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Roles</SelectLabel>
+                  <SelectItem value="all">All Roles</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="supervisor">Supervisor</SelectItem>
+                  <SelectItem value="user">User</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
 
-            <select className="h-9 px-3 text-sm bg-gray-50 border border-gray-200 rounded-lg text-gray-600">
-              <option>All Statuses</option>
-              <option>Active</option>
-              <option>Inactive</option>
-              <option>Pending</option>
-            </select>
+            <Select>
+              <SelectTrigger className="h-9 px-3 w-min text-sm bg-gray-50 border border-gray-200 rounded-lg text-gray-600">
+                <SelectValue placeholder="Select Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Statuses</SelectLabel>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                  <SelectItem value="suspended">Suspended</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -91,13 +115,7 @@ const OldUsersTable: React.FC = () => {
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50/80 border-b border-gray-100">
-                {[
-                  "User",
-                  "Role",
-                  "Status",
-                  "Joined",
-                  "",
-                ].map((col) => (
+                {["User", "Role", "Status", "Joined", ""].map((col) => (
                   <TableHead
                     key={col}
                     className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest py-3"
@@ -131,7 +149,7 @@ const OldUsersTable: React.FC = () => {
               {users.map((user, index) => {
                 const sc = statusConfig[user.status];
                 const rc = roleConfig[user.role];
-                console.log(rc, sc, user.role)
+                console.log(rc, sc, user.role);
 
                 return (
                   <TableRow
@@ -236,9 +254,7 @@ const OldUsersTable: React.FC = () => {
         <div className="px-6 py-3 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between">
           <p className="text-xs text-gray-400">
             Showing{" "}
-            <span className="font-semibold text-gray-600">
-              {users.length}
-            </span>{" "}
+            <span className="font-semibold text-gray-600">{users.length}</span>{" "}
             users
           </p>
 

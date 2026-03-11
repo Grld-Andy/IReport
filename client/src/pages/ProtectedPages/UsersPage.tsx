@@ -4,54 +4,7 @@ import { LuShield, LuUsers, LuUserCheck, LuUserX } from "react-icons/lu";
 import PageHeader from "@/components/custom/PageHeader";
 import { Button } from "@/components/ui/button";
 import OldUsersTable from "@/components/custom/UsersPage/OldUsersTable";
-
-// ─── Stat Card ────────────────────────────────────────────────────────────────
-function StatCard({
-  icon,
-  label,
-  value,
-  sub,
-  color,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string | number;
-  sub: string;
-  color: string;
-}) {
-  return (
-    <div
-      className="bg-white rounded-xl border border-gray-100 p-5 relative overflow-hidden"
-      style={{
-        boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)",
-      }}
-    >
-      <div
-        className="absolute top-0 left-0 right-0 h-[3px] rounded-t-xl"
-        style={{ background: color }}
-      />
-      <div
-        className="absolute bottom-[-20px] right-[-20px] w-20 h-20 rounded-full opacity-50"
-        style={{ background: color + "18" }}
-      />
-      <div className="text-2xl mb-3" style={{ color }}>
-        {icon}
-      </div>
-      <div
-        className="text-3xl font-bold text-gray-900 leading-none"
-        style={{ fontFamily: "'DM Mono', monospace" }}
-      >
-        {value}
-      </div>
-      <div className="text-[11px] text-gray-400 uppercase tracking-widest font-semibold mt-1">
-        {label}
-      </div>
-      <div className="text-[11px] font-semibold mt-2" style={{ color }}>
-        {sub}
-      </div>
-    </div>
-  );
-}
+import StatCard from "@/components/custom/UsersPage/StatCard";
 
 const UsersPage: React.FC = () => {
   return (
@@ -64,15 +17,9 @@ const UsersPage: React.FC = () => {
           subtitle="Manage access, roles, and team assignments across your incident
             response org"
         />
-        <Button
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:opacity-90 active:scale-95"
-          style={{
-            background: "#2563eb",
-            boxShadow: "0 2px 8px rgba(37,99,235,0.35)",
-          }}
-        >
+        <Button className="bg-green-500 hover:bg-green-600 text-white">
           <HiOutlineUserAdd size={16} />
-          Invite User
+          Add User
         </Button>
       </div>
 
@@ -109,7 +56,7 @@ const UsersPage: React.FC = () => {
       </div>
 
       {/* ── Table Card ── */}
-      <OldUsersTable/>
+      <OldUsersTable />
     </div>
   );
 };

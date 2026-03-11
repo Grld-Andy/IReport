@@ -9,18 +9,21 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
-  const { incidents } = useAppSelector((state) => state.incidents)
-  const [cardsData, setCardsData] = useState(generateDashboardCards(incidents))
+  const { incidents } = useAppSelector((state) => state.incidents);
+  const [cardsData, setCardsData] = useState(generateDashboardCards(incidents));
 
   useEffect(() => {
-    setCardsData(generateDashboardCards(incidents))
-  }, [incidents])
+    setCardsData(generateDashboardCards(incidents));
+  }, [incidents]);
 
   return (
     <div>
       <div className="flex justify-between gap-5">
         <div>
-          <PageHeader title="Welcome Back" subtitle="Plan, prioritize, and accomplish task with ease"/>
+          <PageHeader
+            title="Welcome Back"
+            subtitle="Plan, prioritize, and accomplish task with ease"
+          />
         </div>
 
         <div>
@@ -32,7 +35,16 @@ const Dashboard: React.FC = () => {
 
       {/* stats cards */}
       <div className="flex gap-3 overflow-x-scroll hide-scrollbar py-3 px-1">
-        {cardsData.map((item) => (
+        <StatsCard
+          cardDetails={{
+            title: "Total Incidents",
+            count: incidents.length,
+            percentage: 0,
+            color: "yellow",
+            isIncrese: true,
+          }}
+        />
+        {cardsData.slice(0,4).map((item) => (
           <StatsCard cardDetails={item} key={item.title} />
         ))}
       </div>
@@ -47,7 +59,7 @@ const Dashboard: React.FC = () => {
             </p>
           </div>
           <div className="bg-gray-50 p-5 flex flex-col gap-5 rounded-2xl border-[1px] border-black/10 shadow-sm">
-            <DashboardChart/>
+            <DashboardChart />
           </div>
         </div>
 
@@ -56,11 +68,9 @@ const Dashboard: React.FC = () => {
             <h1 className="font-bold text-[18px]">Activity Feed</h1>
           </div>
           <div className="bg-gray-50 p-5 flex flex-col gap-5 rounded-2xl border-[1px] border-black/10 shadow-sm">
-            {
-              activityFeeds.map((item, index) => (
-                <DashboardActivityFeed key={index} activity={item}/>
-              ))
-            }
+            {activityFeeds.map((item, index) => (
+              <DashboardActivityFeed key={index} activity={item} />
+            ))}
           </div>
         </div>
       </div>

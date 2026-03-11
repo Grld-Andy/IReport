@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { MdOutlineDelete } from 'react-icons/md';
 import { deleteIncident as deleteIncidentService } from '@/services/deleteIncident';
+import { toast } from 'sonner';
 
 interface Props{
     id: string
@@ -23,17 +24,15 @@ const DeleteIncidentModal: React.FC<Props> = ({id, deleteIncident}) => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
     const submitDelete = async () => {
-      try{
-        setIsSubmitting(true)
-        const result = await deleteIncidentService(id)
-        if(result){
-          deleteIncident(id)
-        }
-        setIsSubmitting(false)
-        setIsOpen(false)
-      }catch(e){
-        console.log("error deleting incident: ", e)
+      setIsSubmitting(true)
+      const {success, message} = await deleteIncidentService(id)
+      if(success){
+        deleteIncident(id)
+      }else{
+        toast.error(message, {position: "top-center"})
       }
+      setIsSubmitting(false)
+      setIsOpen(false)
     }
 
   return (

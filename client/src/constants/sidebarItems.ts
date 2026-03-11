@@ -24,6 +24,11 @@ export const sidebarItems: Array<NavItem> = [
       name: "Kanban Board",
       path: "/kanban",
     },
+  ];
+
+
+export const adminSidebarItems: Array<NavItem> = [
+  
     // {
     //   icon: IoBarChartOutline,
     //   activeIcon: IoBarChartSharp,
@@ -36,4 +41,4 @@ export const sidebarItems: Array<NavItem> = [
       name: "User Management",
       path: "/users",
     },
-  ];
+]
