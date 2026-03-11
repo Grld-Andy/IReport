@@ -1,0 +1,8 @@
+﻿{
+    "activity":  {
+                     "module":  {
+                                    "name":  "Activity",
+                                    "enabled":  true
+                                }
+                 }
+}

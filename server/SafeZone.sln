@@ -25,6 +25,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeZone.Modules.Comments.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeZone.Modules.Comments.Core", "src\Modules\Comments\SafeZone.Modules.Comments.Core\SafeZone.Modules.Comments.Core.csproj", "{3FEF9366-A508-4DE6-96A5-0A924986298C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Activity", "Activity", "{DFE97034-8FAE-99C7-73EA-22021F6EF371}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeZone.Modules.Activity.Api", "src\Modules\Activity\SafeZone.Modules.Activity.Api\SafeZone.Modules.Activity.Api.csproj", "{66C05B65-5E05-4C1B-8829-913F8168E920}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeZone.Modules.Activity.Core", "src\Modules\Activity\SafeZone.Modules.Activity.Core\SafeZone.Modules.Activity.Core.csproj", "{D4D22BDF-C403-4288-980A-528EFE065C0F}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{0EC62A1A-9858-3A60-8A0C-FC9AACFA2EC7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeZone.Modules.Identity.Api", "src\Modules\Identity\SafeZone.Modules.Identity.Api\SafeZone.Modules.Identity.Api.csproj", "{CDE560A6-0192-42E7-A5B6-21BFB6683BD0}"
