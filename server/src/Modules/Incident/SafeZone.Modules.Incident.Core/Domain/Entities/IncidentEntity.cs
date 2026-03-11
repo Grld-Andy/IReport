@@ -98,8 +98,8 @@ internal class IncidentEntity
 
     public void Resolve()
     {
-        if (Status != IncidentStatus.InProgress)
-            throw new BadRequestException("Only in-progress incidents can be resolved.");
+        if (Status == IncidentStatus.Open)
+            throw new BadRequestException("Open incidents cannot be resolved.");
 
         Status = IncidentStatus.Resolved;
         Touch();
@@ -117,7 +117,7 @@ internal class IncidentEntity
     public void InProgress()
     {
         if (Status == IncidentStatus.Open || !AssignedToId.HasValue)
-            throw new BadRequestException("Use Assign endpoint to move to InProgress");
+            throw new BadRequestException("Assign Incident before moving to In Progress");
 
         Status = IncidentStatus.InProgress;
         Touch();

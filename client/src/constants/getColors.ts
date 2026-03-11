@@ -1,3 +1,19 @@
+export const getRandomColor = () => {
+  const colors = [
+    "bg-gradient-to-r from-red-500 via-red-600 to-red-700 border-red-700 border text-white",
+    "bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 border-blue-700 border text-white",
+    "bg-gradient-to-r from-green-500 via-green-600 to-green-700 border-green-700 border text-white",
+    "bg-gradient-to-r from-yellow-500 via-yellow-500 to-yellow-500 border-yellow-700 border text-white",
+    "bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 border-purple-700 border text-white",
+    "bg-gradient-to-r from-pink-500 via-pink-600 to-pink-700 border-pink-700 border text-white",
+    "bg-gradient-to-r from-indigo-500 via-indigo-600 to-indigo-700 border-indigo-700 border text-white",
+    "bg-gradient-to-r from-teal-500 via-teal-600 to-teal-700 border-teal-700 border text-white",
+  ];
+
+  const randomIndex = Math.floor(Math.random() * colors.length);
+  return colors[randomIndex];
+};
+
 export const getSeverityColor = (color: string) => {
     switch (color) {
       case "Critical":

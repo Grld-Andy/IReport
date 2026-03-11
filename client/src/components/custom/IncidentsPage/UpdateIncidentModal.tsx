@@ -23,14 +23,8 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  IncidentSeverity,
-  severityOptions,
-} from "@/types/SeverityEnum";
-import {
-  categoryOptions,
-  IncidentCategory,
-} from "@/types/CategoryEnum";
+import { IncidentSeverity, severityOptions } from "@/types/SeverityEnum";
+import { categoryOptions, IncidentCategory } from "@/types/CategoryEnum";
 import { IncidentStatus, statusOptions } from "@/types/StatusEnum";
 import { apiUrl } from "@/constants";
 import { incidentSchema, type Incident } from "@/types/Incident";
@@ -41,6 +35,7 @@ import axios from "axios";
 import { CiEdit } from "react-icons/ci";
 import { useAppSelector } from "@/redux/app/hooks";
 import UserCombobox from "./UserCombobox";
+import { toast } from "sonner";
 
 export type IncidentForm = z.infer<typeof incidentSchema>;
 
@@ -104,15 +99,28 @@ export default function UpdateIncidentModal({
 
   const onSubmit = async (data: IncidentForm) => {
     try {
-      await axios.put(
+      const response = await axios.put(
         `${apiUrl}incidents/${incident.id}`,
         { ...data, assignedToId: data.assignedTo },
         { withCredentials: true },
       );
-      setIsOpen(false);
-      reset();
+
+      if (response.status == 204) {
+        setIsOpen(false);
+        reset();
+      } else {
+        toast.error("Update failed.", { position: "top-center" });
+      }
     } catch (err) {
-      console.error("Failed to update incident", err);
+      if (axios.isAxiosError(err)) {
+        const axiosErr = err;
+        const message =
+          axiosErr.response?.data?.errors?.map((e: {message: string}) => e.message).join(", ") ||
+          axiosErr.message;
+        toast.error(message, { position: "top-center" });
+      } else {
+        toast.error((err as Error)?.message, { position: "top-center" });
+      }
     }
   };
 
@@ -281,7 +289,11 @@ export default function UpdateIncidentModal({
                 className="w-full bg-amber-500 hover:bg-amber-600 text-white"
                 disabled={isSubmitting}
               >
-                {isSubmitting ?<div className="loader"></div> : "Update Incident"}
+                {isSubmitting ? (
+                  <div className="loader"></div>
+                ) : (
+                  "Update Incident"
+                )}
               </Button>
             </DialogFooter>
           </form>

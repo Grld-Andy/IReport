@@ -2,16 +2,23 @@ import React from "react";
 import { FaUser } from "react-icons/fa";
 import { GoBell } from "react-icons/go";
 import { MdOutlineEmail } from "react-icons/md";
-import SearchInput from "../ui/SearchInput";
+// import SearchInput from "../ui/SearchInput";
 import type { User } from "@/types/User";
 import { useAppSelector } from "@/redux/app/hooks";
+import { SiGoogleauthenticator } from "react-icons/si";
 
 const Navbar: React.FC = () => {
-  const user: User|null = useAppSelector((state) => state.auth.user);
-  
+  const user: User | null = useAppSelector((state) => state.auth.user);
+
   return (
     <nav className="px-5 py-3 bg-gray-100 rounded-lg w-full flex justify-between items-center gap-5">
-      <SearchInput/>
+      {/* <SearchInput/> */}
+      <div className="flex items-center justify-center gap-2 py-5">
+        <SiGoogleauthenticator size={25} />
+        <span className="text-[20px] font-bold font-serif">
+          SafeZone
+        </span>
+      </div>
 
       <div className="flex gap-2 items-center">
         <div className="grid place-content-center h-[35px] w-[35px] rounded-full bg-white">
@@ -27,7 +34,9 @@ const Navbar: React.FC = () => {
           </div>
           <div className="flex flex-col justify-between items-start py-1">
             <h3 className="text-black text-[1em] text-nowrap">{user?.name}</h3>
-            <p className="text-gray-800 text-[0.8em] text-nowrap">{user?.email}</p>
+            <p className="text-gray-800 text-[0.8em] text-nowrap">
+              {user?.email}
+            </p>
           </div>
         </div>
       </div>

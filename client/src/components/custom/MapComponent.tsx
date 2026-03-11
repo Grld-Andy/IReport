@@ -12,6 +12,7 @@ import "leaflet/dist/leaflet.css";
 import type { Incident } from "@/types/Incident";
 import { severityConfig, statusConfig } from "@/constants/getColors";
 import Badge from "./Badge";
+import { incidentIcon, meIcon } from "@/assets/Icon";
 
 interface Props {
   incidents: Array<Incident>;
@@ -44,46 +45,39 @@ const MapComponent: React.FC<Props> = ({ incidents, myLocation }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      <Marker position={persolCenter}>
-        <Popup className="">Default Location</Popup>
-      </Marker>
-
-      {incidents?.map((incident) => (
-        <Marker
-          key={incident.id}
-          position={{ lat: incident.latitude, lng: incident.longitude }}
-        >
-          <Popup>
-            <div className="">
-              <h1 className="text-lg font-semibold">{incident.subject}</h1>
-              <p className="text-md text-gray-700">{incident.description}</p>
-              <p className="text-gray-700">Category: {incident.category}</p>
-              <p>
-                Severity:{" "}
-                <Badge value={incident.severity} config={severityConfig} />
-              </p>
-              <p>
-                Status:{" "}
-                <Badge
-                  value={incident.status.toString()}
-                  config={statusConfig}
-                />
-              </p>
-              <p>Date Created: {new Date(incident.createdAt).toDateString()}</p>
-              <p>Created By: {incident.reporter.name}</p>
-            </div>
-          </Popup>
-        </Marker>
-      ))}
-
       {myLocation && (
         <>
-          <Marker position={myLocation}>
+          <Marker icon={meIcon} position={myLocation}>
             <Popup>My Current Location</Popup>
           </Marker>
           <FlyToLocation location={myLocation} />
         </>
       )}
+
+      {incidents?.map((incident) => (
+        <Marker
+        icon={incidentIcon}
+          key={incident.id}
+          position={{ lat: incident.latitude, lng: incident.longitude }}
+        >
+          <Popup>
+            <div className="">
+              <div className="flex gap-2">
+                <Badge value={incident.severity} config={severityConfig} />
+                <Badge
+                  value={incident.status.toString()}
+                  config={statusConfig}
+                />
+              </div>
+              <h1 className="text-lg font-semibold">{incident.subject}</h1>
+              <p className="text-md text-gray-700">{incident.description}</p>
+              <p className="text-gray-700">Category: {incident.category}</p>
+              <p className="">Created by {incident.reporter.name} on </p>
+              <p>{new Date(incident.createdAt).toDateString()}</p>
+            </div>
+          </Popup>
+        </Marker>
+      ))}
 
       <Rectangle bounds={persolArea} pathOptions={{ color: "blue" }} />
     </MapContainer>

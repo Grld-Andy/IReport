@@ -24,9 +24,9 @@ const Sidebar: React.FC = () => {
         {/* logo */}
         <div className="flex items-center justify-center gap-2 py-5">
           <SiGoogleauthenticator size={25} />
-          <span className="text-[20px] font-bold font-serif hidden md:block">
+          {/* <span className="text-[20px] font-bold font-serif hidden md:block">
             SafeZone
-          </span>
+          </span> */}
         </div>
 
         {/* navitems */}

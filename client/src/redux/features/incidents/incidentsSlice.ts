@@ -27,7 +27,6 @@ const incidentsSlice = createSlice({
                 if(i.id != action.payload.id){
                     return i;
                 }else{
-                    console.log("checking if data has assigned to id: ", action.payload)
                     return {...action.payload, updatedAt: new Date().toString()};
                 }
             })

@@ -5,17 +5,35 @@ export const updateIncidentStatus = async (id: string, status: number) => {
   try {
     const response = await axios.patch(
       `${apiUrl}incidents/${id}/status`,
-      {status},
-      { withCredentials: true },
+      { status },
+      { withCredentials: true }
     );
-    console.log(response);
-    if (response.status == 204) {
-      console.log("updated successfully")
-      return true;
+
+    if (response.status === 204) {
+      return { success: true, message: "Updated successfully" };
     }
-    return false;
+
+    return { success: false, message: "Unknown error" };
   } catch (err) {
-    console.error("Failed to update incident status", err);
-    return false;
+    if (axios.isAxiosError(err)) {
+      const axiosErr = err;
+      const status = axiosErr.response?.status;
+      // Usually the server returns an object like { errors: [...] }
+      const message =
+        axiosErr.response?.data?.errors?.map((e: {message: string}) => e.message).join(", ") ||
+        axiosErr.message;
+
+      return {
+        success: false,
+        status,
+        message,
+      };
+    } else {
+      return {
+        success: false,
+        status: null,
+        message: (err as Error)?.message || "Unknown error",
+      };
+    }
   }
 };

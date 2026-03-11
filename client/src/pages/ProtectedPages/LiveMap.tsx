@@ -3,11 +3,11 @@ import PageHeader from "@/components/custom/PageHeader";
 import { Button } from "@/components/ui/button";
 import { useAppSelector } from "@/redux/app/hooks";
 import React, { useState } from "react";
+import { toast } from "sonner";
 
 const LiveMap: React.FC = () => {
   const {incidents} = useAppSelector((state) => state.incidents)
   const [myLocation, setMyLocation] = useState<{ lat: number; lng: number } | null>(null);
-
 
   const handleGetLocation = () => {
     if (navigator.geolocation) {
@@ -20,11 +20,11 @@ const LiveMap: React.FC = () => {
         },
         (error) => {
           console.error("Error getting location:", error);
-          alert("Unable to get your location. Please allow location access.");
+          toast.error("Unable to get your location. Please allow location access.");
         }
       );
     } else {
-      alert("Geolocation is not supported by your browser.");
+      toast.error("Geolocation is not supported by your browser.");
     }
   };
 
