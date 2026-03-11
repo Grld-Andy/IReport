@@ -7,3 +7,8 @@ internal enum IncidentStatus
     Resolved = 3,
     Closed = 4
 }
+
+internal class IncidentStatusDto
+{
+    public int Status { get; set; } = 0;
+}

@@ -20,10 +20,10 @@ internal sealed class UpdateIncidentHandler
         incident.UpdateIncident(command);
 
         List<Guid> userIds = [incident.ReporterId];
-        if (incident.AssignedToId.HasValue)
+        if (command.AssignedToId.HasValue)
         {
-            userIds.Add(incident.AssignedToId.Value);
-            incident.AssignTo(incident.ReporterId);
+            userIds.Add(command.AssignedToId.Value);
+            incident.AssignTo(command.AssignedToId.Value);
         }
         var users = await userApiClient.GetUsersByIds(userIds);
         var usersDict = users.ToDictionary(u => u.Id);

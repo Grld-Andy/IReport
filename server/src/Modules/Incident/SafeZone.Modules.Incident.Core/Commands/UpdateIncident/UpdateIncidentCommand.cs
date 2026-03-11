@@ -6,5 +6,5 @@ internal record UpdateIncidentCommand(
     string Description,
     IncidentSeverity Severity,
     IncidentCategory Category,
-    Guid AssignedToId
+    Guid? AssignedToId
 ) : ICommand;

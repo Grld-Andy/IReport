@@ -108,22 +108,9 @@ export default function UpdateIncidentModal({
 
   const onSubmit = async (data: IncidentForm) => {
     try {
-      const position = await new Promise<GeolocationPosition>(
-        (resolve, reject) => {
-          if (!navigator.geolocation) {
-            reject(new Error("Geolocation is not supported by your browser"));
-          } else {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-          }
-        },
-      );
-
-      const { latitude, longitude } = position.coords;
-      console.log("data being updated: ", data)
-
       await axios.put(
         `${apiUrl}incidents/${incident.id}`,
-        { ...data, latitude, longitude, assignedToId: data.assignedTo },
+        { ...data, assignedToId: data.assignedTo },
         { withCredentials: true },
       );
 

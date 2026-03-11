@@ -114,6 +114,22 @@ internal class IncidentEntity
         Touch();
     }
 
+    public void InProgress()
+    {
+        if (Status == IncidentStatus.Open || !AssignedToId.HasValue)
+            throw new BadRequestException("Use Assign endpoint to move to InProgress");
+
+        Status = IncidentStatus.InProgress;
+        Touch();
+    }
+
+    public void Open()
+    {
+        Status = IncidentStatus.Open;
+        AssignedToId = null;
+        Touch();
+    }
+
     public void Close()
     {
         if (Status != IncidentStatus.Resolved)
