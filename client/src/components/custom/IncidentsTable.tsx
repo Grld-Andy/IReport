@@ -29,6 +29,7 @@ const IncidentsTable: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [search, setSearch] = useState("");
   const stateTotalIncidents = useAppSelector((state) => state.incidents.totalIncidents)
+  const stateIncidents = useAppSelector((state) => state.incidents.incidents)
 
   const navigate = useNavigate();
   const { page } = useParams();
@@ -59,11 +60,14 @@ const IncidentsTable: React.FC = () => {
     navigate(`/incidents/${pageTo}`);
   };
 
-  const updateIncident = (incident: Incident) => {
+  useEffect(() => {
     setIncidents((prev) =>
-      prev.map((i) => (i.id === incident.id ? incident : i)),
+      prev.map((incident) => {
+        const updated = stateIncidents.find((s) => s.id === incident.id);
+        return updated ?? incident;
+      })
     );
-  };
+  }, [stateIncidents]);
 
   const deleteIncident = (id: string) => {
     setIncidents((prev) => prev.filter((i) => i.id !== id));
@@ -230,7 +234,7 @@ const IncidentsTable: React.FC = () => {
                   <TableCell className="flex gap-1">
                     <UpdateIncidentModal
                       incident={incident}
-                      updateIncident={updateIncident}
+                      // updateIncident={updateIncident}
                     />
                     <DeleteIncidentModal
                       id={incident.id}

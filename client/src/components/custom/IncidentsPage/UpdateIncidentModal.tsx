@@ -25,15 +25,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   IncidentSeverity,
-  severityArray,
   severityOptions,
 } from "@/types/SeverityEnum";
 import {
-  categoryArray,
   categoryOptions,
   IncidentCategory,
 } from "@/types/CategoryEnum";
-import { IncidentStatus, statusArray, statusOptions } from "@/types/StatusEnum";
+import { IncidentStatus, statusOptions } from "@/types/StatusEnum";
 import { apiUrl } from "@/constants";
 import { incidentSchema, type Incident } from "@/types/Incident";
 import { useForm } from "react-hook-form";
@@ -48,12 +46,10 @@ export type IncidentForm = z.infer<typeof incidentSchema>;
 
 interface IncidentUpdateModalProps {
   incident: Incident;
-  updateIncident: (incident: Incident) => void;
 }
 
 export default function UpdateIncidentModal({
   incident,
-  updateIncident,
 }: IncidentUpdateModalProps) {
   const users = useAppSelector((state) => state.users.users);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -113,18 +109,6 @@ export default function UpdateIncidentModal({
         { ...data, assignedToId: data.assignedTo },
         { withCredentials: true },
       );
-
-      const updatedIncident = {
-        id: incident.id,
-        subject: data.subject,
-        description: data.description,
-        locationDetails: data.locationDetails || incident.locationDetails,
-        status: statusArray[data.status ? data.status - 1 : 1],
-        category: categoryArray[data.category ? data.category - 1 : 1],
-        severity: severityArray[data.severity ? data.severity - 1 : 1],
-        updatedAt: new Date().toISOString(),
-      };
-      updateIncident({ ...incident, ...updatedIncident });
       setIsOpen(false);
       reset();
     } catch (err) {
