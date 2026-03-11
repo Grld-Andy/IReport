@@ -8,6 +8,6 @@ internal class GetAssignedIncidentsHandler(IIncidentRepository incidentRepositor
         GetAssignedIncidentsQuery query,
         CancellationToken cancellationToken = default)
     {
-        return await _incidentRepository.GetAllIncidents(query, new Dictionary<string, string>(){{"userId", query.UserId.ToString()}, {"status", "closed"}}, cancellationToken);
+        return await _incidentRepository.GetAllIncidents(query, query.OrderBy, query.SortOrder, new Dictionary<string, string>(){{"userId", query.UserId.ToString()}, {"status", "closed"}}, cancellationToken);
     }
 }

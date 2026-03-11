@@ -1,11 +1,9 @@
-using SafeZone.Modules.Incident.Core.Queries.GetIncidents;
-
 namespace SafeZone.Modules.Incident.Core.Domain.Repositories;
 
 internal interface IIncidentRepository
 {
     Task<IncidentEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<Paged<IncidentDto>> GetAllIncidents(GetIncidentsQuery query, Dictionary<string, string>? filters, CancellationToken cancellation = default);
+    Task<Paged<IncidentDto>> GetAllIncidents(IPagedQuery query, string orderBy, string sortOrder, Dictionary<string, string>? filters, CancellationToken cancellation = default);
     Task AddAsync(IncidentEntity incident, CancellationToken cancellationToken = default);
     Task UpdateAsync(IncidentEntity incident, CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default);

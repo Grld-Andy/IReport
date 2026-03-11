@@ -36,7 +36,7 @@ internal sealed class IncidentRepository(IncidentDbContext _context, IUserApiCli
             .AnyAsync(x => x.Id == id, cancellationToken);
     }
 
-    public async Task<Paged<IncidentDto>> GetAllIncidents(GetIncidentsQuery query, Dictionary<string, string>? filters, CancellationToken cancellationToken = default)
+    public async Task<Paged<IncidentDto>> GetAllIncidents(IPagedQuery query, string orderBy, string sortOrder, Dictionary<string, string>? filters, CancellationToken cancellationToken = default)
     {
         var incidentsQuery = context.Incidents
             .AsNoTracking()
@@ -67,16 +67,14 @@ internal sealed class IncidentRepository(IncidentDbContext _context, IUserApiCli
             }
         }
 
-        // sort
-        var orderBy = query.OrderBy ?? "-createdAt";
-        var descending = orderBy.StartsWith("-");
-        var field = descending ? orderBy[1..] : orderBy;
-
-        incidentsQuery = field.ToLower() switch
+        incidentsQuery = (orderBy, sortOrder) switch
         {
-            "createdat" => descending ? incidentsQuery.OrderByDescending(x => x.CreatedAt) : incidentsQuery.OrderBy(x => x.CreatedAt),
-            "severity" => descending ? incidentsQuery.OrderByDescending(x => x.Severity) : incidentsQuery.OrderBy(x => x.Severity),
-            "category" => descending ? incidentsQuery.OrderByDescending(x => x.Category) : incidentsQuery.OrderBy(x => x.Category),
+            ("createdat", "asc") => incidentsQuery.OrderBy(x => x.CreatedAt),
+            ("-createdat", "desc") => incidentsQuery.OrderByDescending(x => x.CreatedAt),
+            ("severity", "asc") => incidentsQuery.OrderBy(x => x.Severity),
+            ("-severity", "desc") => incidentsQuery.OrderByDescending(x => x.Severity),
+            ("category", "asc") => incidentsQuery.OrderBy(x => x.Category),
+            ("-category", "desc") => incidentsQuery.OrderByDescending(x => x.Category),
             _ => incidentsQuery.OrderByDescending(x => x.CreatedAt)
         };
 

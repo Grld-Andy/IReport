@@ -13,6 +13,6 @@ internal class GetIncidentsHandler(IIncidentRepository _incidentsRepo) : IQueryH
         {
             dict = new Dictionary<string, string>(){{"filter", query.Filter}};
         }
-        return await incidentsRepo.GetAllIncidents(query, dict, cancellationToken);
+        return await incidentsRepo.GetAllIncidents(query, query.OrderBy, query.SortOrder, dict, cancellationToken);
     }
 }

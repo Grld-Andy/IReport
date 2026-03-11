@@ -11,6 +11,8 @@ export const getIncidents = async (page:number, filter = "", orderBy?: string) =
   }
   if(orderBy?.startsWith("-")){
     url += "&sortOrder=desc"
+  }else{
+    url += "&sortOrder=asc"
   }
   const response = await axios.get(url)
   const result: Array<Incident> = response.data.items
