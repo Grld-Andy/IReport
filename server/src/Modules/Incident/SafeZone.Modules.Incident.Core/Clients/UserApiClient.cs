@@ -1,4 +1,3 @@
-using System.Reflection;
 using SafeZone.Modules.Incident.Core.Clients.DTO;
 using SafeZone.Shared.Abstractions.Modules;
 

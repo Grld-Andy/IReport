@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
 
-namespace SafeZone.Shared.Infrastructure.SignalR.ActivityHub;
+namespace SafeZone.Shared.Infrastructure.SignalR.ActivitiesHub;
 
 public class ActivityHub : Hub{}

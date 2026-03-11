@@ -14,6 +14,7 @@ internal static class Extensions
     {
         services
             .AddSingleton<IUserApiClient, UserApiClient>()
+            .AddSingleton<IActivityApiClient, ActivityApiClient>()
             .AddScoped<IIncidentRepository, IncidentRepository>()
             .AddPostgres<IncidentDbContext>(configuration);
         return services;
