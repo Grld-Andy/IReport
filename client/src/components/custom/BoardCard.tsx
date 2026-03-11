@@ -48,20 +48,20 @@ const BoardCard: React.FC<Props> = ({ incident }) => {
           <div className="flex gap-2">
             <div
               className="w-[30px] h-[30px] grid place-content-center text-white bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full overflow-hidden"
-              title={incident.reporter.name.charAt(0).toUpperCase()}
+              title={incident.assignedTo.name.charAt(0).toUpperCase()}
             >
-              {incident.reporter.name.charAt(0).toUpperCase()}
+              {incident.assignedTo.name.charAt(0).toUpperCase()}
             </div>
             <div>
               <p className="text-xs text-gray-500 text-nowrap">
-                {new Date(incident.createdAt).toLocaleDateString("en-GB", {
+                {new Date(incident.updatedAt).toLocaleDateString("en-GB", {
                   day: "2-digit",
                   month: "short",
                   year: "numeric",
                 })}
               </p>
               <p className="text-xs text-gray-500 text-nowrap">
-                {new Date(incident.createdAt).toLocaleTimeString([], {
+                {new Date(incident.updatedAt).toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}

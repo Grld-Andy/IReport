@@ -2,12 +2,15 @@ import { apiUrl } from "@/constants"
 import type { Incident } from "@/types/Incident"
 import axios from "axios"
 
-export const getIncidents = async (page:number, filter = "", orderBy?: string, sortOrder?: string) => {
+export const getIncidents = async (page:number, filter = "", orderBy?: string) => {
   let url = ""
   if(filter){
-    url = `${apiUrl}incidents?page=${page}&filter=${filter}&orderBy=${orderBy}&sortOrder=${sortOrder}`
+    url = `${apiUrl}incidents?page=${page}&filter=${filter}&orderBy=${orderBy}`
   }else{
-    url = `${apiUrl}incidents?page=${page}&orderBy=${orderBy}&sortOrder=${sortOrder}`
+    url = `${apiUrl}incidents?page=${page}&orderBy=${orderBy}`
+  }
+  if(orderBy?.startsWith("-")){
+    url += "&sortOrder=desc"
   }
   const response = await axios.get(url)
   const result: Array<Incident> = response.data.items

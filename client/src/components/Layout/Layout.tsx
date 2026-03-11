@@ -49,7 +49,7 @@ const Layout: React.FC = () => {
     return <Navigate to="/auth/login" replace />;
   }
 
-  if(user.role != 'admin' && location.pathname.includes("/users")){
+  if(user.role != 'admin' && (location.pathname.includes("/users") || location.pathname.includes("/reports"))){
     return <NotFound/>
   }
 

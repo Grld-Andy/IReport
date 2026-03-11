@@ -1,46 +1,29 @@
-import { Button } from "@/components/ui/button";
-import { FieldGroup, Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import {
-  Popover,
-  PopoverContent,
-  PopoverDescription,
-  PopoverHeader,
-  PopoverTitle,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectLabel,
+  SelectItem,
+} from "@/components/ui/select";
 
 const FilterButton = () => {
   return (
-    <div>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">Filter</Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-64" align="start">
-          <PopoverHeader>
-            <PopoverTitle>Dimensions</PopoverTitle>
-            <PopoverDescription>
-              Set the dimensions for the layer.
-            </PopoverDescription>
-          </PopoverHeader>
-          <FieldGroup className="gap-4">
-            <Field orientation="horizontal">
-              <FieldLabel htmlFor="width" className="w-1/2">
-                Width
-              </FieldLabel>
-              <Input id="width" defaultValue="100%" />
-            </Field>
-            <Field orientation="horizontal">
-              <FieldLabel htmlFor="height" className="w-1/2">
-                Height
-              </FieldLabel>
-              <Input id="height" defaultValue="25px" />
-            </Field>
-          </FieldGroup>
-        </PopoverContent>
-      </Popover>
-    </div>
+    <Select>
+      <SelectTrigger className="h-9 px-3 w-min text-sm bg-gray-50 border border-gray-200 rounded-lg text-gray-600">
+        <SelectValue placeholder="Select Status" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel>Order</SelectLabel>
+          <SelectItem value="all">Date Created</SelectItem>
+          <SelectItem value="active">Active</SelectItem>
+          <SelectItem value="inactive">Inactive</SelectItem>
+          <SelectItem value="suspended">Suspended</SelectItem>
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   );
 };
 

@@ -5,8 +5,14 @@ import PageHeader from "@/components/custom/PageHeader";
 import { Button } from "@/components/ui/button";
 import OldUsersTable from "@/components/custom/UsersPage/OldUsersTable";
 import StatCard from "@/components/custom/UsersPage/StatCard";
+import { useAppSelector } from "@/redux/app/hooks";
 
 const UsersPage: React.FC = () => {
+  const {users, totalUsers} = useAppSelector((state) => state.users)
+  const activeUsers = users.filter(u => u.status == 'Active').length
+  const inactiveUsers = users.filter(u => u.status == 'Inactive').length
+  const suspendedUsers = users.filter(u => u.status == 'Suspended').length
+
   return (
     <div className="flex flex-col gap-5">
       {/* ── Page Header ── */}
@@ -28,28 +34,28 @@ const UsersPage: React.FC = () => {
         <StatCard
           icon={<LuUsers />}
           label="Total Users"
-          value={10}
+          value={users.length}
           sub="Across all teams"
           color="#2563eb"
         />
         <StatCard
           icon={<LuUserCheck />}
           label="Active"
-          value={7}
-          sub={`${Math.round((7 / 10) * 100)}% of workforce`}
+          value={activeUsers}
+          sub={`${Math.round((activeUsers / totalUsers) * 100)}% of workforce`}
           color="#059669"
         />
         <StatCard
           icon={<LuUserX />}
-          label="Inactive"
-          value={2}
+          label="Suspended"
+          value={suspendedUsers}
           sub="Access suspended"
           color="#94a3b8"
         />
         <StatCard
           icon={<LuShield />}
           label="Pending Invite"
-          value={1}
+          value={inactiveUsers}
           sub="Awaiting first login"
           color="#d97706"
         />

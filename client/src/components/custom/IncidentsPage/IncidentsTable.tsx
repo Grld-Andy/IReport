@@ -8,7 +8,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import SortButton from "./SortButton";
-import FilterButton from "./FilterButton";
 import { Input } from "@/components/ui/input";
 import { CiSearch } from "react-icons/ci";
 import Badge from "../Badge";
@@ -21,6 +20,7 @@ import { Button } from "../../ui/button";
 import UpdateIncidentModal from "./UpdateIncidentModal";
 import DeleteIncidentModal from "./DeleteIncidentModal";
 import { useAppSelector } from "@/redux/app/hooks";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const IncidentsTable: React.FC = () => {
   const [incidents, setIncidents] = useState<Incident[]>([]);
@@ -28,30 +28,36 @@ const IncidentsTable: React.FC = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
-  const [sortOrder, setSortOrder] = useState<string>("")
-  const [orderBy, setOrderBy] = useState<string>("")
-  const stateTotalIncidents = useAppSelector((state) => state.incidents.totalIncidents)
-  const stateIncidents = useAppSelector((state) => state.incidents.incidents)
+  const [orderBy, setOrderBy] = useState<string>("");
+  const stateTotalIncidents = useAppSelector(
+    (state) => state.incidents.totalIncidents,
+  );
+  const stateIncidents = useAppSelector((state) => state.incidents.incidents);
 
   const navigate = useNavigate();
   const { page } = useParams();
+  const debouncedSearch = useDebounce(search, 500);
 
   const currentPage = Math.max(1, Number(page) || 1);
 
   const fetchIncidents = useCallback(async () => {
     try {
       setLoading(true);
-      const result = await getIncidents(currentPage, search, orderBy, sortOrder);
+      const result = await getIncidents(
+        currentPage,
+        debouncedSearch,
+        orderBy,
+      );
       setIncidents(result.incidents ?? []);
       setTotalIncidents(result.totalIncidents ?? 0);
       setTotalPages(result.totalPages ?? 1);
-      console.log(result)
+      console.log(result);
     } catch (error) {
       console.error("Failed to fetch incidents:", error);
     } finally {
       setLoading(false);
     }
-  }, [currentPage, orderBy, search, sortOrder]);
+  }, [currentPage, orderBy, debouncedSearch]);
 
   useEffect(() => {
     fetchIncidents();
@@ -67,7 +73,7 @@ const IncidentsTable: React.FC = () => {
       prev.map((incident) => {
         const updated = stateIncidents.find((s) => s.id === incident.id);
         return updated ?? incident;
-      })
+      }),
     );
   }, [stateIncidents]);
 
@@ -86,7 +92,7 @@ const IncidentsTable: React.FC = () => {
 
   const searchIncidents = async () => {
     fetchIncidents();
-  }
+  };
 
   return (
     <div className="flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -116,8 +122,7 @@ const IncidentsTable: React.FC = () => {
           </div>
 
           <div className="flex gap-2">
-            <SortButton />
-            <FilterButton />
+            <SortButton orderBy={orderBy} setOrderBy={setOrderBy} />
           </div>
         </div>
       </div>
@@ -196,10 +201,7 @@ const IncidentsTable: React.FC = () => {
 
                   {/* Severity */}
                   <TableCell>
-                    <Badge
-                      value={incident.severity}
-                      config={severityConfig}
-                    />
+                    <Badge value={incident.severity} config={severityConfig} />
                   </TableCell>
 
                   {/* Category */}
@@ -233,14 +235,16 @@ const IncidentsTable: React.FC = () => {
 
                   {/* Last Updated */}
                   <TableCell className="text-sm text-gray-500 whitespace-nowrap">
-                    {new Date(incident.updatedAt).toLocaleDateString()}
+                    {new Date(incident.updatedAt).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
                   </TableCell>
 
                   {/* Actions */}
                   <TableCell className="flex gap-1">
-                    <UpdateIncidentModal
-                      incident={incident}
-                    />
+                    <UpdateIncidentModal incident={incident} />
                     <DeleteIncidentModal
                       id={incident.id}
                       deleteIncident={deleteIncident}

@@ -12,7 +12,7 @@ const Sidebar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.auth.user);
-  const sidebarNaivgation = user?.role == 'admin' ? sidebarItems : [...sidebarItems, ...adminSidebarItems]
+  const sidebarNaivgation = user?.role != 'admin' ? sidebarItems : [...sidebarItems, ...adminSidebarItems]
 
   const logout = async () => {
     await axios.post(`${apiUrl}auth/logout`, {}, { withCredentials: true });

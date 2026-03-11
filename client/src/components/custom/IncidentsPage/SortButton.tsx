@@ -1,46 +1,56 @@
-import { Button } from "@/components/ui/button";
-import { FieldGroup, Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import {
-  Popover,
-  PopoverContent,
-  PopoverDescription,
-  PopoverHeader,
-  PopoverTitle,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectLabel,
+  SelectItem,
+} from "@/components/ui/select";
 
-const SortButton = () => {
+interface Props {
+  orderBy: string;
+  setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const SortButton: React.FC<Props> = ({ orderBy, setOrderBy }) => {
   return (
-    <div>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline">Sort</Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-64" align="start">
-          <PopoverHeader>
-            <PopoverTitle>Dimensions</PopoverTitle>
-            <PopoverDescription>
-              Set the dimensions for the layer.
-            </PopoverDescription>
-          </PopoverHeader>
-          <FieldGroup className="gap-4">
-            <Field orientation="horizontal">
-              <FieldLabel htmlFor="width" className="w-1/2">
-                Width
-              </FieldLabel>
-              <Input id="width" defaultValue="100%" />
-            </Field>
-            <Field orientation="horizontal">
-              <FieldLabel htmlFor="height" className="w-1/2">
-                Height
-              </FieldLabel>
-              <Input id="height" defaultValue="25px" />
-            </Field>
-          </FieldGroup>
-        </PopoverContent>
-      </Popover>
-    </div>
+    <Select value={orderBy} onValueChange={setOrderBy}>
+      <SelectTrigger className="h-9 px-3 w-[150px] text-sm bg-gray-50 border border-gray-200 rounded-lg text-gray-600">
+        <SelectValue placeholder="Sort By" />
+      </SelectTrigger>
+
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel>Sort</SelectLabel>
+
+          <SelectItem value="createdAt">
+            Created At (Oldest)
+          </SelectItem>
+
+          <SelectItem value="-createdAt">
+            Created At (Newest)
+          </SelectItem>
+
+          <SelectItem value="severity">
+            Severity (Low → High)
+          </SelectItem>
+
+          <SelectItem value="-severity">
+            Severity (High → Low)
+          </SelectItem>
+
+          <SelectItem value="category">
+            Category (A → Z)
+          </SelectItem>
+
+          <SelectItem value="-category">
+            Category (Z → A)
+          </SelectItem>
+
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   );
 };
 
