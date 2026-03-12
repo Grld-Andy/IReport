@@ -15,6 +15,7 @@ internal sealed class UpdateIncidentHandler
         UpdateIncidentCommand command,
         CancellationToken cancellationToken = default)
     {
+        System.Console.WriteLine($"================ assigned to id: {command.AssignedToId.HasValue}");
         var incident = await repository.GetByIdAsync(
             command.IncidentId, cancellationToken) ?? throw new NotFoundException("Incident", command.IncidentId);
         incident.UpdateIncident(command);

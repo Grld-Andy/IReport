@@ -23,29 +23,38 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { IncidentSeverity, severityOptions } from "@/types/SeverityEnum";
-import { categoryOptions, IncidentCategory } from "@/types/CategoryEnum";
-import { IncidentStatus, statusOptions } from "@/types/StatusEnum";
-import { apiUrl } from "@/constants";
+import {
+  IncidentSeverity,
+  severityArray,
+  severityOptions,
+} from "@/types/SeverityEnum";
+import {
+  categoryArray,
+  categoryOptions,
+  IncidentCategory,
+} from "@/types/CategoryEnum";
+import { IncidentStatus, statusArray, statusOptions } from "@/types/StatusEnum";
 import { incidentSchema, type Incident } from "@/types/Incident";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState, type ReactNode } from "react";
-import axios from "axios";
 import { useAppSelector } from "@/redux/app/hooks";
 import UserCombobox from "./UserCombobox";
 import { toast } from "sonner";
+import { updateIncident } from "@/services/updateIncident";
 
 export type IncidentForm = z.infer<typeof incidentSchema>;
 
 interface IncidentUpdateModalProps {
   incident: Incident;
   trigger: ReactNode;
+  onUpdate?: (incident: Incident) => void;
 }
 
 export default function UpdateIncidentModal({
   incident,
   trigger,
+  onUpdate,
 }: IncidentUpdateModalProps) {
   const users = useAppSelector((state) => state.users.users);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -99,29 +108,35 @@ export default function UpdateIncidentModal({
   };
 
   const onSubmit = async (data: IncidentForm) => {
-    try {
-      const response = await axios.put(
-        `${apiUrl}incidents/${incident.id}`,
-        { ...data, assignedToId: data.assignedTo },
-        { withCredentials: true },
-      );
 
-      if (response.status == 204) {
-        setIsOpen(false);
-        reset();
+    console.log("form data to submit: ", data)
+    const response = await updateIncident(data, incident.id);
+    console.log(response)
+
+    if (response.success) {
+      // update for kanban board
+      if (onUpdate) {
+        const updatedIncident = {
+          ...incident,
+          ...data,
+          assignedTo: users.find((u) => u.id === data.assignedTo) || null,
+        };
+
+        console.log("updated incident =============== ", updatedIncident);
+        onUpdate?.({
+          ...updatedIncident,
+          status: statusArray[Number(updatedIncident.status) - 1],
+          category: categoryArray[updatedIncident.category - 1],
+          severity: severityArray[updatedIncident.severity - 1],
+          assignedTo: {
+            email: updatedIncident.assignedTo?.email ?? "",
+            name: updatedIncident.assignedTo?.name ?? "",
+            id: updatedIncident.assignedTo?.id ?? "",
+          },
+        });
+        setIsOpen(false)
       } else {
-        toast.error("Update failed.", { position: "top-center" });
-      }
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        const axiosErr = err;
-        const message =
-          axiosErr.response?.data?.errors
-            ?.map((e: { message: string }) => e.message)
-            .join(", ") || axiosErr.message;
-        toast.error(message, { position: "top-center" });
-      } else {
-        toast.error((err as Error)?.message, { position: "top-center" });
+        toast.error(response.message, { position: "top-center" });
       }
     }
   };
@@ -164,8 +179,8 @@ export default function UpdateIncidentModal({
                   <Label htmlFor="category">Category</Label>
                   <Select
                     defaultValue={IncidentCategory[
-                      incident.category as unknown as keyof typeof IncidentCategory
-                    ].toString()}
+                      incident?.category as unknown as keyof typeof IncidentCategory
+                    ]?.toString()}
                     onValueChange={(val) => setValue("category", Number(val))}
                   >
                     <SelectTrigger className="w-full">
@@ -193,8 +208,8 @@ export default function UpdateIncidentModal({
                   <Label htmlFor="severity">Severity</Label>
                   <Select
                     defaultValue={IncidentSeverity[
-                      incident.severity as unknown as keyof typeof IncidentSeverity
-                    ].toString()}
+                      incident?.severity as unknown as keyof typeof IncidentSeverity
+                    ]?.toString()}
                     onValueChange={(val) => setValue("severity", Number(val))}
                   >
                     <SelectTrigger className="w-full">

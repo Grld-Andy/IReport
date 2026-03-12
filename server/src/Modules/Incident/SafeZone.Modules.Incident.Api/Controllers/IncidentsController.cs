@@ -57,7 +57,9 @@ internal class IncidentsController(IDispatcher _dispatcher, IContext _context) :
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateIncident([FromRoute] Guid id, [FromBody] UpdateIncidentCommand command)
     {
+        System.Console.WriteLine("============== got comand");
         command = command with { IncidentId = id };
+        System.Console.WriteLine("============== submitting data");
         await dispatcher.SendAsync(command);
         return NoContent();
     }

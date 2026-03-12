@@ -4,6 +4,8 @@ export const getAxiosError = (err: unknown) => {
     if (axios.isAxiosError(err)) {
       const axiosErr = err;
       const status = axiosErr.response?.status;
+      console.log(err)
+      console.log(axiosErr.response)
       const message =
         axiosErr.response?.data?.errors
           ?.map((e: { message: string }) => e.message)

@@ -16,10 +16,11 @@ import UpdateIncidentModal from "./IncidentsPage/UpdateIncidentModal";
 
 interface Props {
   incident: Incident;
+  onDelete: (id: string) => void;
+  onUpdate: (incident: Incident) => void;
 }
 
-const BoardCard: React.FC<Props> = ({ incident }) => {
-
+const BoardCard: React.FC<Props> = ({ incident, onDelete, onUpdate }) => {
   return (
     <div
       key={incident.id}
@@ -30,12 +31,12 @@ const BoardCard: React.FC<Props> = ({ incident }) => {
           <div
             className={`${getSeverityColor(
               incident.severity.toString(),
-            )} border-0 font-semibold w-min rounded-full px-2 text-sm`}
+            )} border-0 font-semibold w-min rounded-full flex items-center px-2 text-sm`}
           >
             {incident.severity}
           </div>
           <div
-            className={`bg-gray-200 text-black border-[1px] font-semibold w-min rounded-full px-4 text-sm`}
+            className={`bg-gray-200 flex items-center text-black border-[1px] font-semibold w-min rounded-full px-4 text-sm`}
           >
             {incident.category}
           </div>
@@ -52,10 +53,23 @@ const BoardCard: React.FC<Props> = ({ incident }) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuGroup>
-              <UpdateIncidentModal incident={incident} trigger={<DropdownMenuItem onSelect={(e) => e.preventDefault()}>Edit</DropdownMenuItem>}/>
+              <UpdateIncidentModal
+                onUpdate={onUpdate}
+                incident={incident}
+                trigger={
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    Edit
+                  </DropdownMenuItem>
+                }
+              />
               <DeleteIncidentModal
+                deleteIncident={onDelete}
                 id={incident.id}
-                trigger={<DropdownMenuItem onSelect={(e) => e.preventDefault()}>Delete</DropdownMenuItem>}
+                trigger={
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    Delete
+                  </DropdownMenuItem>
+                }
               />
             </DropdownMenuGroup>
           </DropdownMenuContent>
@@ -71,7 +85,7 @@ const BoardCard: React.FC<Props> = ({ incident }) => {
         Reported By: {incident.reporter.name}
       </p>
 
-      {incident.assignedTo && incident.status != "open" && (
+      {incident.assignedTo && incident.status != "Open" && (
         <div className="flex justify-between items-center mt-3">
           <div className="flex gap-2">
             <div

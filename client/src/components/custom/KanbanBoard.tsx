@@ -62,7 +62,7 @@ const KanbanBoard: React.FC = () => {
       return;
     }
 
-    toast.error(result.message, { position: "top-center" })
+    toast.error(result.message, { position: "top-center" });
 
     setBoard((prev) => {
       const targetList = [...prev[toColumn]];
@@ -85,13 +85,44 @@ const KanbanBoard: React.FC = () => {
     setDragSource(null);
   };
 
+  const deleteIncidentFromBoard = (id: string) => {
+    setBoard((prev) => {
+      const updated = { ...prev };
+
+      (Object.keys(updated) as ColumnKey[]).forEach((col) => {
+        updated[col] = updated[col].filter((incident) => incident.id !== id);
+      });
+
+      return updated;
+    });
+  };
+
+  const updateIncidentInBoard = (updatedIncident: Incident) => {
+    setBoard((prev) => {
+      const updated = { ...prev };
+
+      (Object.keys(updated) as ColumnKey[]).forEach((col) => {
+        updated[col] = updated[col].filter((i) => i.id !== updatedIncident.id);
+      });
+
+      const column = updatedIncident.status as ColumnKey;
+
+      console.log("checking updated data")
+      console.log(column)
+      console.log(updated)
+      updated[column].unshift(updatedIncident);
+
+      return updated;
+    });
+  };
+
   return (
     <div className="py-2 rounded-lg">
       <div className="flex gap-2 overflow-x-auto hide-scrollbar">
         {columns.map((column) => (
           <div
             key={column.value}
-            className="bg-gray-100 p-3 border rounded-xl w-[300px] flex-shrink-0"
+            className="bg-gray-100 p-3 border rounded-xl w-[340px] flex-shrink-0"
           >
             <div className="flex justify-between items-center pb-2">
               <h2 className="text-lg font-semibold">{column.name}</h2>
@@ -117,7 +148,11 @@ const KanbanBoard: React.FC = () => {
               >
                 {board[column.value as ColumnKey].map((incident) => (
                   <div key={incident.id} data-id={incident.id}>
-                    <BoardCard incident={incident} />
+                    <BoardCard
+                      incident={incident}
+                      onDelete={deleteIncidentFromBoard}
+                      onUpdate={updateIncidentInBoard}
+                    />
                   </div>
                 ))}
               </ReactSortable>
