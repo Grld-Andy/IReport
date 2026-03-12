@@ -1,8 +1,4 @@
-using SafeZone.Modules.Incident.Core.Events;
-using SafeZone.Modules.Incident.Core.Events.External;
-using SafeZone.Shared.Abstractions.Messaging;
-using SafeZone.Shared.Infrastructure.SignalR.ActivitiesHub.ActivityCreated;
-// using SafeZone.Shared.Infrastructure.SignalR.ActivitiesHub.ActivityCreated;
+
 
 namespace SafeZone.Modules.Incident.Core.Commands.CreateIncident;
 
@@ -37,7 +33,6 @@ internal sealed class CreateIncidentHandler
         var usersDict = users.ToDictionary(u => u.Id);
 
         await messageBroker.PublishAsync(new IncidentAddedEvent(IncidentMapper.FromEntity(incident, usersDict)), cancellationToken);
-
         await messageBroker.PublishAsync(new ActivityCreatedEvent(
             incident.ReporterId,
             usersDict[incident.ReporterId].Name,

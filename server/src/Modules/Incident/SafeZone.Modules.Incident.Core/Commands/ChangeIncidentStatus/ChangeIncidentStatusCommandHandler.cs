@@ -1,6 +1,3 @@
-using SafeZone.Modules.Incident.Core.Events;
-using SafeZone.Shared.Abstractions.Messaging;
-
 namespace SafeZone.Modules.Incident.Core.Commands.ChangeIncidentStatus;
 
 internal sealed class ChangeIncidentStatusHandler(
