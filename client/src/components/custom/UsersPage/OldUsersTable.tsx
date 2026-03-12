@@ -13,6 +13,14 @@ import { BsThreeDots } from "react-icons/bs";
 import type { User } from "@/types/User";
 import { avatarHue, roleConfig, statusConfig } from "./constant";
 import { getUsers } from "@/services/getUsers";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
@@ -26,7 +34,6 @@ import {
 const OldUsersTable: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [menuOpen, setMenuOpen] = useState<number | null>(null);
 
   const fetchUsers = async () => {
     try {
@@ -210,38 +217,20 @@ const OldUsersTable: React.FC = () => {
 
                     {/* Actions */}
                     <TableCell>
-                      <div className="relative">
-                        <button
-                          onClick={() =>
-                            setMenuOpen(menuOpen === index ? null : index)
-                          }
-                          className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100"
-                        >
-                          <BsThreeDots size={14} />
-                        </button>
-
-                        {menuOpen === index && (
-                          <div
-                            className="absolute right-0 top-8 z-10 bg-white rounded-xl border border-gray-100 py-1 w-40"
-                            style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.10)" }}
-                          >
-                            {[
-                              "View Profile",
-                              "Edit Role",
-                              "Reset Password",
-                              "Deactivate",
-                            ].map((label) => (
-                              <button
-                                key={label}
-                                onClick={() => setMenuOpen(null)}
-                                className="w-full text-left px-4 py-2 text-xs font-medium hover:bg-gray-50"
-                              >
-                                {label}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline"
+                            className="w-7 h-7 bg-transparent border-transparent shadow-none rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100">
+                            <BsThreeDots size={14} />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem>Edit Profile</DropdownMenuItem>
+                            <DropdownMenuItem>Suspend</DropdownMenuItem>
+                          </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 );

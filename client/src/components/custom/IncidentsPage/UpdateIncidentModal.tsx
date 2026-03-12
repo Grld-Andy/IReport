@@ -30,9 +30,8 @@ import { apiUrl } from "@/constants";
 import { incidentSchema, type Incident } from "@/types/Incident";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import axios from "axios";
-import { CiEdit } from "react-icons/ci";
 import { useAppSelector } from "@/redux/app/hooks";
 import UserCombobox from "./UserCombobox";
 import { toast } from "sonner";
@@ -41,10 +40,12 @@ export type IncidentForm = z.infer<typeof incidentSchema>;
 
 interface IncidentUpdateModalProps {
   incident: Incident;
+  trigger: ReactNode;
 }
 
 export default function UpdateIncidentModal({
   incident,
+  trigger,
 }: IncidentUpdateModalProps) {
   const users = useAppSelector((state) => state.users.users);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -115,8 +116,9 @@ export default function UpdateIncidentModal({
       if (axios.isAxiosError(err)) {
         const axiosErr = err;
         const message =
-          axiosErr.response?.data?.errors?.map((e: {message: string}) => e.message).join(", ") ||
-          axiosErr.message;
+          axiosErr.response?.data?.errors
+            ?.map((e: { message: string }) => e.message)
+            .join(", ") || axiosErr.message;
         toast.error(message, { position: "top-center" });
       } else {
         toast.error((err as Error)?.message, { position: "top-center" });
@@ -126,11 +128,7 @@ export default function UpdateIncidentModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-amber-500 hover:bg-amber-600 text-white">
-          <CiEdit />
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
 
       {isOpen && (
         <DialogContent className="p-0 overflow-hidden">

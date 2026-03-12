@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import SortButton from "./SortButton";
 import { Input } from "@/components/ui/input";
-import { CiSearch } from "react-icons/ci";
+import { CiEdit, CiSearch } from "react-icons/ci";
 import Badge from "../Badge";
 import { severityConfig, statusConfig } from "@/constants/getColors";
 import { incidentColumns } from "@/constants/incidentColumns";
@@ -21,6 +21,7 @@ import UpdateIncidentModal from "./UpdateIncidentModal";
 import DeleteIncidentModal from "./DeleteIncidentModal";
 import { useAppSelector } from "@/redux/app/hooks";
 import { useDebounce } from "@/hooks/useDebounce";
+import { MdOutlineDelete } from "react-icons/md";
 
 const IncidentsTable: React.FC = () => {
   const [incidents, setIncidents] = useState<Incident[]>([]);
@@ -243,10 +244,12 @@ const IncidentsTable: React.FC = () => {
                   {/* Actions */}
                   {user?.role == "responder" || (
                     <TableCell className="flex gap-1">
-                      <UpdateIncidentModal incident={incident} />
+                      <UpdateIncidentModal incident={incident}
+                        trigger={<Button className="bg-amber-500 hover:bg-amber-600 text-white"><CiEdit /></Button>} />
                       <DeleteIncidentModal
                         id={incident.id}
                         deleteIncident={deleteIncident}
+                        trigger={<Button variant={"destructive"}><MdOutlineDelete/></Button>}
                       />
                     </TableCell>
                   )}
