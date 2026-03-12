@@ -18,14 +18,17 @@ export const sidebarItems: Array<NavItem> = [
       path: "/incidents",
     },
     { icon: IoMapOutline, activeIcon: IoMap, name: "Live Map", path: "/map" },
+  ];
+
+
+export const supervisorSidebarItems = [
     {
       icon: MdOutlineViewKanban,
       activeIcon: MdViewKanban,
       name: "Kanban Board",
       path: "/kanban",
     },
-  ];
-
+]
 
 export const adminSidebarItems: Array<NavItem> = [
   

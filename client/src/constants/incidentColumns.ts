@@ -6,5 +6,4 @@ export const incidentColumns = [
   "Status",
   "Assigned To",
   "Last Updated",
-  "Action",
 ];

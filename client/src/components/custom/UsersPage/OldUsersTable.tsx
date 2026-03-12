@@ -88,7 +88,7 @@ const OldUsersTable: React.FC = () => {
                   <SelectItem value="all">All Roles</SelectItem>
                   <SelectItem value="admin">Admin</SelectItem>
                   <SelectItem value="supervisor">Supervisor</SelectItem>
-                  <SelectItem value="user">User</SelectItem>
+                  <SelectItem value="responder">Responder</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>

@@ -3,7 +3,7 @@ import { SiGoogleauthenticator } from "react-icons/si";
 import { CiLogout } from "react-icons/ci";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
-import { adminSidebarItems, sidebarItems } from "@/constants/sidebarItems";
+import { adminSidebarItems, sidebarItems, supervisorSidebarItems } from "@/constants/sidebarItems";
 import { apiUrl } from "@/constants";
 import axios from "axios";
 import { useAppSelector } from "@/redux/app/hooks";
@@ -12,7 +12,9 @@ const Sidebar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.auth.user);
-  const sidebarNaivgation = user?.role != 'admin' ? sidebarItems : [...sidebarItems, ...adminSidebarItems]
+  let sidebarNaivgation = sidebarItems
+  sidebarNaivgation = user?.role == 'responder' ? sidebarNaivgation : [...sidebarNaivgation, ...supervisorSidebarItems]
+  sidebarNaivgation = user?.role != 'admin' ? sidebarNaivgation : [...sidebarNaivgation, ...adminSidebarItems]
 
   const logout = async () => {
     await axios.post(`${apiUrl}auth/logout`, {}, { withCredentials: true });

@@ -27,12 +27,14 @@ const IncidentsTable: React.FC = () => {
   const [totalIncidents, setTotalIncidents] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
+  const user = useAppSelector((state) => state.auth.user);
   const [search, setSearch] = useState<string>("");
   const [orderBy, setOrderBy] = useState<string>("");
   const stateTotalIncidents = useAppSelector(
     (state) => state.incidents.totalIncidents,
   );
   const stateIncidents = useAppSelector((state) => state.incidents.incidents);
+  const newIncidentColumns = user?.role == "responder" ? incidentColumns : [...incidentColumns, "Action"];
 
   const navigate = useNavigate();
   const { page } = useParams();
@@ -43,11 +45,7 @@ const IncidentsTable: React.FC = () => {
   const fetchIncidents = useCallback(async () => {
     try {
       setLoading(true);
-      const result = await getIncidents(
-        currentPage,
-        debouncedSearch,
-        orderBy,
-      );
+      const result = await getIncidents(currentPage, debouncedSearch, orderBy);
       setIncidents(result.incidents ?? []);
       setTotalIncidents(result.totalIncidents ?? 0);
       setTotalPages(result.totalPages ?? 1);
@@ -132,7 +130,7 @@ const IncidentsTable: React.FC = () => {
         <Table>
           <TableHeader>
             <TableRow className="bg-gray-50">
-              {incidentColumns.map((col) => (
+              {newIncidentColumns.map((col) => (
                 <TableHead
                   key={col}
                   className="text-xs text-gray-500 font-medium"
@@ -243,13 +241,15 @@ const IncidentsTable: React.FC = () => {
                   </TableCell>
 
                   {/* Actions */}
-                  <TableCell className="flex gap-1">
-                    <UpdateIncidentModal incident={incident} />
-                    <DeleteIncidentModal
-                      id={incident.id}
-                      deleteIncident={deleteIncident}
-                    />
-                  </TableCell>
+                  {user?.role == "responder" || (
+                    <TableCell className="flex gap-1">
+                      <UpdateIncidentModal incident={incident} />
+                      <DeleteIncidentModal
+                        id={incident.id}
+                        deleteIncident={deleteIncident}
+                      />
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
           </TableBody>

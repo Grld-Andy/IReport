@@ -13,11 +13,15 @@ import { saveIncidentsState } from "@/redux/features/incidents/incidentsSlice";
 import { saveUsers } from "@/redux/features/users/usersSlice";
 import { useIncidentHub } from "@/hooks/useIncidentHook";
 import NotFound from "@/pages/NotFound";
+import { getActivities } from "@/services/getActivities";
+import { saveActivitiesState } from "@/redux/features/activities/activitiesSlice";
+import { useActivityHub } from "@/hooks/useActivitiesHook";
 
 const Layout: React.FC = () => {
   const dispatch = useAppDispatch()
   const user : User|null = useAppSelector((state) => state.auth.user)
   useIncidentHub()
+  useActivityHub()
 
   useEffect(() => {
     const setUser = async () => {
@@ -32,9 +36,13 @@ const Layout: React.FC = () => {
           dispatch(loginSuccess(response.data))
 
           const incidentsResult = await getAllIncidents()
-          const usersResult = await getAllUsers()
           dispatch(saveIncidentsState(incidentsResult))
+
+          const usersResult = await getAllUsers()
           dispatch(saveUsers(usersResult))
+          
+          const activitiesResult = await getActivities()
+          dispatch(saveActivitiesState(activitiesResult))
         }
       } catch (e) {
         console.error(e);
@@ -49,6 +57,9 @@ const Layout: React.FC = () => {
     return <Navigate to="/auth/login" replace />;
   }
 
+  if(user.role == 'responder' && (location.pathname.includes("/kanban"))){
+    return <NotFound/>
+  }
   if(user.role != 'admin' && (location.pathname.includes("/users") || location.pathname.includes("/reports"))){
     return <NotFound/>
   }

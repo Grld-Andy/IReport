@@ -2,7 +2,6 @@ import DashboardChart from "@/components/custom/Dashboard/Charts";
 import DashboardActivityFeed from "@/components/custom/Dashboard/DashboardActivityFeed";
 import StatsCard from "@/components/custom/Dashboard/StatsCard";
 import PageHeader from "@/components/custom/PageHeader";
-import { activityFeeds } from "@/constants/activityFeeds";
 import { generateDashboardCards } from "@/constants/incidentAnalyticsFunc";
 import { useAppSelector } from "@/redux/app/hooks";
 import React, { useEffect, useState } from "react";
@@ -11,6 +10,7 @@ import { Link } from "react-router-dom";
 const Dashboard: React.FC = () => {
   const { incidents } = useAppSelector((state) => state.incidents);
   const user = useAppSelector((state) => state.auth.user);
+  const activities = useAppSelector((state) => state.activities.activities)
   const [cardsData, setCardsData] = useState(generateDashboardCards(incidents));
 
   useEffect(() => {
@@ -70,8 +70,11 @@ const Dashboard: React.FC = () => {
           <div className="flex justify-between items-center">
             <h1 className="font-bold text-[18px]">Activity Feed</h1>
           </div>
-          <div className="bg-gray-50 p-5 flex flex-col gap-5 rounded-2xl border-[1px] border-black/10 shadow-sm">
-            {activityFeeds.map((item, index) => (
+          <div className="bg-gray-50 min-w-[400px] p-5 flex flex-col gap-5 rounded-2xl border-[1px] border-black/10 shadow-sm">
+          {
+            activities.length == 0 && <h1 className="grid place-content-center text-gray-600">No activies</h1>
+          }
+            {activities.map((item, index) => (
               <DashboardActivityFeed key={index} activity={item} />
             ))}
           </div>

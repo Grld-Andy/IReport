@@ -1,9 +1,9 @@
-export type Role = "Admin" | "Supervisor" | "User";
+export type Role = "Admin" | "Supervisor" | "Responder";
 export type Status = "Active" | "Inactive" | "Suspended";
 export const roleConfig: Record<string, { className: string }> = {
   "admin": { className: "bg-violet-50 text-violet-700 ring-1 ring-violet-200" },
   "supervisor": { className: "bg-blue-50 text-blue-700 ring-1 ring-blue-200" },
-  "user": { className: "bg-amber-50 text-amber-700 ring-1 ring-amber-200" }
+  "responder": { className: "bg-amber-50 text-amber-700 ring-1 ring-amber-200" }
 };
 
 export const statusConfig: Record<string, { dot: string; className: string }> = {
