@@ -32,11 +32,13 @@ internal sealed class ActivityModule : IModule
     {
         // Optional: add middleware here
         app.UseModuleRequests()
-            .Subscribe<CreateActivityCommand>("activities/post", 
-                (command, serviceProvider, cancellationToken) =>
-                {
-                    return serviceProvider.GetRequiredService<IDispatcher>().SendAsync<CreateActivityCommand, ActivityEntity>(command, cancellationToken);
-                }
+            .Subscribe<CreateActivityCommand, ActivityEntity>("activities/post", 
+                    async (command, serviceProvider, cancellationToken) =>
+                    {
+                        return await serviceProvider
+                            .GetRequiredService<IDispatcher>()
+                            .SendAsync<CreateActivityCommand, ActivityEntity>(command, cancellationToken);
+                    }
             );
     }
 

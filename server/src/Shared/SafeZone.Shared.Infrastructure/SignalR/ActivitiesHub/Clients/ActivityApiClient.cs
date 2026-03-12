@@ -8,8 +8,9 @@ namespace SafeZone.Shared.Infrastructure.SignalR.ActivitiesHub.Clients;
 internal class ActivityApiClient(IModuleClient _moduleClient) : IActivityApiClient
 {
     private readonly IModuleClient moduleClient = _moduleClient;
-    public Task<ActivityEntity> AddAsync(CreateActivityCommand command, CancellationToken ct)
+    public async Task<ActivityEntity> AddAsync(CreateActivityCommand command, CancellationToken ct)
     {
-        return moduleClient.SendAsync<ActivityEntity>("activities/post", command, ct);
+        var result = await moduleClient.SendAsync<ActivityEntity>("activities/post", command, ct);
+        return result;
     }
 }
