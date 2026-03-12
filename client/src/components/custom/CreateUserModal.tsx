@@ -29,11 +29,14 @@ import { userCreateSchema } from "@/types/User";
 import { createUserService } from "@/services/createUser";
 import { HiOutlineUserAdd } from "react-icons/hi";
 import { toast } from "sonner";
+import { useAppDispatch } from "@/redux/app/hooks";
+import { addUser } from "@/redux/features/users/usersSlice";
 
 export type UserForm = z.infer<typeof userCreateSchema>;
 
 export default function CreateUserModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useAppDispatch();
 
   const {
     register,
@@ -54,14 +57,16 @@ export default function CreateUserModal() {
   });
 
   const onSubmit = async (data: UserForm) => {
-      const response = await createUserService(data);
-      console.log("User created", response);
+    const response = await createUserService(data);
+    console.log("User created", response);
 
-      if(response.success){
+    if (response.success) {
       reset();
-      setIsOpen(false);}else{
-        toast.error(response.message)
-      }
+      dispatch(addUser({...data, createdAt: new Date(),updatedAt: new Date(), status: "Inactive", id: crypto.randomUUID()}));
+      setIsOpen(false);
+    } else {
+      toast.error(response.message, { position: "top-center" });
+    }
   };
 
   return (

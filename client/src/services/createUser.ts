@@ -8,7 +8,7 @@ export const createUserService = async (data: UserForm) => {
     console.log("registering new user: ", data);
     const response = await axios.post(
       `${apiUrl}auth/register`,
-      { ...data },
+      { user: {...data} },
       { withCredentials: true },
     );
 

@@ -30,10 +30,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAppSelector } from "@/redux/app/hooks";
 
 const OldUsersTable: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const stateUsers = useAppSelector((state) => state.users.users)
 
   const fetchUsers = async () => {
     try {
@@ -49,7 +51,7 @@ const OldUsersTable: React.FC = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [stateUsers]);
 
   return (
     <div className="flex flex-col gap-5">
