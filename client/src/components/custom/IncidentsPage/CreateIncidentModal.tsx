@@ -32,11 +32,40 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { createIncidentService } from "@/services/createInicident";
 import { toast } from "sonner";
+import LocationPicker from "./LocationPicker";
+import axios from "axios";
 
 export type IncidentForm = z.infer<typeof incidentSchema>;
 
 export default function CreateIncidentModal() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+
+  const handleLocationSelect = (lat: number, lng: number, name?: string) => {
+    setLatitude(lat);
+    setLongitude(lng);
+
+    if (name) {
+      setValue("locationDetails", name);
+    }
+  };
+
+  const getMyLocation = () => {
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+
+      setLatitude(lat);
+      setLongitude(lng);
+
+      const res = await axios.get(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+      );
+
+      setValue("locationDetails", res.data.display_name);
+    });
+  };
 
   const {
     register,
@@ -62,7 +91,11 @@ export default function CreateIncidentModal() {
   };
 
   const onSubmit = async (data: IncidentForm) => {
-    const response = await createIncidentService(data);
+    const response = await createIncidentService({
+      ...data,
+      longitude,
+      latitude,
+    });
     if (response.success) {
       console.log("Created incident successfully", response);
       reset();
@@ -174,9 +207,45 @@ export default function CreateIncidentModal() {
               </div>
 
               <Field>
+                <div className="flex gap-5 justify-between">
+                  <div className="flex flex-col gap-2">
+                    <Label>Select Location on Map</Label>
+                    {latitude && longitude ? (
+                      <p className="text-xs text-gray-500 h-[18px]">
+                        Selected: {latitude.toFixed(5)}, {longitude.toFixed(5)}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-gray-500 h-[18px]">
+                        Please select location
+                      </p>
+                    )}
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={getMyLocation}
+                  >
+                    Use My Location
+                  </Button>
+                </div>
+
+                <div
+                  className="border rounded-md overflow-hidden
+                "
+                >
+                  <LocationPicker
+                    latitude={latitude}
+                    longitude={longitude}
+                    onLocationSelect={handleLocationSelect}
+                  />
+                </div>
+              </Field>
+
+              <Field>
                 <Label htmlFor="locationDetails">Location Details</Label>
                 <Textarea
                   id="locationDetails"
+                  rows={5}
                   {...register("locationDetails")}
                   placeholder="First floor of the main building"
                 />
