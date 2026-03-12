@@ -31,6 +31,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { createIncidentService } from "@/services/createInicident";
+import { toast } from "sonner";
 
 export type IncidentForm = z.infer<typeof incidentSchema>;
 
@@ -61,13 +62,12 @@ export default function CreateIncidentModal() {
   };
 
   const onSubmit = async (data: IncidentForm) => {
-    try {
-      const response = await createIncidentService(data);
-
+    const response = await createIncidentService(data);
+    if (response.success) {
       console.log("Created incident successfully", response);
       reset();
-    } catch (err) {
-      console.error("Failed to create incident", err);
+    } else {
+      toast.error(response.message, { position: "top-center" });
     }
   };
 
@@ -75,7 +75,7 @@ export default function CreateIncidentModal() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="bg-green-500 hover:bg-green-600 text-white">
-          <IoAddCircleOutline size={16}/>
+          <IoAddCircleOutline size={16} />
           Report Incident
         </Button>
       </DialogTrigger>
@@ -194,7 +194,11 @@ export default function CreateIncidentModal() {
                 className="w-full bg-green-500 hover:bg-green-600 text-white"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? <div className='loader'></div> : "Create Incident"}
+                {isSubmitting ? (
+                  <div className="loader"></div>
+                ) : (
+                  "Create Incident"
+                )}
               </Button>
             </DialogFooter>
           </form>

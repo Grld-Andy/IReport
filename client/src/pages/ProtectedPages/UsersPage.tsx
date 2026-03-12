@@ -1,11 +1,10 @@
 import React from "react";
-import { HiOutlineUserAdd } from "react-icons/hi";
 import { LuShield, LuUsers, LuUserCheck, LuUserX } from "react-icons/lu";
 import PageHeader from "@/components/custom/PageHeader";
-import { Button } from "@/components/ui/button";
 import OldUsersTable from "@/components/custom/UsersPage/OldUsersTable";
 import StatCard from "@/components/custom/UsersPage/StatCard";
 import { useAppSelector } from "@/redux/app/hooks";
+import CreateUserModal from "@/components/custom/CreateUserModal";
 
 const UsersPage: React.FC = () => {
   const {users, totalUsers} = useAppSelector((state) => state.users)
@@ -15,21 +14,15 @@ const UsersPage: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      {/* ── Page Header ── */}
-
       <div className="flex justify-between items-center">
         <PageHeader
           title="User Management"
           subtitle="Manage access, roles, and team assignments across your incident
             response org"
         />
-        <Button className="bg-green-500 hover:bg-green-600 text-white">
-          <HiOutlineUserAdd size={16} />
-          Add User
-        </Button>
+        <CreateUserModal/>
       </div>
 
-      {/* ── Stat Cards ── */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         <StatCard
           icon={<LuUsers />}

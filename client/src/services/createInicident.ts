@@ -1,5 +1,6 @@
 import { apiUrl } from "@/constants";
 import axios from "axios";
+import { getAxiosError } from "./getAxiosError";
 
 interface IcreateIncident {
   subject: string;
@@ -12,20 +13,31 @@ interface IcreateIncident {
 }
 
 export const createIncidentService = async (data: IcreateIncident) => {
-  const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-    if (!navigator.geolocation) {
-      reject(new Error("Geolocation is not supported by your browser"));
-    } else {
-      navigator.geolocation.getCurrentPosition(resolve, reject);
+  try {
+    const position = await new Promise<GeolocationPosition>(
+      (resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error("Geolocation is not supported by your browser"));
+        } else {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        }
+      },
+    );
+
+    const { latitude, longitude } = position.coords;
+
+    const response = await axios.post(
+      `${apiUrl}incidents`,
+      { ...data, latitude, longitude },
+      { withCredentials: true },
+    );
+
+    if (response.status === 201) {
+      const message = { id: response.data, latitude, longitude }
+      return { success: true, message };
     }
-  });
-
-  const { latitude, longitude } = position.coords;
-
-  const response = await axios.post(
-    `${apiUrl}incidents`,
-    { ...data, latitude, longitude },
-    { withCredentials: true },
-  );
-  return {id: response.data, latitude, longitude};
+    return { success: false, message: "Unknown error" };
+  } catch (err) {
+    return getAxiosError(err);
+  }
 };

@@ -9,42 +9,51 @@ import { Link, useNavigate } from "react-router-dom";
 import { userRegisterSchema } from "@/types/User";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import axios from 'axios';
+import axios from "axios";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectGroup,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { apiUrl } from "@/constants";
 
 export type RegisterUser = z.infer<typeof userRegisterSchema>;
 
 const Register: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<RegisterUser>({
     resolver: zodResolver(userRegisterSchema),
   });
 
   const onSubmit = async (data: RegisterUser) => {
-    try{
-      setIsSubmitting(true)
-      const response = await axios.post(`${apiUrl}auth/register`,
-        {
-          user: {
-            name: data.name,
-            email: data.email,
-            role: "user",
-            password: data.password,
-            confirmPassword: data.confirmPassword
-          }
-        }
-      );
-      console.log(response)
-      navigate("/auth/login")
-    }catch(e){
+    try {
+      setIsSubmitting(true);
+      const response = await axios.post(`${apiUrl}auth/register`, {
+        user: {
+          name: data.name,
+          email: data.email,
+          role: "user",
+          team: data.team,
+          password: data.password,
+          confirmPassword: data.confirmPassword,
+        },
+      });
+      console.log(response);
+      navigate("/auth/login");
+    } catch (e) {
       console.error(e);
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   };
 
@@ -54,25 +63,27 @@ const Register: React.FC = () => {
 
   return (
     <div className="grid md:grid-cols-2 h-screen">
-      <div className="flex flex-col justify-center items-center h-full p-8 gap-8">
+      <div className="flex flex-col justify-center items-center h-full gap-5">
         {/* Logo */}
         <div className="flex items-center gap-3">
           <SiGoogleauthenticator size={50} />
           <span className="text-[30px] font-bold font-serif">SafeZone</span>
         </div>
 
-        <div className={`w-full max-w-md flex flex-col gap-6 ${isSubmitting ? "pointer-events-none transition-all duration-100" : ""}`}>
+        <div
+          className={`w-full max-w-md flex flex-col ${isSubmitting ? "pointer-events-none transition-all duration-100" : ""}`}
+        >
           <div className="text-center">
-            <h1 className="text-[40px] font-extrabold text-black font-serif">
+            {/* <h1 className="text-[40px] font-extrabold text-black font-serif">
               Welcome!
-            </h1>
-            <p className="text-gray-700 mt-2">
+            </h1> */}
+            <p className="text-gray-700 mb-5">
               Join us today and start your journey with SafeZone.
             </p>
           </div>
 
           {/* FORM */}
-          <form onSubmit={handleSubmit(onSubmit, onError)}>
+          <form onSubmit={handleSubmit(onSubmit, onError)} className="py-2">
             <FieldGroup>
               <div className="flex flex-row gap-3">
                 <Field>
@@ -104,6 +115,50 @@ const Register: React.FC = () => {
                   )}
                 </Field>
               </div>
+
+              <Field>
+                <FieldLabel>Team</FieldLabel>
+
+                <Select onValueChange={(val) => setValue("team", val)}>
+                  <SelectTrigger className="h-10 bg-white">
+                    <SelectValue placeholder="Select your team" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Response Teams</SelectLabel>
+
+                      <SelectItem value="marine_operations">
+                        Marine Operations
+                      </SelectItem>
+
+                      <SelectItem value="port_security">
+                        Port Security
+                      </SelectItem>
+
+                      <SelectItem value="emergency_response">
+                        Emergency Response
+                      </SelectItem>
+
+                      <SelectItem value="environmental_safety">
+                        Environmental Safety
+                      </SelectItem>
+
+                      <SelectItem value="logistics_control">
+                        Logistics & Cargo Control
+                      </SelectItem>
+
+                      <SelectItem value="vessel_traffic_control">
+                        Vessel Traffic Control
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+
+                {errors.team && (
+                  <p className="text-red-500 text-sm">{errors.team.message}</p>
+                )}
+              </Field>
 
               <div className="flex flex-row gap-3">
                 <Field>
@@ -139,14 +194,18 @@ const Register: React.FC = () => {
 
               <Field>
                 <Button type="submit" className="w-full h-10">
-                  {isSubmitting ? <div className="loader bg-white w-[25px]"></div> : <span>Sign Up</span>}
+                  {isSubmitting ? (
+                    <div className="loader bg-white w-[25px]"></div>
+                  ) : (
+                    <span>Sign Up</span>
+                  )}
                 </Button>
               </Field>
             </FieldGroup>
           </form>
 
           {/* OR Divider */}
-          <div className="relative my-4">
+          <div className="relative my-6">
             <div className="bg-black w-full h-[1px]"></div>
             <div className="absolute w-full flex items-center justify-center top-1/2 -translate-y-1/2">
               <span className="bg-gray-50 px-3 text-gray-500">OR</span>
