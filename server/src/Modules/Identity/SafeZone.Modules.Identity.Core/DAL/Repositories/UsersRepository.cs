@@ -18,6 +18,7 @@ internal class UsersRepository(UsersDbContext _dbContext) : IUserRepository
             email: userDto.Email,
             password: userDto.Password,
             role: userDto.Role,
+            team: userDto.Team,
             now: DateTime.Now
         );
 

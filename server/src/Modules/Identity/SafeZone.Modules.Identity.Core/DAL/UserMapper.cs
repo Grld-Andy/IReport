@@ -11,6 +11,7 @@ internal static class UserMapper
             new UserEmail(dto.Email),
             new UserPassword(dto.Password),
             UserRole.From(dto.Role),
+            team: dto.Team,
             now
         );
     }
