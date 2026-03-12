@@ -21,21 +21,17 @@ internal class AssignIncidentCommandHandler
         var incident = await repository.GetByIdAsync(command.IncidentId, cancellationToken) 
             ?? throw new NotFoundException("Incident", command.IncidentId);
 
-        // store previous assigned user (optional)
         var oldAssignedId = incident.AssignedToId;
 
-        // assign new user
         incident.AssignTo(command.UserId);
 
         await repository.SaveAsync(cancellationToken);
 
-        // get user info for activity feed
         var users = await userApiClient.GetUsersByIds([command.UserId, userContext.Identity.Id]);
         var usersDict = users.ToDictionary(u => u.Id);
         var actor = users.First(u => u.Id == userContext.Identity.Id);
         var assignedUser = users.First(u => u.Id == command.UserId);
 
-        // prepare activity message
         string details = oldAssignedId.HasValue
             ? $"Assigned changed from {oldAssignedId} → {command.UserId} ({assignedUser.Name})"
             : $"Assigned to {assignedUser.Name}";

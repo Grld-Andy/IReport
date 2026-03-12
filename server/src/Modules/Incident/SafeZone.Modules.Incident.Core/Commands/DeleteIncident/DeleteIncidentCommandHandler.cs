@@ -26,7 +26,6 @@ internal class DeleteIncidentHandler
             .GetByIdAsync(command.IncidentId, cancellationToken)
             ?? throw new NotFoundException("Incident", command.IncidentId);
 
-        // capture values before delete
         var details = string.Join("\n", new[]
         {
             $"Subject: {incident.Subject.Value}",
@@ -35,7 +34,7 @@ internal class DeleteIncidentHandler
         });
 
         var users = await userApiClient.GetUsersByIds(
-            new List<Guid> { userContext.Identity.Id });
+            [userContext.Identity.Id]);
 
         var actor = users.First();
 

@@ -14,6 +14,7 @@ import { apiUrl } from "@/constants";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
 import { loginStart, loginSuccess, loginStop } from "@/redux/features/auth/authSlice";
+import { toast } from "sonner";
 
 const Login: React.FC = () => {
   const isSubmitting : boolean = useAppSelector((state) => state.auth.isLoading)
@@ -44,8 +45,10 @@ const Login: React.FC = () => {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setApiError(error.response?.data.errors[0].message);
+        toast.error(apiError)
       } else {
         console.error("Unexpected error:", error);
+        toast.error("Unexpected error")
       }
     } finally {
       dispatch(loginStop());
