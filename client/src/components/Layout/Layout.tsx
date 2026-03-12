@@ -83,3 +83,7 @@ const Layout: React.FC = () => {
 };
 
 export default Layout;
+
+// todo: show only assigned/self reported incidents to user
+// todo: show only team incidents to supervisor
+// todo: supervisor can only assign team reported incidents

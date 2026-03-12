@@ -50,7 +50,7 @@ const Register: React.FC = () => {
         },
       });
       console.log(response);
-      navigate("/auth/login");
+      navigate("/auth/login"); // todo: register toast to show error
     } catch (e) {
       console.error(e);
       setIsSubmitting(false);
