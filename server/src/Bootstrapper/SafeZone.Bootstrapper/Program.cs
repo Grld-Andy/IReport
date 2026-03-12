@@ -4,7 +4,7 @@ using SafeZone.Shared.Abstractions;
 using SafeZone.Shared.Infrastructure;
 using SafeZone.Shared.Infrastructure.Logging;
 using SafeZone.Shared.Infrastructure.Modules;
-using SafeZone.Shared.Infrastructure.SignalR.ActivityHub;
+using SafeZone.Shared.Infrastructure.SignalR.ActivitiesHub;
 using SafeZone.Shared.Infrastructure.SignalR.IncidentsHub;
 
 var builder = WebApplication

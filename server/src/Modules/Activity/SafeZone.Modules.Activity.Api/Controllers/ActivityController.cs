@@ -4,8 +4,8 @@ using SafeZone.Modules.Activity.Core.Domain.Repositories;
 namespace SafeZone.Modules.Activity.Api.Controllers;
 
 [ApiController]
-[Route("activities")]
-public class ActivitiesController(IActivityRepository repository) : ControllerBase
+[Route("api/[controller]")]
+internal class ActivitiesController(IActivityRepository repository) : ControllerBase
 {
     private readonly IActivityRepository _repository = repository;
 

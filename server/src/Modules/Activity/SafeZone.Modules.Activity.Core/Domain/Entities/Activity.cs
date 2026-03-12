@@ -2,6 +2,7 @@ namespace SafeZone.Modules.Activity.Core.Domain.Entities;
 
 internal class ActivityEntity
 {
+    public ActivityEntity(){}
     public Guid Id { get; set; }
     public Guid? ActorId { get; set; }
     public string ActorName { get; set; } = default!;

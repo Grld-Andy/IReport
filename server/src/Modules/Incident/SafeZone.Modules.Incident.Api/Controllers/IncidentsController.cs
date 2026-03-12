@@ -87,7 +87,6 @@ internal class IncidentsController(IDispatcher _dispatcher, IContext _context) :
     [HttpPatch("{id:guid}/status")]
     public async Task<IActionResult> UpdateIncidentStatus([FromRoute] Guid id, [FromBody] IncidentStatusDto status)
     {
-        Console.WriteLine("here");
         await dispatcher.SendAsync(new ChangeIncidentStatusCommand(id, (IncidentStatus)status.Status));
         return NoContent();
     }

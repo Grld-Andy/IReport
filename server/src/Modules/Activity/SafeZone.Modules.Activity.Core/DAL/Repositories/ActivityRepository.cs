@@ -9,6 +9,7 @@ internal class ActivityRepository(ActivitiesDbContext context) : IActivityReposi
 
     public async Task<ActivityEntity> AddAsync(ActivityEntity activity, CancellationToken ct)
     {
+        activity.CreatedAt = DateTime.UtcNow;
         _context.Activities.Add(activity);
         await _context.SaveChangesAsync(ct);
         return activity;

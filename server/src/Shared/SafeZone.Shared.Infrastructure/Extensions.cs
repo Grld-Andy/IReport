@@ -31,6 +31,7 @@ using SafeZone.Shared.Infrastructure.Queries;
 using SafeZone.Shared.Infrastructure.Security;
 using SafeZone.Shared.Infrastructure.Serialization;
 using SafeZone.Shared.Infrastructure.Services;
+using SafeZone.Shared.Infrastructure.SignalR.ActivitiesHub.Clients;
 using SafeZone.Shared.Infrastructure.Storage;
 using SafeZone.Shared.Infrastructure.Time;
 
@@ -98,6 +99,7 @@ public static class Extensions
         
         services.AddMemoryCache();
         services.AddHttpClient();
+        services.AddSingleton<IActivityApiClient, ActivityApiClient>();
         services.AddSingleton<IRequestStorage, RequestStorage>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSingleton<IJsonSerializer, SystemTextJsonSerializer>();

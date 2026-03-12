@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SafeZone.Modules.Activity.Core;
 using SafeZone.Modules.Activity.Core.Commands.CreateActivity;
 using SafeZone.Modules.Activity.Core.Domain.Entities;
 using SafeZone.Shared.Abstractions.Dispatchers;
@@ -24,6 +25,7 @@ internal sealed class ActivityModule : IModule
     public void Register(IServiceCollection services, IConfiguration configuration)
     {
         // Optional: register core services here
+        services.AddCore(configuration);
     }
         
     public void Use(IApplicationBuilder app)

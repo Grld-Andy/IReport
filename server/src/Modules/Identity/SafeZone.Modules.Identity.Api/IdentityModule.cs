@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SafeZone.Modules.Identity.Core;
 using SafeZone.Modules.Identity.Core.DTO;
-using SafeZone.Modules.Identity.Core.Queries.GetSingleUser;
 using SafeZone.Modules.Identity.Core.Queries.GetUsersByIds;
 using SafeZone.Shared.Abstractions.Dispatchers;
 using SafeZone.Shared.Abstractions.Modules;

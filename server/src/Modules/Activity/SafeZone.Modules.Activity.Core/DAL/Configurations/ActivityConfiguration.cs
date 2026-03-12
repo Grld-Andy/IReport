@@ -4,15 +4,16 @@ using SafeZone.Modules.Activity.Core.Domain.Entities;
 
 namespace SafeZone.Modules.Activity.Core.DAL.Configurations;
 
-internal class UserConfiguration : IEntityTypeConfiguration<ActivityEntity>
+internal sealed class ActivityConfiguration : IEntityTypeConfiguration<ActivityEntity>
 {
     public void Configure(EntityTypeBuilder<ActivityEntity> builder)
     {
-        builder.ToTable("activities");
+        builder.ToTable("Activities");
 
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.ActorId);
+        builder.Property(x => x.ActorId)
+            .IsRequired(false);
 
         builder.Property(x => x.ActorName)
             .IsRequired()
