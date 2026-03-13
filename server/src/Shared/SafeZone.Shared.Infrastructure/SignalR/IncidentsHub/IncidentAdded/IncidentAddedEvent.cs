@@ -18,6 +18,7 @@ internal sealed class IncidentDto
     public double Latitude { get; init; }
     public double Longitude { get; init; }
     public string LocationDetails { get; init; } = default!;
+    public string Team { get; init; } = default!;
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; init; }
 }
