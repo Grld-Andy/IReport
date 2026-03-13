@@ -1,3 +1,4 @@
+using SafeZone.Modules.Incident.Core.Commands.UpdateIncident;
 using SafeZone.Modules.Incident.Core.Domain.Enums;
 using SafeZone.Modules.Incident.Core.Domain.ValueObjects;
 using SafeZone.Shared.Abstractions.Exceptions.ExceptionClasses;
@@ -86,10 +87,19 @@ internal class IncidentEntity
         Touch();
     }
 
+    public void UpdateIncident(UpdateIncidentCommand updateDto)
+    {
+        Subject = updateDto.Subject;
+        Description = updateDto.Description;
+        Severity = updateDto.Severity;
+        Category = updateDto.Category;
+        Touch();
+    }
+
     public void Resolve()
     {
-        if (Status != IncidentStatus.InProgress)
-            throw new BadRequestException("Only in-progress incidents can be resolved.");
+        if (Status == IncidentStatus.Open)
+            throw new BadRequestException("Open incidents cannot be resolved.");
 
         Status = IncidentStatus.Resolved;
         Touch();
@@ -101,6 +111,22 @@ internal class IncidentEntity
             throw new BadRequestException("Cannot delete an incident in progress.");
 
         IsDeleted = true;
+        Touch();
+    }
+
+    public void InProgress()
+    {
+        if (Status == IncidentStatus.Open || !AssignedToId.HasValue)
+            throw new BadRequestException("Assign Incident before moving to In Progress");
+
+        Status = IncidentStatus.InProgress;
+        Touch();
+    }
+
+    public void Open()
+    {
+        Status = IncidentStatus.Open;
+        AssignedToId = null;
         Touch();
     }
 

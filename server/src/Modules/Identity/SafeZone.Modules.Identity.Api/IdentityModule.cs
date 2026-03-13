@@ -4,7 +4,11 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SafeZone.Modules.Identity.Core;
+using SafeZone.Modules.Identity.Core.DTO;
+using SafeZone.Modules.Identity.Core.Queries.GetUsersByIds;
+using SafeZone.Shared.Abstractions.Dispatchers;
 using SafeZone.Shared.Abstractions.Modules;
+using SafeZone.Shared.Infrastructure.Modules;
 
 namespace SafeZone.Modules.Identity.Api;
 
@@ -26,16 +30,16 @@ internal sealed class IdentityModule : IModule
     public void Use(IApplicationBuilder app)
     {
         // Optional: add middleware here
+        app.UseModuleRequests()
+            .Subscribe<GetUsersByIdsQuery, List<UserDetailsDto>>("users/get",
+                (query, serviceProvider, cancellationToken) =>
+                {
+                    return serviceProvider.GetRequiredService<IDispatcher>().QueryAsync(query, cancellationToken);
+                }
+            );
     }
 
     public void Expose(IEndpointRouteBuilder endpoints)
     {
-        // Simple GET endpoint
-        endpoints.MapGet("/identity/status", () =>
-        {
-            return Results.Ok("Identity is working");
-        })
-        .WithTags("Identity")
-        .WithName("Get Identity Status");
     }
 }

@@ -1,12 +1,53 @@
-import PageHeader from '@/components/custom/PageHeader'
-import React from 'react'
+import MapComponent from "@/components/custom/MapComponent";
+import PageHeader from "@/components/custom/PageHeader";
+import { Button } from "@/components/ui/button";
+import { useAppSelector } from "@/redux/app/hooks";
+import React, { useState } from "react";
+import { toast } from "sonner";
 
-const LiveMap : React.FC = () => {
+const LiveMap: React.FC = () => {
+  const {incidents} = useAppSelector((state) => state.incidents)
+  const [myLocation, setMyLocation] = useState<{ lat: number; lng: number } | null>(null);
+
+  const handleGetLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setMyLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          toast.error("Unable to get your location. Please allow location access.");
+        }
+      );
+    } else {
+      toast.error("Geolocation is not supported by your browser.");
+    }
+  };
+
   return (
-    <div>
-        <PageHeader title='Live Map'/>
-    </div>
-  )
-}
+    <div className="flex flex-col gap-5">
+      <div className="flex justify-between items-center">
+        <PageHeader
+          title="Live Map"
+          subtitle="Track incidents and respondents in real time"
+        />
+        <Button
+          className="bg-green-500 hover:bg-green-600"
+          onClick={handleGetLocation}
+        >
+          My Location
+        </Button>
+      </div>
 
-export default LiveMap
+      <div className="border rounded-2xl shadow-md overflow-hidden h-full">
+        <MapComponent incidents={incidents} myLocation={myLocation} />
+      </div>
+    </div>
+  );
+};
+
+export default LiveMap;

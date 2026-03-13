@@ -31,6 +31,7 @@ using SafeZone.Shared.Infrastructure.Queries;
 using SafeZone.Shared.Infrastructure.Security;
 using SafeZone.Shared.Infrastructure.Serialization;
 using SafeZone.Shared.Infrastructure.Services;
+using SafeZone.Shared.Infrastructure.SignalR.ActivitiesHub.Clients;
 using SafeZone.Shared.Infrastructure.Storage;
 using SafeZone.Shared.Infrastructure.Time;
 
@@ -69,19 +70,36 @@ public static class Extensions
 
         services.AddCorsPolicy(configuration);
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen(swagger =>
+        services.AddSignalR();
+        services.AddSwaggerGen(options =>
         {
-            swagger.EnableAnnotations();
-            swagger.CustomSchemaIds(x => x.FullName);
-            swagger.SwaggerDoc("v1", new OpenApiInfo
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
             {
-                Title = "SafeZone API",
-                Version = "v1"
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer"
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
             });
         });
         
         services.AddMemoryCache();
         services.AddHttpClient();
+        services.AddSingleton<IActivityApiClient, ActivityApiClient>();
         services.AddSingleton<IRequestStorage, RequestStorage>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSingleton<IJsonSerializer, SystemTextJsonSerializer>();
@@ -134,6 +152,15 @@ public static class Extensions
         app.UseCors("cors");
         app.UseCorrelationId();
         app.UseErrorHandling();
+
+        // var webSocketOptions = new WebSocketOptions
+        // {
+        //     KeepAliveInterval = TimeSpan.FromMinutes(2)
+        // };
+        // webSocketOptions.AllowedOrigins.Add("http://localhost:3000");
+        // webSocketOptions.AllowedOrigins.Add("http://www.localhost:3000");
+        // app.UseWebSockets(webSocketOptions);
+
         app.UseSwagger();
         app.UseSwaggerUI();
         app.UseReDoc(reDoc =>
@@ -142,7 +169,7 @@ public static class Extensions
             reDoc.SpecUrl("/swagger/v1/swagger.json");
             reDoc.DocumentTitle = "SafeZone API";
         });
-        app.UseAuthentication();
+        app.UseAuth();
         app.UseContext();
         app.UseLogging();
         app.UseRouting();

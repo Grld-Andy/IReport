@@ -6,65 +6,52 @@ using SafeZone.Modules.Incident.Core.Commands.ChangeIncidentStatus;
 using SafeZone.Modules.Incident.Core.Commands.UpdateIncident;
 using SafeZone.Modules.Incident.Core.Queries.GetIncidentById;
 using SafeZone.Modules.Incident.Core.Queries.GetIncidents;
-using SafeZone.Modules.Incident.Core.Queries.GetOpenIncidents;
 using SafeZone.Modules.Incident.Core.Queries.GetAssignedIncidents;
 using SafeZone.Shared.Abstractions.Dispatchers;
 using SafeZone.Modules.Incident.Core.Domain.Enums;
 using SafeZone.Shared.Abstractions.Contexts;
+using SafeZone.Modules.Incident.Core.DTO;
+using SafeZone.Shared.Abstractions.Queries;
 
 namespace SafeZone.Modules.Incident.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-internal class IncidentsController(IDispatcher _dispatcher, IIdentityContext _identityContext) : ControllerBase
+internal class IncidentsController(IDispatcher _dispatcher, IContext _context) : ControllerBase
 {
     private readonly IDispatcher dispatcher = _dispatcher;
-    private readonly IIdentityContext identityContext = _identityContext;
+    private readonly IContext context = _context;
 
-    [HttpGet]
-    public async Task<IActionResult> GetAllIncidents()
+    [HttpPost]
+    public async Task<ActionResult<Guid>> CreateIncident([FromBody] CreateIncidentDto dto)
     {
-        var result = await dispatcher.QueryAsync(new GetIncidentsQuery());
-        if (result.Count == 0)
-            return NoContent();
-
+        var currentUserId = context.Identity.Id;
+        var command = new CreateIncidentCommand(dto.Subject, dto.Description, dto.Category, dto.Severity, currentUserId, dto.Latitude, dto.Longitude, dto.LocationDetails);
+        var id = await dispatcher.SendAsync<CreateIncidentCommand, Guid>(command);
+        return CreatedAtAction(nameof(GetIncidentById), new { id }, null);
+    }
+    
+    [HttpGet]
+    public async Task<ActionResult<Paged<IncidentDto>>> GetAllIncidents([FromQuery] GetIncidentsQuery query)
+    {
+        var result = await dispatcher.QueryAsync(query);
         return Ok(result);
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetIncidentById([FromRoute] Guid id)
+    public async Task<ActionResult<IncidentDto>> GetIncidentById([FromRoute] Guid id)
     {
         var result = await dispatcher.QueryAsync(new GetIncidentByIdQuery(id));
         return Ok(result);
     }
 
     [HttpGet("assigned/me")]
-    public async Task<IActionResult> GetIncidentsAssignedToUser()
+    public async Task<ActionResult<Paged<IncidentDto>>> GetIncidentsAssignedToUser()
     {
-        var currentUserId = identityContext.Id;
-        var result = await dispatcher.QueryAsync(new GetAssignedIncidentsQuery(currentUserId));
-
-        if (result.Count == 0)
-            return NoContent();
+        var currentUserId = context.Identity.Id;
+        var result = await dispatcher.QueryAsync(new GetAssignedIncidentsQuery(){UserId = currentUserId});
 
         return Ok(result);
-    }
-
-    [HttpGet("open")]
-    public async Task<IActionResult> GetOpenIncidents()
-    {
-        var result = await dispatcher.QueryAsync(new GetOpenIncidentsQuery());
-        if (result.Count == 0)
-            return NoContent();
-
-        return Ok(result);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> CreateIncident([FromBody] CreateIncidentCommand command)
-    {
-        var id = await dispatcher.SendAsync<CreateIncidentCommand, Guid>(command);
-        return CreatedAtAction(nameof(GetIncidentById), new { id }, null);
     }
 
     [HttpPut("{id:guid}")]
@@ -82,17 +69,25 @@ internal class IncidentsController(IDispatcher _dispatcher, IIdentityContext _id
         return NoContent();
     }
 
-    [HttpPut("{id:guid}/assign")]
+    [HttpPatch("{id:guid}/assign")]
     public async Task<IActionResult> AssignIncident([FromRoute] Guid id, [FromBody] Guid userId)
     {
         await dispatcher.SendAsync(new AssignIncidentCommand(id, userId));
         return NoContent();
     }
 
-    [HttpPut("{id:guid}/status")]
-    public async Task<IActionResult> UpdateIncidentStatus([FromRoute] Guid id, [FromBody] IncidentStatus status)
+    [HttpPatch("{id:guid}/assign/me")]
+    public async Task<IActionResult> AssignIncidentToCurrentUser([FromRoute] Guid id)
     {
-        await dispatcher.SendAsync(new ChangeIncidentStatusCommand(id, status));
+        var currentUserId = context.Identity.Id;
+        await dispatcher.SendAsync(new AssignIncidentCommand(id, currentUserId));
+        return NoContent();
+    }
+
+    [HttpPatch("{id:guid}/status")]
+    public async Task<IActionResult> UpdateIncidentStatus([FromRoute] Guid id, [FromBody] IncidentStatusDto status)
+    {
+        await dispatcher.SendAsync(new ChangeIncidentStatusCommand(id, (IncidentStatus)status.Status));
         return NoContent();
     }
 }

@@ -1,64 +1,75 @@
-import React, { useState } from "react";
+import React from "react";
 import { SiGoogleauthenticator } from "react-icons/si";
 import { CiLogout } from "react-icons/ci";
-import { MdDashboard, MdOutlineDashboard, MdViewKanban } from "react-icons/md";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
-import { IoMap, IoMapOutline } from "react-icons/io5";
-import type { NavItem } from "@/types/NavItem";
-import { MdOutlineViewKanban } from "react-icons/md";
-import { RiErrorWarningLine, RiErrorWarningFill } from "react-icons/ri";
-import { IoBarChartOutline, IoBarChartSharp } from "react-icons/io5";
-import { HiOutlineUsers, HiUsers  } from "react-icons/hi2";
+import { adminSidebarItems, sidebarItems, supervisorSidebarItems } from "@/constants/sidebarItems";
+import { apiUrl } from "@/constants";
+import axios from "axios";
+import { useAppSelector } from "@/redux/app/hooks";
 
 const Sidebar: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<string>("Dashboard");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const user = useAppSelector((state) => state.auth.user);
+  let sidebarNaivgation = sidebarItems
+  sidebarNaivgation = user?.role == 'responder' ? sidebarNaivgation : [...sidebarNaivgation, ...supervisorSidebarItems]
+  sidebarNaivgation = user?.role != 'admin' ? sidebarNaivgation : [...sidebarNaivgation, ...adminSidebarItems]
 
-  const navItems : Array<NavItem> = [
-    {icon: MdOutlineDashboard, activeIcon: MdDashboard, name: "Dashboard"},
-    {icon: RiErrorWarningLine, activeIcon: RiErrorWarningFill, name: "Incidents"},
-    {icon: IoMapOutline, activeIcon: IoMap, name: "Live Map"},
-    {icon: MdOutlineViewKanban, activeIcon: MdViewKanban, name: "Kanban Board"},
-    {icon: IoBarChartOutline, activeIcon: IoBarChartSharp, name: "Reports"},
-    {icon: HiOutlineUsers, activeIcon: HiUsers, name: "User Management"},
-  ]
+  const logout = async () => {
+    await axios.post(`${apiUrl}auth/logout`, {}, { withCredentials: true });
+    localStorage.removeItem("__safezone_user");
+    navigate("/auth/login");
+  };
 
   return (
     <div className="flex flex-col justify-between bg-gray-100 w-full h-full py-3 px-5">
       {/* upper */}
       <div className="flex flex-col gap-8">
-
         {/* logo */}
         <div className="flex items-center justify-center gap-2 py-5">
           <SiGoogleauthenticator size={25} />
-          <span className="text-[20px] font-bold font-serif hidden md:block">SafeZone</span>
+          {/* <span className="text-[20px] font-bold font-serif hidden md:block">
+            SafeZone
+          </span> */}
         </div>
 
         {/* navitems */}
         <div className="flex flex-col gap-3">
           {
-            navItems.map((item, index) => {
-              return(
-                <Button onClick={() => setActiveTab(item.name)} key={index} className={
-                    `${activeTab != item.name ? "hover:bg-green-400 bg-transparent text-gray-800" : "bg-green-500 hover:bg-green-500 text-white"}
-                    flex items-center justify-start gap-3 shadow-none py-5
-                    `
-                  }>
-                  {
-                    activeTab != item.name ?
-                    <item.icon className="scale-125"/>
-                    : <item.activeIcon className="scale-125 text-white"/>
-                  }
-                  <p className="hidden md:block">{item.name}</p>
-                </Button>
-              )
-            })
+          sidebarNaivgation.map((item, index) => {
+            const isActive =
+              location.pathname === item.path ||
+              location.pathname.startsWith(`${item.path}/`);
+            const Icon = isActive ? item.activeIcon : item.icon;
+
+            return (
+              <Button
+                key={index}
+                onClick={() => navigate(item.path)}
+                className={`
+          flex items-center justify-start gap-3 shadow-none py-5
+          ${
+            isActive
+              ? "bg-green-500 text-white hover:bg-green-500"
+              : "bg-transparent text-gray-800 hover:bg-green-400"
           }
+        `}
+              >
+                <Icon className={`scale-125 ${isActive ? "text-white" : ""}`} />
+                <p className="hidden md:block">{item.name}</p>
+              </Button>
+            );
+          })}
         </div>
       </div>
 
       {/* lower: logout button */}
-      <Button className="flex items-center justify-start hover:bg-green-400 gap-3 bg-transparent shadow-none">
-        <CiLogout className="text-gray-800"/>
+      <Button
+        onClick={logout}
+        className="flex items-center justify-start hover:bg-green-400 gap-3 bg-transparent shadow-none"
+      >
+        <CiLogout className="text-gray-800" />
         <p className="text-gray-800 hidden md:block">Logout</p>
       </Button>
     </div>

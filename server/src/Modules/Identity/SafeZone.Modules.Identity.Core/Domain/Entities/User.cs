@@ -6,6 +6,7 @@ internal class User
     public UserName Name { get; private set; } = default!;
     public UserEmail Email { get; } = default!;
     public UserPassword Password { get; private set; } = default!;
+    public string Team { get; set; } = default!;
     public UserRole Role { get; } = default!;
     public UserStatus Status { get; private set; } = default!;
     public DateTime CreatedAt { get; private set; } = default;
@@ -19,12 +20,14 @@ internal class User
         UserEmail email,
         UserPassword password,
         UserRole role,
+        string team,
         DateTime now)
     {
         Id = id;
         Name = name;
         Email = email;
         Password = password;
+        Team = team;
         Role = role;
         Status = UserStatus.Inactive;
         CreatedAt = now;
@@ -36,9 +39,10 @@ internal class User
         UserEmail email,
         UserPassword password,
         UserRole role,
+        string team,
         DateTime now)
     {
-        return new User(Guid.NewGuid(), name, email, password, role, now);
+        return new User(Guid.NewGuid(), name, email, password, role, team, now);
     }
 
     public void ChangeStatus(UserStatus newStatus, DateTime now)

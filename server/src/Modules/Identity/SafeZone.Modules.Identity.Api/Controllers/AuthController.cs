@@ -2,16 +2,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SafeZone.Modules.Identity.Core.Commands.Login;
 using SafeZone.Modules.Identity.Core.Commands.Register;
+using SafeZone.Modules.Identity.Core.DTO;
+using SafeZone.Modules.Identity.Core.Queries.GetSingleUser;
 using SafeZone.Modules.Identity.Core.Services;
+using SafeZone.Shared.Abstractions.Contexts;
 using SafeZone.Shared.Abstractions.Dispatchers;
 
 namespace SafeZone.Modules.Identity.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-internal class AuthController(IDispatcher _dispatcher, ITokenStorage _tokenStorage) : ControllerBase
+internal class AuthController(IDispatcher _dispatcher, IContext _context, ITokenStorage _tokenStorage) : ControllerBase
 {
     private readonly IDispatcher dispatcher = _dispatcher;
+    private readonly IContext context = _context;
     private readonly ITokenStorage tokenStorage = _tokenStorage;
     
 
@@ -23,27 +27,49 @@ internal class AuthController(IDispatcher _dispatcher, ITokenStorage _tokenStora
         return NoContent();
     }
 
+    [HttpGet("me")]
+    public async Task<ActionResult> CheckAuth()
+    {
+        var currentUserId = context.Identity.Id;
+        // var keys = context.Identity.Claims.Keys;
+
+        // foreach (string key in keys)
+        // {
+        //     var values = context.Identity.Claims[key];
+
+        //     foreach (var value in values)
+        //     {
+        //         Console.WriteLine($"================= Key: {key} => Value: {value}");
+        //     }
+        // }
+        var result = await dispatcher.QueryAsync(new GetSingleUserQuery(currentUserId));
+        return Ok(result);
+    }
+
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> LoginUser([FromBody] LoginCommand command, CancellationToken cancellationToken)
+    public async Task<ActionResult<UserDetailsDto>> LoginUser([FromBody] LoginCommand command, CancellationToken cancellationToken)
     {
-        await dispatcher.SendAsync(command, cancellationToken);
+        var result = await dispatcher.SendAsync<LoginCommand, UserDetailsDto>(command, cancellationToken);
         var jwt = tokenStorage.Get();
         Response.Cookies.Append(
             "__access_token",
             jwt.AccessToken,
             new CookieOptions{ 
                 HttpOnly=true,
-                // Secure = true // uncomment once deployes over https
+                // Secure = true // uncomment once deployed over https
             }
         );
-        return NoContent();
+        return Ok(result);
     }
 
     [HttpPost("logout")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> LogoutUser(CancellationToken cancellationToken)
     {
+        Response.Cookies.Delete(
+            "__access_token"
+        );
         return NoContent();
     }
 }

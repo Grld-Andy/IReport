@@ -17,21 +17,26 @@ const StatsCard: React.FC<Props> = ({ cardDetails }) => {
         </div>
       </div>
       <div className="flex-col gap-2">
-        <div className={`flex gap-1 text-[0.8em]
+        <div
+          className={`flex gap-1 text-[0.8em]
               ${cardDetails.color == "green" ? "text-green-900" : ""}
               ${cardDetails.color == "red" ? "text-red-900" : ""}
               ${cardDetails.color == "orange" ? "text-orange-900" : ""}
               ${cardDetails.color == "blue" ? " text-blue-900" : ""}
-              ${cardDetails.color == "purple" ? "text-purple-900" : ""}`
-            }>
-          <span className={`
+              ${cardDetails.color == "yellow" ? " text-yellow-900" : ""}
+              ${cardDetails.color == "purple" ? "text-purple-900" : ""}`}
+        >
+          <span
+            className={`
               grid place-items-center w-[70px] h-[20px] border-[1px]  rounded-full
               ${cardDetails.color == "green" ? "bg-green-300 border-green-600" : ""}
               ${cardDetails.color == "red" ? "bg-red-300 border-red-600" : ""}
               ${cardDetails.color == "orange" ? "bg-orange-300 border-orange-600" : ""}
               ${cardDetails.color == "blue" ? "bg-blue-300 border-blue-600" : ""}
+              ${cardDetails.color == "yellow" ? "bg-yellow-300 border-yellow-600" : ""}
               ${cardDetails.color == "purple" ? "bg-purple-300 border-purple-600" : ""}
-            `}>
+            `}
+          >
             {cardDetails.percentage}%
           </span>
           <p className="text-nowrap">Might add percentage</p>

@@ -30,11 +30,11 @@ internal sealed class CommentsModule : IModule
     public void Expose(IEndpointRouteBuilder endpoints)
     {
         // Simple GET endpoint
-        endpoints.MapGet("/comments/status", () =>
-        {
-            return Results.Ok("Comments is working");
-        })
-        .WithTags("Comments")
-        .WithName("Get Comments Status");
+        // endpoints.MapGet("/comments/status", () =>
+        // {
+        //     return Results.Ok("Comments is working");
+        // })
+        // .WithTags("Comments")
+        // .WithName("Get Comments Status");
     }
 }

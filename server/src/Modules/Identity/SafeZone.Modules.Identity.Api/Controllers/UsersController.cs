@@ -23,7 +23,7 @@ internal class UsersController(IDispatcher _dispatcher) : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<User>> LoginUser([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<UserDetailsDto>> LoginUser([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var user = await dispatcher.QueryAsync(new GetSingleUserQuery(id), cancellationToken);
         return Ok(user);

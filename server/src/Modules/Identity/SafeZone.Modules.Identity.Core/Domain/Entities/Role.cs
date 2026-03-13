@@ -2,18 +2,16 @@ namespace SafeZone.Modules.Identity.Core.Domain.Entities;
 
 public sealed class UserRole : IEquatable<UserRole>
 {
-    public static readonly UserRole User = new("user");
+    public static readonly UserRole Responder = new("responder");
     public static readonly UserRole Admin = new("admin");
     public static readonly UserRole Supervisor = new("supervisor");
-    public static readonly UserRole Responder = new("responder");
 
     private static readonly Dictionary<string, UserRole> Roles =
         new(StringComparer.OrdinalIgnoreCase)
         {
-            ["user"] = User,
+            ["responder"] = Responder,
             ["admin"] = Admin,
             ["supervisor"] = Supervisor,
-            ["responder"] = Responder
         };
 
     public string Value { get; }
@@ -38,7 +36,6 @@ public sealed class UserRole : IEquatable<UserRole>
     public bool IsAdmin() => this == Admin;
     public bool IsSupervisor() => this == Supervisor;
     public bool IsResponder() => this == Responder;
-    public bool IsUser() => this == User;
 
     public override string ToString() => Value;
 

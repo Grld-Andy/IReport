@@ -1,3 +1,5 @@
 namespace SafeZone.Modules.Incident.Core.Queries.GetIncidents;
 
-internal record GetIncidentsQuery() : IQuery<List<IncidentDto>>;
+internal class GetIncidentsQuery() : PagedQuery<IncidentDto>{
+    public string? Filter { get; set; } = "";
+}

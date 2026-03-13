@@ -1,4 +1,3 @@
-using SafeZone.Modules.Identity.Core.DTO;
 using SafeZone.Shared.Infrastructure.Postgres;
 
 namespace SafeZone.Modules.Identity.Core.DAL.Repositories;
@@ -19,6 +18,7 @@ internal class UsersRepository(UsersDbContext _dbContext) : IUserRepository
             email: userDto.Email,
             password: userDto.Password,
             role: userDto.Role,
+            team: userDto.Team,
             now: DateTime.Now
         );
 
@@ -72,5 +72,15 @@ internal class UsersRepository(UsersDbContext _dbContext) : IUserRepository
     public async Task SaveAsync(CancellationToken cancellationToken = default)
     {
         await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<List<UserDetailsDto>> GetAllByIdsAsync(List<Guid> guids, CancellationToken cancellationToken = default)
+    {
+        var users = await dbContext.Users
+            .AsNoTracking()
+            .Where(u => guids.Contains(u.Id))
+            .Select(u => UserMapper.FromEntity(u))
+            .ToListAsync(cancellationToken: cancellationToken);
+        return users;
     }
 }

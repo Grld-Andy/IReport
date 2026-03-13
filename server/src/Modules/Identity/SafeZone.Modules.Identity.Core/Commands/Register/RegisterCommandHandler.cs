@@ -10,6 +10,10 @@ internal class RegisterCommandHandler(IUserRepository _userRepository, IPassword
     public async Task HandleAsync(RegisterCommand command, CancellationToken cancellationToken = default)
     {
         var userDto = command.User;
+        if(userDto.Password != userDto.ConfirmPassword)
+        {
+            throw new BadRequestException("Passwords do not match, please try again.");
+        }
         userDto.Password = passwordManager.Secure(userDto.Password);
         await userRepository.CreateAsync(UserMapper.ToEntity(userDto), cancellationToken);
     }

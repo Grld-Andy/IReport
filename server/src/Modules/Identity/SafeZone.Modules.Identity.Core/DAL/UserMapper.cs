@@ -1,4 +1,3 @@
-using SafeZone.Modules.Identity.Core.DTO;
 namespace SafeZone.Modules.Identity.Core.DAL;
 
 internal static class UserMapper
@@ -12,6 +11,7 @@ internal static class UserMapper
             new UserEmail(dto.Email),
             new UserPassword(dto.Password),
             UserRole.From(dto.Role),
+            team: dto.Team,
             now
         );
     }
@@ -25,7 +25,8 @@ internal static class UserMapper
             Status = user.Status.Value,
             Name = user.Name,
             Email = user.Email,
-            Role = user.Role.Value
+            Role = user.Role.Value,
+            Team = user.Team
         };
     }
 }

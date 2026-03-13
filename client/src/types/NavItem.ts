@@ -5,4 +5,5 @@ export interface NavItem
     icon: IconType
     name: string
     activeIcon: IconType
+    path: string
 }

@@ -12,6 +12,7 @@ internal static class Extensions
     public static IServiceCollection AddCore(this IServiceCollection services, IConfiguration configuration)
     {
         services
+            .AddSingleton<IUserApiClient, UserApiClient>()
             .AddScoped<IIncidentRepository, IncidentRepository>()
             .AddPostgres<IncidentDbContext>(configuration);
         return services;
