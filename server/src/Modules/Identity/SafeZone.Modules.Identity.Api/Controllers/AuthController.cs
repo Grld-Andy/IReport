@@ -31,17 +31,6 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     public async Task<ActionResult> CheckAuth()
     {
         var currentUserId = context.Identity.Id;
-        // var keys = context.Identity.Claims.Keys;
-
-        // foreach (string key in keys)
-        // {
-        //     var values = context.Identity.Claims[key];
-
-        //     foreach (var value in values)
-        //     {
-        //         Console.WriteLine($"================= Key: {key} => Value: {value}");
-        //     }
-        // }
         var result = await dispatcher.QueryAsync(new GetSingleUserQuery(currentUserId));
         return Ok(result);
     }

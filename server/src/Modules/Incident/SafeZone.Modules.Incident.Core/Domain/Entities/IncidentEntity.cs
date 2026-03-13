@@ -11,6 +11,7 @@ internal class IncidentEntity
     public IncidentSubject Subject { get; private set; } = default!;
     public IncidentDescription Description { get; private set; } = default!;
     public IncidentCategory Category { get; private set; }
+    public string Team {get; set;} = string.Empty;
     public IncidentSeverity Severity { get; private set; }
     public IncidentStatus Status { get; private set; }
     public Guid ReporterId { get; private set; }
@@ -29,7 +30,8 @@ internal class IncidentEntity
         IncidentCategory category,
         IncidentSeverity severity,
         Guid reporterId,
-        IncidentLocation location)
+        IncidentLocation location,
+        string team)
     {
         Id = id;
         Subject = subject;
@@ -38,6 +40,7 @@ internal class IncidentEntity
         Severity = severity;
         ReporterId = reporterId;
         Location = location;
+        Team = team;
         Status = IncidentStatus.Open;
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
@@ -49,7 +52,8 @@ internal class IncidentEntity
         IncidentCategory category,
         IncidentSeverity severity,
         Guid reporterId,
-        IncidentLocation location)
+        IncidentLocation location,
+        string team)
     {
         return new IncidentEntity(
             Guid.NewGuid(),
@@ -58,7 +62,8 @@ internal class IncidentEntity
             category,
             severity,
             reporterId,
-            location);
+            location,
+            team);
     }
 
     public void AssignTo(Guid userId)

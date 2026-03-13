@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SafeZone.Modules.Incident.Core.DAL;
 
 #nullable disable
 
-namespace SafeZone.Modules.Incident.Core.DAL.Migrations
+namespace SafeZone.Modules.Incident.Core.Data.Migrations
 {
     [DbContext(typeof(IncidentDbContext))]
-    partial class IncidentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260313104951_AddTeam")]
+    partial class AddTeam
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

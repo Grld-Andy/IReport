@@ -10,6 +10,7 @@ internal sealed class IncidentDto
     public string Category { get; init; } = default!;
     public string Severity { get; init; } = default!;
     public string Status { get; init; } = default!;
+    public string Team { get; init; } = default!;
     public UserDto? Reporter { get; init; }
     public UserDto? AssignedTo { get; init; }
     public double Latitude { get; init; }

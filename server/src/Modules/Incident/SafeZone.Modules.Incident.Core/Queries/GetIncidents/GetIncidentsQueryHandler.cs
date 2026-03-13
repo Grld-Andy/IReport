@@ -11,8 +11,13 @@ internal class GetIncidentsHandler(IIncidentRepository _incidentsRepo) : IQueryH
         Dictionary<string, string> dict = [];
         if (!string.IsNullOrWhiteSpace(query.Filter))
         {
-            dict = new Dictionary<string, string>(){{"filter", query.Filter}};
+            dict.Add("filter", query.Filter);
         }
+        if (!string.IsNullOrWhiteSpace(query.Team))
+        {
+            dict.Add("team", query.Team);
+        }
+
         return await incidentsRepo.GetAllIncidents(query, query.OrderBy, query.SortOrder, dict, cancellationToken);
     }
 }

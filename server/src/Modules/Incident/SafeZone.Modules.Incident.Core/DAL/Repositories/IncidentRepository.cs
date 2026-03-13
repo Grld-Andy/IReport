@@ -1,50 +1,67 @@
-using SafeZone.Modules.Incident.Core.Queries.GetIncidents;
 using SafeZone.Shared.Infrastructure.Postgres;
 
 namespace SafeZone.Modules.Incident.Core.DAL.Repositories;
 
-internal sealed class IncidentRepository(IncidentDbContext _context, IUserApiClient _userApiClient) : IIncidentRepository
+internal sealed class IncidentRepository(IncidentDbContext _dbcontext, IUserApiClient _userApiClient, IContext _context) : IIncidentRepository
 {
-    private readonly IncidentDbContext context = _context;
+    private readonly IncidentDbContext dbcontext = _dbcontext;
     private readonly IUserApiClient userApiClient = _userApiClient;
+    private readonly IContext context = _context;
 
     public async Task SaveAsync(CancellationToken cancellationToken = default){
-        await context.SaveChangesAsync(cancellationToken);
+        await dbcontext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<IncidentEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await context.Incidents
+        return await dbcontext.Incidents
             .FirstOrDefaultAsync(i => i.Id == id, cancellationToken)
             ?? throw new NotFoundException("Incident", id);
     }
 
     public async Task AddAsync(IncidentEntity incident, CancellationToken cancellationToken = default)
     {
-        await context.Incidents.AddAsync(incident, cancellationToken);
+        await dbcontext.Incidents.AddAsync(incident, cancellationToken);
     }
 
     public Task UpdateAsync(IncidentEntity incident, CancellationToken cancellationToken = default)
     {
-        context.Incidents.Update(incident);
+        dbcontext.Incidents.Update(incident);
         return Task.CompletedTask;
     }
 
     public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await context.Incidents
+        return await dbcontext.Incidents
             .AnyAsync(x => x.Id == id, cancellationToken);
     }
 
     public async Task<Paged<IncidentDto>> GetAllIncidents(IPagedQuery query, string orderBy, string sortOrder, Dictionary<string, string>? filters, CancellationToken cancellationToken = default)
     {
-        var incidentsQuery = context.Incidents
+        var incidentsQuery = dbcontext.Incidents
             .AsNoTracking()
             .AsQueryable();
         
         // filter
         if(filters?.Count > 0)
         {
+            var role = context.Identity.Role;
+            var id = context.Identity.Id;
+            if(filters.TryGetValue("team", out var team) && !role.Equals("admin", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Console.WriteLine($"================ current user team : {team}");
+                if(role.Equals("supervisor"))
+                {
+                    Console.WriteLine("fetching for supervisor");
+                    incidentsQuery = incidentsQuery.Where(i => EF.Functions.Like(i.Team.ToLower(), $"%{team.ToLower()}%"));
+                }
+                else
+                {
+                    Console.WriteLine("fetching for responder");
+                    incidentsQuery = incidentsQuery.Where(i => i.ReporterId == id || i.AssignedToId == id);
+                }
+            }
+
             if(filters.TryGetValue("filter", out var filter))
             {
                 incidentsQuery = incidentsQuery.Where(i => EF.Functions.Like(i.Subject.Value, $"%{filter}%") || EF.Functions.Like(i.Description.Value, $"%{filter}%"));
