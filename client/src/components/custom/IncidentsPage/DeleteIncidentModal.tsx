@@ -15,13 +15,13 @@ import { toast } from "sonner";
 
 interface Props {
   id: string;
-  deleteIncident?: (id: string) => void;
+  deleteFunc?: (id: string) => void;
   trigger: ReactNode;
 }
 
 const DeleteIncidentModal: React.FC<Props> = ({
   id,
-  deleteIncident,
+  deleteFunc,
   trigger,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -31,8 +31,8 @@ const DeleteIncidentModal: React.FC<Props> = ({
     setIsSubmitting(true);
     const { success, message } = await deleteIncidentService(id);
     if (success) {
-      if (deleteIncident) {
-        deleteIncident(id);
+      if (deleteFunc) {
+        deleteFunc(id);
       }
     } else {
       toast.error(message, { position: "top-center" });

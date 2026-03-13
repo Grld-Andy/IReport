@@ -45,10 +45,10 @@ const Login: React.FC = () => {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setApiError(error.response?.data.errors[0].message);
-        toast.error(apiError)
+        toast.error(apiError, {position: "top-center"})
       } else {
         console.error("Unexpected error:", error);
-        toast.error("Unexpected error")
+        toast.error("Unexpected error", {position: "top-center"})
       }
     } finally {
       dispatch(loginStop());

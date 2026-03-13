@@ -63,7 +63,7 @@ const BoardCard: React.FC<Props> = ({ incident, onDelete, onUpdate }) => {
                 }
               />
               <DeleteIncidentModal
-                deleteIncident={onDelete}
+                deleteFunc={onDelete}
                 id={incident.id}
                 trigger={
                   <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
