@@ -35,7 +35,10 @@ const IncidentsTable: React.FC = () => {
     (state) => state.incidents.totalIncidents,
   );
   const stateIncidents = useAppSelector((state) => state.incidents.incidents);
-  const newIncidentColumns = user?.role == "responder" ? incidentColumns : [...incidentColumns, "Action"];
+  const newIncidentColumns =
+    user?.role == "responder"
+      ? incidentColumns
+      : [...incidentColumns, "Action"];
 
   const navigate = useNavigate();
   const { page } = useParams();
@@ -244,12 +247,23 @@ const IncidentsTable: React.FC = () => {
                   {/* Actions */}
                   {user?.role == "responder" || (
                     <TableCell className="flex gap-1">
-                      <UpdateIncidentModal incident={incident}
-                        trigger={<Button className="bg-amber-500 hover:bg-amber-600 text-white"><CiEdit /></Button>} />
+                      <UpdateIncidentModal
+                        incident={incident}
+                        key={incident.id}
+                        trigger={
+                          <Button className="bg-amber-500 hover:bg-amber-600 text-white">
+                            <CiEdit />
+                          </Button>
+                        }
+                      />
                       <DeleteIncidentModal
                         id={incident.id}
                         deleteIncident={deleteIncident}
-                        trigger={<Button variant={"destructive"}><MdOutlineDelete/></Button>}
+                        trigger={
+                          <Button variant={"destructive"}>
+                            <MdOutlineDelete />
+                          </Button>
+                        }
                       />
                     </TableCell>
                   )}

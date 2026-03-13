@@ -6,6 +6,7 @@ export interface User{
     name: string
     email: string
     role: string
+    team: string
     createdAt: Date
     updatedAt: Date
 }

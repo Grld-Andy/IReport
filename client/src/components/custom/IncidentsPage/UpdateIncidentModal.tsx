@@ -42,6 +42,8 @@ import { useAppSelector } from "@/redux/app/hooks";
 import UserCombobox from "./UserCombobox";
 import { toast } from "sonner";
 import { updateIncident } from "@/services/updateIncident";
+import LocationPicker from "./LocationPicker";
+import axios from "axios";
 
 export type IncidentForm = z.infer<typeof incidentSchema>;
 
@@ -56,6 +58,12 @@ export default function UpdateIncidentModal({
   trigger,
   onUpdate,
 }: IncidentUpdateModalProps) {
+  const [latitude, setLatitude] = useState<number | null>(
+    incident.latitude ?? null,
+  );
+  const [longitude, setLongitude] = useState<number | null>(
+    incident.longitude ?? null,
+  );
   const users = useAppSelector((state) => state.users.users);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -78,6 +86,31 @@ export default function UpdateIncidentModal({
       locationDetails: "",
     },
   });
+
+  const handleLocationSelect = (lat: number, lng: number, name?: string) => {
+    setLatitude(lat);
+    setLongitude(lng);
+
+    if (name) {
+      setValue("locationDetails", name);
+    }
+  };
+
+  const getMyLocation = () => {
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+
+      setLatitude(lat);
+      setLongitude(lng);
+
+      const res = await axios.get(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+      );
+
+      setValue("locationDetails", res.data.display_name);
+    });
+  };
 
   // Prefill form with incident data
   useEffect(() => {
@@ -108,10 +141,20 @@ export default function UpdateIncidentModal({
   };
 
   const onSubmit = async (data: IncidentForm) => {
-
-    console.log("form data to submit: ", data)
-    const response = await updateIncident(data, incident.id);
-    console.log(response)
+    console.log("form data to submit: ", {
+      ...data,
+      latitude,
+      longitude,
+    });
+    const response = await updateIncident(
+      {
+        ...data,
+        latitude,
+        longitude,
+      },
+      incident.id,
+    );
+    console.log(response);
 
     if (response.success) {
       // update for kanban board
@@ -134,7 +177,7 @@ export default function UpdateIncidentModal({
             id: updatedIncident.assignedTo?.id ?? "",
           },
         });
-        setIsOpen(false)
+        setIsOpen(false);
       } else {
         toast.error(response.message, { position: "top-center" });
       }
@@ -281,6 +324,40 @@ export default function UpdateIncidentModal({
                   )}
                 </Field>
               </div>
+
+              <Field>
+                <div className="flex gap-5 justify-between">
+                  <div className="flex flex-col gap-2">
+                    <Label>Select Location on Map</Label>
+
+                    {latitude && longitude ? (
+                      <p className="text-xs text-gray-500 h-[18px]">
+                        Selected: {latitude.toFixed(5)}, {longitude.toFixed(5)}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-gray-500 h-[18px]">
+                        Please select location
+                      </p>
+                    )}
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={getMyLocation}
+                  >
+                    Use My Location
+                  </Button>
+                </div>
+
+                <div className="border rounded-md overflow-hidden">
+                  <LocationPicker
+                    latitude={latitude}
+                    longitude={longitude}
+                    onLocationSelect={handleLocationSelect}
+                  />
+                </div>
+              </Field>
 
               <Field>
                 <Label htmlFor="locationDetails">Location Details</Label>

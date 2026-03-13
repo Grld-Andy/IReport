@@ -54,7 +54,6 @@ const UsersPage: React.FC = () => {
         />
       </div>
 
-      {/* ── Table Card ── */}
       <OldUsersTable />
     </div>
   );

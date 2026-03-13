@@ -25,7 +25,8 @@ internal static class UserMapper
             Status = user.Status.Value,
             Name = user.Name,
             Email = user.Email,
-            Role = user.Role.Value
+            Role = user.Role.Value,
+            Team = user.Team
         };
     }
 }

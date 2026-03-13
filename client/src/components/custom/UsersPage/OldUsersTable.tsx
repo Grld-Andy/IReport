@@ -41,6 +41,7 @@ const OldUsersTable: React.FC = () => {
     try {
       setLoading(true);
       const result = await getUsers(1);
+      console.log("fetched users: ", result)
       setUsers(result.users ?? []);
     } catch (error) {
       console.error("Failed to fetch users:", error);
@@ -124,7 +125,7 @@ const OldUsersTable: React.FC = () => {
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50/80 border-b border-gray-100">
-                {["User", "Role", "Status", "Joined", ""].map((col) => (
+                {["User", "Role", "Team", "Status", "Joined", ""].map((col) => (
                   <TableHead
                     key={col}
                     className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest py-3"
@@ -155,10 +156,9 @@ const OldUsersTable: React.FC = () => {
                 </TableRow>
               )}
 
-              {users.map((user, index) => {
+              {loading || users.map((user, index) => {
                 const sc = statusConfig[user.status];
                 const rc = roleConfig[user.role];
-                console.log(rc, sc, user.role);
 
                 return (
                   <TableRow
@@ -196,6 +196,10 @@ const OldUsersTable: React.FC = () => {
                       </span>
                     </TableCell>
 
+                    <TableCell className="text-sm text-gray-400 text-nowrap min-w-[100px]">
+                      {user.team}
+                    </TableCell>
+
                     {/* Status */}
                     <TableCell>
                       <span
@@ -209,7 +213,7 @@ const OldUsersTable: React.FC = () => {
                     </TableCell>
 
                     {/* Joined */}
-                    <TableCell className="text-sm text-gray-400">
+                    <TableCell className="text-sm text-gray-400 text-nowrap">
                       {new Date(user.createdAt).toLocaleDateString("en-GB", {
                         day: "2-digit",
                         month: "short",

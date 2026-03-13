@@ -62,7 +62,15 @@ export default function CreateUserModal() {
 
     if (response.success) {
       reset();
-      dispatch(addUser({...data, createdAt: new Date(),updatedAt: new Date(), status: "Inactive", id: crypto.randomUUID()}));
+      dispatch(
+        addUser({
+          ...data,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          status: "Inactive",
+          id: crypto.randomUUID(),
+        }),
+      );
       setIsOpen(false);
     } else {
       toast.error(response.message, { position: "top-center" });
@@ -136,13 +144,10 @@ export default function CreateUserModal() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Roles</SelectLabel>
-
                         <SelectItem value="admin">Administrator</SelectItem>
-
                         <SelectItem value="supervisor">
                           Incident Supervisor
                         </SelectItem>
-
                         <SelectItem value="responder">
                           Field Responder
                         </SelectItem>
@@ -168,28 +173,22 @@ export default function CreateUserModal() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Response Teams</SelectLabel>
-
-                        <SelectItem value="marine_operations">
+                        <SelectItem value="Marine Operations">
                           Marine Operations
                         </SelectItem>
-
-                        <SelectItem value="port_security">
+                        <SelectItem value="Port Security">
                           Port Security
                         </SelectItem>
-
-                        <SelectItem value="emergency_response">
+                        <SelectItem value="Emergency Response">
                           Emergency Response
                         </SelectItem>
-
-                        <SelectItem value="environmental_safety">
+                        <SelectItem value="Environmental Safety">
                           Environmental Safety
                         </SelectItem>
-
-                        <SelectItem value="logistics_control">
+                        <SelectItem value="Logistics Control">
                           Logistics & Cargo Control
                         </SelectItem>
-
-                        <SelectItem value="vessel_traffic_control">
+                        <SelectItem value="Vessel Traffic Control">
                           Vessel Traffic Control
                         </SelectItem>
                       </SelectGroup>

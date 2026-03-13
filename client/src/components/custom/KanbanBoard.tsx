@@ -106,10 +106,6 @@ const KanbanBoard: React.FC = () => {
       });
 
       const column = updatedIncident.status as ColumnKey;
-
-      console.log("checking updated data")
-      console.log(column)
-      console.log(updated)
       updated[column].unshift(updatedIncident);
 
       return updated;
