@@ -24,6 +24,7 @@ export interface IncidentUser{
     email: string
     name: string
     id: string
+    team?: string
 }
 
 export const incidentSchema = z.object({

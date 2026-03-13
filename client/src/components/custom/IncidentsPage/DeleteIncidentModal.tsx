@@ -34,6 +34,7 @@ const DeleteIncidentModal: React.FC<Props> = ({
       if (deleteFunc) {
         deleteFunc(id);
       }
+      toast.success("Incident Reported Successfully", {position: "top-center"})
     } else {
       toast.error(message, { position: "top-center" });
     }

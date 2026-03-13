@@ -26,6 +26,7 @@ internal static class IncidentMapper
             Status = incident.Status.ToString(),
             Reporter = reporter,
             AssignedTo = assigned,
+            Team = incident.Team,
             Latitude = incident.Location.Latitude,
             Longitude = incident.Location.Longitude,
             LocationDetails = incident.Location.ExtraDetails,

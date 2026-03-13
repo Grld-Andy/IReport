@@ -1,5 +1,3 @@
-using SafeZone.Shared.Abstractions.Contexts;
-
 namespace SafeZone.Modules.Incident.Core.Commands.UpdateIncident;
 
 internal sealed class UpdateIncidentHandler
@@ -36,8 +34,6 @@ internal sealed class UpdateIncidentHandler
         if (incident.AssignedToId != command.AssignedToId)
             changes.Add($"AssignedTo changed");
 
-        incident.UpdateIncident(command);
-
         List<Guid> userIds = [incident.ReporterId, context.Identity.Id];
 
         if (command.AssignedToId.HasValue)
@@ -46,6 +42,7 @@ internal sealed class UpdateIncidentHandler
             incident.AssignTo(command.AssignedToId.Value);
         }
 
+        incident.UpdateIncident(command);
         var users = await userApiClient.GetUsersByIds(userIds);
         var usersDict = users.ToDictionary(u => u.Id);
 

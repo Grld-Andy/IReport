@@ -98,6 +98,7 @@ export default function CreateIncidentModal() {
     });
     if (response.success) {
       console.log("Created incident successfully", response);
+      toast.success("Incident Reported Successfully", {position: "top-center"})
       reset();
     } else {
       toast.error(response.message, { position: "top-center" });
