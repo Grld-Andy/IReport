@@ -57,7 +57,8 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
 
     public async Task<Paged<UserDetailsDto>> GetAllAsync(IPagedQuery query, CancellationToken cancellationToken = default)
     {
-        if (context.Identity.Role == "admin")
+        var role = context.Identity.Role;
+        if (role == "admin")
         {
             return await dbContext.Users.AsNoTracking().Select(u => UserMapper.FromEntity(u)).PaginateAsync(query, cancellationToken: cancellationToken);
         }
