@@ -12,7 +12,7 @@ import "leaflet/dist/leaflet.css";
 import type { Incident } from "@/types/Incident";
 import { severityConfig, statusConfig } from "@/constants/getColors";
 import Badge from "./Badge";
-import { incidentIcon, meIcon } from "@/assets/Icon";
+import { criticalIncidentIcon, highIncidentIcon, lowIncidentIcon, mediumIncidentIcon, meIcon } from "@/assets/Icon";
 
 interface Props {
   incidents: Array<Incident>;
@@ -34,6 +34,7 @@ const FlyToLocation: React.FC<{
 };
 
 const MapComponent: React.FC<Props> = ({ incidents, myLocation }) => {
+  console.log(incidents)
   return (
     <MapContainer
       center={persolCenter}
@@ -56,7 +57,11 @@ const MapComponent: React.FC<Props> = ({ incidents, myLocation }) => {
 
       {incidents?.map((incident) => (
         <Marker
-        icon={incidentIcon}
+        icon={
+          incident.severity == "Low" ? lowIncidentIcon :
+          incident.severity == "Medium" ? mediumIncidentIcon :
+          incident.severity == "High" ? highIncidentIcon : criticalIncidentIcon
+        }
           key={incident.id}
           position={{ lat: incident.latitude, lng: incident.longitude }}
         >
