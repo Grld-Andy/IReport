@@ -7,6 +7,7 @@ import type { Incident } from "@/types/Incident";
 import { getStatusNum } from "@/types/StatusEnum";
 import BoardCard from "./BoardCard";
 import { toast } from "sonner";
+import { useAppSelector } from "@/redux/app/hooks";
 
 type ColumnKey = "Open" | "InProgress" | "Resolved" | "Closed";
 type KanbanState = Record<ColumnKey, Incident[]>;
@@ -26,10 +27,11 @@ const KanbanBoard: React.FC = () => {
     Closed: [],
   });
   const [dragSource, setDragSource] = useState<ColumnKey | null>(null);
+  const currentUser = useAppSelector((state) => state.auth.user)
 
   useEffect(() => {
     const fetchIncidents = async () => {
-      const result = await getAllIncidents();
+      const result = await getAllIncidents(currentUser?.team);
 
       const grouped: KanbanState = {
         Open: [],
@@ -46,7 +48,7 @@ const KanbanBoard: React.FC = () => {
     };
 
     fetchIncidents();
-  }, []);
+  }, [currentUser?.team]);
 
   const handleDragAdd = async (evt: any, toColumn: ColumnKey) => {
     const incidentId = evt.item.dataset.id;

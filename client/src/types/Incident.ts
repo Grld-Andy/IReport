@@ -17,6 +17,7 @@ export interface Incident{
     locationDetails: string
     createdAt: string
     updatedAt: string
+    team: string
 }
 
 export interface IncidentUser{

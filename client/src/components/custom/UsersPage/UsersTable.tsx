@@ -10,7 +10,7 @@ import {
 import SortButton from "../IncidentsPage/SortButton";
 import FilterButton from "../IncidentsPage/FilterButton";
 import { Input } from "@/components/ui/input";
-import { CiSearch } from "react-icons/ci";
+import { CiEdit, CiSearch } from "react-icons/ci";
 import Badge from "../Badge";
 import { severityConfig, statusConfig } from "@/constants/getColors";
 import { incidentColumns } from "@/constants/incidentColumns";
@@ -21,15 +21,20 @@ import { Button } from "../../ui/button";
 import UpdateIncidentModal from "../IncidentsPage/UpdateIncidentModal";
 import DeleteIncidentModal from "../IncidentsPage/DeleteIncidentModal";
 import { useAppSelector } from "@/redux/app/hooks";
+import { MdOutlineDelete } from "react-icons/md";
 
 const UsersTable: React.FC = () => {
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [totalIncidents, setTotalIncidents] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
-  const [search, setSearch] = useState("");
-  const stateTotalIncidents = useAppSelector((state) => state.incidents.totalIncidents)
-  const stateIncidents = useAppSelector((state) => state.incidents.incidents)
+  const stateTotalIncidents = useAppSelector(
+    (state) => state.incidents.totalIncidents,
+  );
+  const stateIncidents = useAppSelector((state) => state.incidents.incidents);
+  const currentUser = useAppSelector((state) => state.auth.user);
+  const [search, setSearch] = useState<string>("");
+  const [orderBy, setOrderBy] = useState<string>("");
 
   const navigate = useNavigate();
   const { page } = useParams();
@@ -39,17 +44,17 @@ const UsersTable: React.FC = () => {
   const fetchIncidents = useCallback(async () => {
     try {
       setLoading(true);
-      const result = await getIncidents(currentPage);
+      const result = await getIncidents(currentPage, "", "", currentUser?.team);
       setIncidents(result.incidents ?? []);
       setTotalIncidents(result.totalIncidents ?? 0);
       setTotalPages(result.totalPages ?? 1);
-      console.log(result)
+      console.log(result);
     } catch (error) {
       console.error("Failed to fetch incidents:", error);
     } finally {
       setLoading(false);
     }
-  }, [currentPage]);
+  }, [currentPage, currentUser?.team]);
 
   useEffect(() => {
     fetchIncidents();
@@ -65,7 +70,7 @@ const UsersTable: React.FC = () => {
       prev.map((incident) => {
         const updated = stateIncidents.find((s) => s.id === incident.id);
         return updated ?? incident;
-      })
+      }),
     );
   }, [stateIncidents]);
 
@@ -110,7 +115,7 @@ const UsersTable: React.FC = () => {
           </div>
 
           <div className="flex gap-2">
-            <SortButton />
+            <SortButton orderBy={orderBy} setOrderBy={setOrderBy} />
             <FilterButton />
           </div>
         </div>
@@ -190,10 +195,7 @@ const UsersTable: React.FC = () => {
 
                   {/* Severity */}
                   <TableCell>
-                    <Badge
-                      value={incident.severity}
-                      config={severityConfig}
-                    />
+                    <Badge value={incident.severity} config={severityConfig} />
                   </TableCell>
 
                   {/* Category */}
@@ -234,11 +236,21 @@ const UsersTable: React.FC = () => {
                   <TableCell className="flex gap-1">
                     <UpdateIncidentModal
                       incident={incident}
-                      // updateIncident={updateIncident}
+                      // updateFunc={updateIncident}
+                      trigger={
+                        <Button className="bg-amber-500 hover:bg-amber-600 text-white">
+                          <CiEdit />
+                        </Button>
+                      }
                     />
                     <DeleteIncidentModal
                       id={incident.id}
-                      deleteIncident={deleteIncident}
+                      deleteFunc={deleteIncident}
+                      trigger={
+                        <Button variant={"destructive"}>
+                          <MdOutlineDelete />
+                        </Button>
+                      }
                     />
                   </TableCell>
                 </TableRow>

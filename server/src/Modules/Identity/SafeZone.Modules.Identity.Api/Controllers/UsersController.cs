@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using SafeZone.Modules.Identity.Core.Domain.Entities;
 using SafeZone.Modules.Identity.Core.DTO;
 using SafeZone.Modules.Identity.Core.Queries.GetSingleUser;
 using SafeZone.Modules.Identity.Core.Queries.GetUsers;

@@ -35,7 +35,7 @@ const Layout: React.FC = () => {
         } else {
           dispatch(loginSuccess(response.data))
 
-          const incidentsResult = await getAllIncidents()
+          const incidentsResult = await getAllIncidents(user?.team)
           dispatch(saveIncidentsState(incidentsResult))
 
           const usersResult = await getAllUsers()
@@ -51,7 +51,7 @@ const Layout: React.FC = () => {
     };
 
     setUser();
-  }, [dispatch]);
+  }, [dispatch, user?.team]);
 
   if (!user) {
     return <Navigate to="/auth/login" replace />;
@@ -83,7 +83,3 @@ const Layout: React.FC = () => {
 };
 
 export default Layout;
-
-// todo: show only assigned/self reported incidents to user
-// todo: show only team incidents to supervisor
-// todo: supervisor can only assign team reported incidents

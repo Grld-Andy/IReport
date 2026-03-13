@@ -1,15 +1,18 @@
+using SafeZone.Shared.Abstractions.Contexts;
 using SafeZone.Shared.Infrastructure.Postgres;
 
 namespace SafeZone.Modules.Identity.Core.DAL.Repositories;
 
-internal class UsersRepository(UsersDbContext _dbContext) : IUserRepository
+internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : IUserRepository
 {
     private readonly UsersDbContext dbContext = _dbContext;
+    private readonly IContext context = _context;
 
     public async Task CreateAsync(User userDto, CancellationToken cancellationToken = default)
     {
         var userExists = dbContext.Users.AsNoTracking().FirstOrDefault(u => u.Email.Equals(userDto.Email));
-        if(userExists is not null){
+        if (userExists is not null)
+        {
             throw new BadRequestException($"User with email {userDto.Email} already exists");
         }
 
@@ -29,7 +32,8 @@ internal class UsersRepository(UsersDbContext _dbContext) : IUserRepository
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
-        if(user is null){
+        if (user is null)
+        {
             return false;
         }
 
@@ -41,7 +45,8 @@ internal class UsersRepository(UsersDbContext _dbContext) : IUserRepository
     public async Task<bool> SoftDeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
-        if(user is null){
+        if (user is null)
+        {
             return false;
         }
 
@@ -52,7 +57,16 @@ internal class UsersRepository(UsersDbContext _dbContext) : IUserRepository
 
     public async Task<Paged<UserDetailsDto>> GetAllAsync(IPagedQuery query, CancellationToken cancellationToken = default)
     {
-        return await dbContext.Users.AsNoTracking().Select(u => UserMapper.FromEntity(u)).PaginateAsync(query, cancellationToken: cancellationToken);
+        var role = context.Identity.Role;
+        if (role == "admin")
+        {
+            return await dbContext.Users.AsNoTracking().Select(u => UserMapper.FromEntity(u)).PaginateAsync(query, cancellationToken: cancellationToken);
+        }
+        else
+        {
+            var user = await GetByIdAsync(context.Identity.Id, cancellationToken);
+            return await dbContext.Users.AsNoTracking().Where(u => u.Team == user.Team).Select(u => UserMapper.FromEntity(u)).PaginateAsync(query, cancellationToken: cancellationToken);
+        }
     }
 
     public async Task<UserDetailsDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

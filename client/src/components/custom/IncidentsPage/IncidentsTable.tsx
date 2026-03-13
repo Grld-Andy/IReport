@@ -35,6 +35,7 @@ const IncidentsTable: React.FC = () => {
     (state) => state.incidents.totalIncidents,
   );
   const stateIncidents = useAppSelector((state) => state.incidents.incidents);
+  const currentUser = useAppSelector((state) => state.auth.user)
   const newIncidentColumns =
     user?.role == "responder"
       ? incidentColumns
@@ -49,7 +50,7 @@ const IncidentsTable: React.FC = () => {
   const fetchIncidents = useCallback(async () => {
     try {
       setLoading(true);
-      const result = await getIncidents(currentPage, debouncedSearch, orderBy);
+      const result = await getIncidents(currentPage, debouncedSearch, orderBy, currentUser?.team);
       setIncidents(result.incidents ?? []);
       setTotalIncidents(result.totalIncidents ?? 0);
       setTotalPages(result.totalPages ?? 1);
@@ -59,7 +60,7 @@ const IncidentsTable: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, orderBy, debouncedSearch]);
+  }, [currentPage, debouncedSearch, orderBy, currentUser?.team]);
 
   useEffect(() => {
     fetchIncidents();
@@ -258,7 +259,7 @@ const IncidentsTable: React.FC = () => {
                       />
                       <DeleteIncidentModal
                         id={incident.id}
-                        deleteIncident={deleteIncident}
+                        deleteFunc={deleteIncident}
                         trigger={
                           <Button variant={"destructive"}>
                             <MdOutlineDelete />
