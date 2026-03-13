@@ -280,7 +280,7 @@ export default function UpdateIncidentModal({
                 </Field>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 z-100">
                 <Field>
                   <Label htmlFor="status">Status</Label>
                   <Select
@@ -353,7 +353,7 @@ export default function UpdateIncidentModal({
                   </Button>
                 </div>
 
-                <div className="border rounded-md overflow-hidden">
+                <div className="border rounded-md overflow-hidden z-[-10]">
                   <LocationPicker
                     latitude={latitude}
                     longitude={longitude}

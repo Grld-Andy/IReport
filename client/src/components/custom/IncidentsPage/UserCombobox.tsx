@@ -34,7 +34,7 @@ const UserCombobox: React.FC<Props> = ({ users, initialUser, onChange }) => {
   };
 
   return (
-    <div className="w-72 relative">
+    <div className="w-72 relative z-100">
       <Input
         type="text"
         value={selectedUser ? selectedUser.name : query}
@@ -53,7 +53,7 @@ const UserCombobox: React.FC<Props> = ({ users, initialUser, onChange }) => {
       />
 
       {open && (
-        <ul className="absolute z-10 mt-1 w-full bg-white p-2 border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
+        <ul className="absolute z-10 mt-1 w-full bg-white p-2 border border-gray-200 rounded-lg shadow-lg max-h-[150px] overflow-auto">
           {filteredUsers.length === 0 ? (
             <li className="px-2 py-1 text-sm text-gray-500">No users found</li>
           ) : (
