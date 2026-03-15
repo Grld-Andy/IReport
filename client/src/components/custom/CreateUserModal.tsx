@@ -58,7 +58,6 @@ export default function CreateUserModal() {
 
   const onSubmit = async (data: UserForm) => {
     const response = await createUserService(data);
-    console.log("User created", response);
 
     if (response.success) {
       reset();

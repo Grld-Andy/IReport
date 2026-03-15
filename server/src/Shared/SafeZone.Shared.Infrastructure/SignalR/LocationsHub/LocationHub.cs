@@ -8,14 +8,11 @@ public class LocationHub : Hub
 {
     public override async Task OnConnectedAsync()
     {
-        Console.WriteLine($"@@@@@@@@@@@@@@ User connected: {Context.ConnectionId}");
-
         await base.OnConnectedAsync();
     }
 
     public async Task UpdateLocation(UserLocationDto locationDto)
     {
-        Console.WriteLine($"=============== {Context.UserIdentifier} got {locationDto.Name} location {locationDto.Lat}, {locationDto.Lng}");
         await Clients.Others.SendAsync("UserLocationUpdated", locationDto);
     }
 

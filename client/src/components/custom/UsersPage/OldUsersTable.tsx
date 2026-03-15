@@ -41,7 +41,6 @@ const OldUsersTable: React.FC = () => {
     try {
       setLoading(true);
       const result = await getUsers(1);
-      console.log("fetched users: ", result)
       setUsers(result.users ?? []);
     } catch (error) {
       console.error("Failed to fetch users:", error);

@@ -46,7 +46,6 @@ const MapComponent: React.FC<Props> = ({
   myLocation,
   usersLocations,
 }) => {
-  console.log(incidents);
   return (
     <MapContainer
       center={persolCenter}

@@ -18,7 +18,6 @@ export const getIncidents = async (page: number, filter = "", orderBy?: string, 
 }
 
 export const getAllIncidents = async (team = "") => {
-  console.log("getting for team ", team)
   const response = await axios.get(`${apiUrl}incidents?results=100&team=${team}`, {withCredentials: true})
   const incidents: Array<Incident> = response.data.items
   const totalIncidents: number = response.data.totalResults

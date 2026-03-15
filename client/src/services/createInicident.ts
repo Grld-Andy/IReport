@@ -17,7 +17,6 @@ interface IcreateIncident {
 export const createIncidentService = async (data: IcreateIncident) => {
   try {
     if (!data.latitude || !data.longitude) {
-      console.log(`getting your current locaiton since ${data.latitude} and ${data.longitude} is null (lat and long)`)
       const position = await new Promise<GeolocationPosition>(
         (resolve, reject) => {
           if (!navigator.geolocation) {
@@ -39,7 +38,7 @@ export const createIncidentService = async (data: IcreateIncident) => {
     );
 
     if (response.status === 201) {
-      const message = { id: response.data, latitude: data.latitude, longitude: data.longitude };
+      const message = `{ id: ${response.data}, latitude: ${data.latitude}, longitude: ${data.longitude} }`;
       return { success: true, message };
     }
     return { success: false, message: "Unknown error" };

@@ -49,15 +49,12 @@ internal sealed class IncidentRepository(IncidentDbContext _dbcontext, IUserApiC
             var id = context.Identity.Id;
             if(filters.TryGetValue("team", out var team) && !role.Equals("admin", StringComparison.InvariantCultureIgnoreCase))
             {
-                Console.WriteLine($"================ current user team : {team}");
                 if(role.Equals("supervisor"))
                 {
-                    Console.WriteLine("fetching for supervisor");
                     incidentsQuery = incidentsQuery.Where(i => EF.Functions.Like(i.Team.ToLower(), $"%{team.ToLower()}%"));
                 }
                 else
                 {
-                    Console.WriteLine("fetching for responder");
                     incidentsQuery = incidentsQuery.Where(i => i.ReporterId == id || i.AssignedToId == id);
                 }
             }

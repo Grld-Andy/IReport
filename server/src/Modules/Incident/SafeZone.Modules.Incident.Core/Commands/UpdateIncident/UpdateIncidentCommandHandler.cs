@@ -41,6 +41,30 @@ internal sealed class UpdateIncidentHandler
             userIds.Add(command.AssignedToId.Value);
             incident.AssignTo(command.AssignedToId.Value);
         }
+        switch (command.Status)
+        {
+            case IncidentStatus.Resolved:
+                incident.Resolve();
+                break;
+
+            case IncidentStatus.Open:
+                incident.Open();
+                break;
+
+            case IncidentStatus.Closed:
+                incident.Close();
+                break;
+
+            case IncidentStatus.InProgress:
+                incident.InProgress();
+                break;
+
+            default:
+                throw new BadRequestException("Invalid status transition");
+        }
+
+        if (incident.Status != command.Status)
+            changes.Add($"Status: {command.Status} → {incident.Status}");
 
         incident.UpdateIncident(command);
         var users = await userApiClient.GetUsersByIds(userIds);

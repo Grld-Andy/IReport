@@ -12,9 +12,6 @@ export const updateIncident = async (incident: IUpdateIncident, id: string) => {
   try {
     // fallback to browser location if none selected
     if (!incident.latitude || !incident.longitude) {
-      console.log(
-        `getting your current location since ${incident.latitude} and ${incident.longitude} is null`,
-      );
 
       const position = await new Promise<GeolocationPosition>(
         (resolve, reject) => {
@@ -35,7 +32,6 @@ export const updateIncident = async (incident: IUpdateIncident, id: string) => {
       assignedToId: incident.assignedTo || null,
     };
 
-    console.log("data being submitted: ", submitData);
 
     const response = await axios.put(
       `${apiUrl}incidents/${id}`,
@@ -49,7 +45,6 @@ export const updateIncident = async (incident: IUpdateIncident, id: string) => {
 
     return { success: false, message: "Unknown error" };
   } catch (err) {
-    console.log("error: ", err);
     return getAxiosError(err);
   }
 };

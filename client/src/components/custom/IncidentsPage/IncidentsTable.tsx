@@ -12,7 +12,10 @@ import { Input } from "@/components/ui/input";
 import { CiEdit, CiSearch } from "react-icons/ci";
 import Badge from "../Badge";
 import { severityConfig, statusConfig } from "@/constants/getColors";
-import { incidentColumns } from "@/constants/incidentColumns";
+import {
+  primaryIncidentColumns,
+  adminIncidentColumns,
+} from "@/constants/incidentColumns";
 import { getIncidents } from "@/services/getIncidents";
 import type { Incident } from "@/types/Incident";
 import { useNavigate, useParams } from "react-router-dom";
@@ -35,7 +38,8 @@ const IncidentsTable: React.FC = () => {
     (state) => state.incidents.totalIncidents,
   );
   const stateIncidents = useAppSelector((state) => state.incidents.incidents);
-  const currentUser = useAppSelector((state) => state.auth.user)
+  const incidentColumns =
+    user?.role == "admin" ? adminIncidentColumns : primaryIncidentColumns;
   const newIncidentColumns =
     user?.role == "responder"
       ? incidentColumns
@@ -50,17 +54,21 @@ const IncidentsTable: React.FC = () => {
   const fetchIncidents = useCallback(async () => {
     try {
       setLoading(true);
-      const result = await getIncidents(currentPage, debouncedSearch, orderBy, currentUser?.team);
+      const result = await getIncidents(
+        currentPage,
+        debouncedSearch,
+        orderBy,
+        user?.team,
+      );
       setIncidents(result.incidents ?? []);
       setTotalIncidents(result.totalIncidents ?? 0);
       setTotalPages(result.totalPages ?? 1);
-      console.log(result);
     } catch (error) {
       console.error("Failed to fetch incidents:", error);
     } finally {
       setLoading(false);
     }
-  }, [currentPage, debouncedSearch, orderBy, currentUser?.team]);
+  }, [currentPage, debouncedSearch, orderBy, user?.team]);
 
   useEffect(() => {
     fetchIncidents();
@@ -235,6 +243,15 @@ const IncidentsTable: React.FC = () => {
                       <div className="text-sm text-gray-700">Not Assigned</div>
                     )}
                   </TableCell>
+
+                  {/* team */}
+                  {user?.role == "admin" && (
+                    <TableCell className="min-w-[150px]">
+                      <div className="text-sm text-gray-700">
+                        {incident.team}
+                      </div>
+                    </TableCell>
+                  )}
 
                   {/* Last Updated */}
                   <TableCell className="text-sm text-gray-500 whitespace-nowrap">

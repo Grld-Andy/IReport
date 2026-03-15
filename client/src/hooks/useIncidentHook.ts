@@ -23,7 +23,7 @@ export function useIncidentHub() {
       .catch((err) => console.error("SignalR connection error: ", err));
 
     hubConnection.on("IncidentAdded", ({ incident }) => {
-      if (incident.team == currentUser?.team) {
+      if (incident.team == currentUser?.team || currentUser?.team == "Admin") {
         dispatch(addIncidentState(incident));
       }
     });
@@ -33,8 +33,8 @@ export function useIncidentHub() {
     });
 
     hubConnection.on("IncidentUpdated", ({ incident }) => {
-      console.log("Incident updated:", incident);
-      if (incident.team == currentUser?.team) {
+      console.log("Incident updated: ", incident, currentUser?.team);
+      if (incident.team == currentUser?.team || currentUser?.team == "Admin") {
         dispatch(updateIncidentState(incident));
       }
     });

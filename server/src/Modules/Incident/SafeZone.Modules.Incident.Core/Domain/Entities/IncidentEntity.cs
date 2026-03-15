@@ -1,8 +1,4 @@
 using SafeZone.Modules.Incident.Core.Commands.UpdateIncident;
-using SafeZone.Modules.Incident.Core.Domain.Enums;
-using SafeZone.Modules.Incident.Core.Domain.ValueObjects;
-using SafeZone.Shared.Abstractions.Exceptions.ExceptionClasses;
-
 namespace SafeZone.Modules.Incident.Core.Domain.Entities;
 
 internal class IncidentEntity

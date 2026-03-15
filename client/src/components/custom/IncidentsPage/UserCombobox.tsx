@@ -14,7 +14,6 @@ const UserCombobox: React.FC<Props> = ({ users, initialUser, onChange }) => {
   const [query, setQuery] = useState("");
   const [selectedUser, setSelectedUser] = useState<IncidentUser | null>(initialUser ?? null);
   const [open, setOpen] = useState(false);
-  console.log("initial user in combobox: ", initialUser)
 
   const filteredUsers =
     query === ""

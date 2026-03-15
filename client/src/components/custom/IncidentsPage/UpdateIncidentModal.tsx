@@ -141,11 +141,6 @@ export default function UpdateIncidentModal({
   };
 
   const onSubmit = async (data: IncidentForm) => {
-    console.log("form data to submit: ", {
-      ...data,
-      latitude,
-      longitude,
-    });
     const response = await updateIncident(
       {
         ...data,
@@ -154,7 +149,6 @@ export default function UpdateIncidentModal({
       },
       incident.id,
     );
-    console.log(response);
 
     if (response.success) {
       // update for kanban board
@@ -165,7 +159,6 @@ export default function UpdateIncidentModal({
           assignedTo: users.find((u) => u.id === data.assignedTo) || null,
         };
 
-        console.log("updated incident =============== ", updatedIncident);
         onUpdate?.({
           ...updatedIncident,
           status: statusArray[Number(updatedIncident.status) - 1],
@@ -180,10 +173,10 @@ export default function UpdateIncidentModal({
         toast.success("Incident Reported Successfully", {
           position: "top-center",
         });
-        setIsOpen(false);
-      } else {
-        toast.error(response.message, { position: "top-center" });
       }
+      setIsOpen(false);
+    } else {
+      toast.error(response.message, { position: "top-center" });
     }
   };
 
