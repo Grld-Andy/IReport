@@ -12,11 +12,19 @@ import "leaflet/dist/leaflet.css";
 import type { Incident } from "@/types/Incident";
 import { severityConfig, statusConfig } from "@/constants/getColors";
 import Badge from "./Badge";
-import { criticalIncidentIcon, highIncidentIcon, lowIncidentIcon, mediumIncidentIcon, meIcon } from "@/assets/Icon";
+import {
+  criticalIncidentIcon,
+  highIncidentIcon,
+  lowIncidentIcon,
+  mediumIncidentIcon,
+  meIcon,
+} from "@/assets/Icon";
+import type { UserLocation } from "@/redux/features/location/locationSlice";
 
 interface Props {
   incidents: Array<Incident>;
   myLocation: { lat: number; lng: number } | null;
+  usersLocations: Record<string, UserLocation>;
 }
 
 const FlyToLocation: React.FC<{
@@ -33,8 +41,12 @@ const FlyToLocation: React.FC<{
   return null;
 };
 
-const MapComponent: React.FC<Props> = ({ incidents, myLocation }) => {
-  console.log(incidents)
+const MapComponent: React.FC<Props> = ({
+  incidents,
+  myLocation,
+  usersLocations,
+}) => {
+  console.log(incidents);
   return (
     <MapContainer
       center={persolCenter}
@@ -57,11 +69,15 @@ const MapComponent: React.FC<Props> = ({ incidents, myLocation }) => {
 
       {incidents?.map((incident) => (
         <Marker
-        icon={
-          incident.severity == "Low" ? lowIncidentIcon :
-          incident.severity == "Medium" ? mediumIncidentIcon :
-          incident.severity == "High" ? highIncidentIcon : criticalIncidentIcon
-        }
+          icon={
+            incident.severity == "Low"
+              ? lowIncidentIcon
+              : incident.severity == "Medium"
+                ? mediumIncidentIcon
+                : incident.severity == "High"
+                  ? highIncidentIcon
+                  : criticalIncidentIcon
+          }
           key={incident.id}
           position={{ lat: incident.latitude, lng: incident.longitude }}
         >
@@ -79,6 +95,21 @@ const MapComponent: React.FC<Props> = ({ incidents, myLocation }) => {
               <p className="text-gray-700">Category: {incident.category}</p>
               <p className="">Created by {incident.reporter.name} on </p>
               <p>{new Date(incident.createdAt).toDateString()}</p>
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+
+      {Object.values(usersLocations).map((user) => (
+        <Marker
+          key={user.userId}
+          icon={meIcon}
+          position={{ lat: user.lat, lng: user.lng }}
+        >
+          <Popup>
+            <div>
+              <h1 className="font-semibold">{user.name}</h1>
+              <p>Live location</p>
             </div>
           </Popup>
         </Marker>

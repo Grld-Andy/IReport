@@ -1,12 +1,13 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-interface UserLocation {
+export interface UserLocation {
   name: string;
   lat: number;
   lng: number;
+  userId: string;
 }
 
-interface LocationState {
+export interface LocationState {
   myLocation: UserLocation | null;
   usersLocations: Record<string, UserLocation>;
   shouldSend: boolean;

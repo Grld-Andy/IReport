@@ -1,5 +1,8 @@
 import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
-import { updateUserLocation } from "@/redux/features/location/locationSlice";
+import {
+  setMyLocation,
+  updateUserLocation,
+} from "@/redux/features/location/locationSlice";
 import * as signalR from "@microsoft/signalr";
 import { useEffect, useRef } from "react";
 
@@ -36,14 +39,20 @@ export function useLocationsHub() {
 
   useEffect(() => {
     if (!shouldSend || !user) return;
-
     watchIdRef.current = navigator.geolocation.watchPosition(
       (pos) => {
         const now = Date.now();
-
         if (now - lastSentRef.current < 3000) return;
-
         lastSentRef.current = now;
+
+        dispatch(
+          setMyLocation({
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            name: "",
+            userId: "",
+          }),
+        );
 
         const location = {
           lat: pos.coords.latitude,
@@ -54,9 +63,7 @@ export function useLocationsHub() {
 
         connectionRef.current
           ?.invoke("UpdateLocation", location)
-          .catch((err) =>
-            console.error("Failed to send location:", err)
-          );
+          .catch((err) => console.error("Failed to send location:", err));
       },
       (err) => {
         console.error("Geolocation error:", err);
@@ -65,7 +72,7 @@ export function useLocationsHub() {
         enableHighAccuracy: true,
         maximumAge: 1000,
         timeout: 10000,
-      }
+      },
     );
 
     return () => {
@@ -73,7 +80,7 @@ export function useLocationsHub() {
         navigator.geolocation.clearWatch(watchIdRef.current);
       }
     };
-  }, [shouldSend, user]);
+  }, [dispatch, shouldSend, user]);
 
   return {};
 }

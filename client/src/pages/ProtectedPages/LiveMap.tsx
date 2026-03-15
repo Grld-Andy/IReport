@@ -2,17 +2,20 @@ import MapComponent from "@/components/custom/MapComponent";
 import PageHeader from "@/components/custom/PageHeader";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
-import { toggleLocationSharing } from "@/redux/features/location/locationSlice";
-import React, { useState } from "react";
+import {
+  setMyLocation,
+  toggleLocationSharing,
+} from "@/redux/features/location/locationSlice";
+import React from "react";
 import { toast } from "sonner";
 
 const LiveMap: React.FC = () => {
   const dispatch = useAppDispatch();
-
+  const usersLocations = useAppSelector(
+    (state) => state.location.usersLocations,
+  );
   const { incidents } = useAppSelector((state) => state.incidents);
-  const shouldSend = useAppSelector((state) => state.location.shouldSend);
-
-  const [myLocation, setMyLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const { myLocation, shouldSend } = useAppSelector((state) => state.location);
 
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
@@ -22,20 +25,26 @@ const LiveMap: React.FC = () => {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        setMyLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
+        dispatch(
+          setMyLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            name: "",
+            userId: "",
+          }),
+        );
       },
       (error) => {
         console.error("Error getting location:", error);
-        toast.error("Unable to get your location. Please allow location access.");
-      }
+        toast.error(
+          "Unable to get your location. Please allow location access.",
+        );
+      },
     );
   };
 
   const handleToggleSharing = () => {
-    handleGetLocation()
+    handleGetLocation();
 
     dispatch(toggleLocationSharing(!shouldSend));
 
@@ -76,7 +85,11 @@ const LiveMap: React.FC = () => {
       </div>
 
       <div className="border rounded-2xl shadow-md overflow-hidden h-full">
-        <MapComponent incidents={incidents} myLocation={myLocation} />
+        <MapComponent
+          usersLocations={usersLocations}
+          incidents={incidents}
+          myLocation={myLocation}
+        />
       </div>
     </div>
   );
