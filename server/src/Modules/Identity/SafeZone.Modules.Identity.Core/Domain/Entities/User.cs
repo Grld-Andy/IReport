@@ -55,6 +55,12 @@ internal class User
         UpdatedAt = now;
     }
 
+    public void ResetPassword(string newPassword)
+    {
+        Password = newPassword;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
     public void ChangeName(UserName name, DateTime now)
     {
         Name = name;

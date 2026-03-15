@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SafeZone.Modules.Identity.Core.Commands.Login;
 using SafeZone.Modules.Identity.Core.Commands.Register;
+using SafeZone.Modules.Identity.Core.Commands.ResetPassword;
 using SafeZone.Modules.Identity.Core.DTO;
 using SafeZone.Modules.Identity.Core.Queries.GetSingleUser;
 using SafeZone.Modules.Identity.Core.Services;
@@ -28,12 +29,24 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     }
 
     [HttpGet("me")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> CheckAuth()
     {
         var currentUserId = context.Identity.Id;
+        var userEmail = context.Identity.Claims["email"].First();
+        Console.WriteLine($"====================== {userEmail}");
         var result = await dispatcher.QueryAsync(new GetSingleUserQuery(currentUserId));
         return Ok(result);
     }
+
+    [HttpPost("reset-password")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordCommand command, CancellationToken cancellationToken)
+    {
+        await dispatcher.SendAsync(command, cancellationToken);
+        return NoContent();
+    }
+
 
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -54,7 +67,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
 
     [HttpPost("logout")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> LogoutUser(CancellationToken cancellationToken)
+    public async Task<IActionResult> LogoutUser()
     {
         Response.Cookies.Delete(
             "__access_token"
