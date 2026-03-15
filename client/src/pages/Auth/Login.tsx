@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { SiGoogleauthenticator } from "react-icons/si";
 import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
@@ -133,27 +132,6 @@ const Login: React.FC = () => {
               </Field>
             </FieldGroup>
           </form>
-
-          {/* Horizontal line */}
-          <div className="relative my-4">
-            <div className="bg-black w-full h-[1px]"></div>
-            <div className="absolute w-full flex items-center justify-center top-1/2 -translate-y-1/2">
-              <span className="bg-gray-50 px-3 text-gray-500">OR</span>
-            </div>
-          </div>
-
-          {/* Social login */}
-          <div className="flex gap-4">
-            {[<FcGoogle size={25} />].map((item, index) => (
-              <div
-                key={index}
-                className="flex bg-white h-10 justify-center items-center border-2 border-black/50 p-3 rounded-lg w-full cursor-pointer hover:bg-gray-100 transition"
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-
           {/* Signup link */}
           <div className="text-center text-gray-700 mt-2">
             Don't have an account?{" "}

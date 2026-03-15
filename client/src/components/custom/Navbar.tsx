@@ -56,7 +56,7 @@ const Navbar: React.FC = () => {
                 </div>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent className="w-40" align="start">
+              <DropdownMenuContent align="start">
                 <DropdownMenuGroup>
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
 
@@ -67,7 +67,7 @@ const Navbar: React.FC = () => {
 
                   {user?.team != "Admin" && (
                     <h1 className="px-2 py-1 text-sm select-none">
-                      Team: {user?.team}
+                      {user?.team}
                     </h1>
                   )}
 

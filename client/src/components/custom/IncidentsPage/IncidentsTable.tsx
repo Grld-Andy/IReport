@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import SortButton from "./SortButton";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { CiEdit, CiSearch } from "react-icons/ci";
 import Badge from "../Badge";
 import { severityConfig, statusConfig } from "@/constants/getColors";
@@ -38,8 +39,11 @@ const IncidentsTable: React.FC = () => {
     (state) => state.incidents.totalIncidents,
   );
   const stateIncidents = useAppSelector((state) => state.incidents.incidents);
-  const incidentColumns =
-    user?.role == "admin" ? adminIncidentColumns : primaryIncidentColumns;
+  const incidentColumns = useMemo(() => {
+    return user?.role === "admin"
+      ? adminIncidentColumns
+      : primaryIncidentColumns;
+  }, [user?.role]);
   const newIncidentColumns =
     user?.role == "responder"
       ? incidentColumns
@@ -54,6 +58,7 @@ const IncidentsTable: React.FC = () => {
   const fetchIncidents = useCallback(async () => {
     try {
       setLoading(true);
+      console.log('fetching data')
       const result = await getIncidents(
         currentPage,
         debouncedSearch,
@@ -63,14 +68,18 @@ const IncidentsTable: React.FC = () => {
       setIncidents(result.incidents ?? []);
       setTotalIncidents(result.totalIncidents ?? 0);
       setTotalPages(result.totalPages ?? 1);
+      console.log("no errors")
     } catch (error) {
       console.error("Failed to fetch incidents:", error);
     } finally {
+      console.log("set loading to false")
       setLoading(false);
     }
   }, [currentPage, debouncedSearch, orderBy, user?.team]);
 
   useEffect(() => {
+    console.log('fetching data')
+    if(!stateTotalIncidents && stateTotalIncidents != 0) return;
     fetchIncidents();
   }, [fetchIncidents, stateTotalIncidents]);
 
@@ -90,9 +99,11 @@ const IncidentsTable: React.FC = () => {
 
   const deleteIncident = (id: string) => {
     setIncidents((prev) => prev.filter((i) => i.id !== id));
-    setTotalIncidents((prev) => prev - 1);
-    const currentTotalPages = Math.ceil(totalIncidents / 10);
-    setTotalPages(currentTotalPages);
+    setTotalIncidents((prev) => {
+      const newTotal = prev - 1;
+      setTotalPages(Math.ceil(newTotal / 10));
+      return newTotal;
+    });
   };
 
   useEffect(() => {
@@ -101,10 +112,6 @@ const IncidentsTable: React.FC = () => {
     }
   }, [currentPage, incidents.length, navigate]);
 
-  const searchIncidents = async () => {
-    fetchIncidents();
-  };
-
   return (
     <div className="flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
       {/* Header */}
@@ -112,7 +119,7 @@ const IncidentsTable: React.FC = () => {
         <div>
           <h1 className="text-lg font-semibold text-gray-900">Incidents</h1>
           <p className="text-sm text-gray-500">
-            {totalIncidents} total records
+            {totalIncidents} total record{totalIncidents > 1 && "s"}
           </p>
         </div>
 
@@ -127,7 +134,6 @@ const IncidentsTable: React.FC = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search..."
-              onSubmit={searchIncidents}
               className="pl-8 h-9 w-full md:w-56 bg-white"
             />
           </div>
@@ -156,13 +162,16 @@ const IncidentsTable: React.FC = () => {
 
           <TableBody>
             {/* Loading */}
-            {loading && (
-              <TableRow>
-                <TableCell colSpan={10} className="text-center py-12">
-                  Loading incidents...
-                </TableCell>
-              </TableRow>
-            )}
+            {loading &&
+              Array.from({ length: 5 }).map((_, idx) => (
+                <TableRow key={idx}>
+                  {newIncidentColumns.map((_, cidx) => (
+                    <TableCell key={cidx} className="py-3">
+                      <Skeleton className="h-4 w-full rounded-md" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
 
             {/* Empty */}
             {!loading && incidents.length === 0 && (

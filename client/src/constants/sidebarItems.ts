@@ -2,7 +2,7 @@ import type { NavItem } from "@/types/NavItem";
 import { HiOutlineUsers, HiUsers } from "react-icons/hi2";
 import { IoMapOutline, IoMap } from "react-icons/io5";
 import { MdOutlineDashboard, MdDashboard, MdOutlineViewKanban, MdViewKanban } from "react-icons/md";
-import { RiErrorWarningLine, RiErrorWarningFill } from "react-icons/ri";
+import { FaList, FaListAlt } from "react-icons/fa";
 
 export const sidebarItems: Array<NavItem> = [
     {
@@ -12,8 +12,7 @@ export const sidebarItems: Array<NavItem> = [
       path: "/",
     },
     {
-      icon: RiErrorWarningLine,
-      activeIcon: RiErrorWarningFill,
+      icon: FaList , activeIcon: FaListAlt,
       name: "Incidents",
       path: "/incidents",
     },

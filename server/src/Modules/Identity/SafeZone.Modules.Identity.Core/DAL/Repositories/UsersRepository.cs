@@ -55,18 +55,44 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
         return true;
     }
 
-    public async Task<Paged<UserDetailsDto>> GetAllAsync(IPagedQuery query, CancellationToken cancellationToken = default)
+    public async Task<Paged<UserDetailsDto>> GetAllAsync(
+        IPagedQuery query,
+        Dictionary<string, string>? filters = null,
+        CancellationToken cancellationToken = default)
     {
         var role = context.Identity.Role;
-        if (role == "admin")
-        {
-            return await dbContext.Users.AsNoTracking().Select(u => UserMapper.FromEntity(u)).PaginateAsync(query, cancellationToken: cancellationToken);
-        }
-        else
+        var userQuery = dbContext.Users.AsNoTracking().AsQueryable();
+
+        if (role != "admin")
         {
             var user = await GetByIdAsync(context.Identity.Id, cancellationToken);
-            return await dbContext.Users.AsNoTracking().Where(u => u.Team == user.Team).Select(u => UserMapper.FromEntity(u)).PaginateAsync(query, cancellationToken: cancellationToken);
+            userQuery = userQuery.Where(u => u.Team == user.Team);
         }
+
+        if (filters != null && filters.Count > 0)
+        {
+            if (filters.TryGetValue("filter", out var search))
+            {
+                var lowerSearch = search.ToLower();
+                userQuery = userQuery.Where(u =>
+                    u.Name.Value.ToLower().Contains(lowerSearch) ||
+                    u.Email.Value.ToLower().Contains(lowerSearch));
+            }
+
+            if (filters.TryGetValue("role", out var roleFilter) && roleFilter != "all")
+            {
+                userQuery = userQuery.Where(u => u.Role.Value == roleFilter);
+            }
+
+            if (filters.TryGetValue("status", out var statusFilter) && statusFilter != "all")
+            {
+                userQuery = userQuery.Where(u => u.Status.Value == statusFilter);
+            }
+        }
+
+        var projected = userQuery.Select(u => UserMapper.FromEntity(u));
+
+        return await projected.PaginateAsync(query, cancellationToken: cancellationToken);
     }
 
     public async Task<UserDetailsDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

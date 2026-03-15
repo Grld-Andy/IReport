@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { SiGoogleauthenticator } from "react-icons/si";
 import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
 import { useForm, type SubmitErrorHandler } from "react-hook-form";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -193,26 +192,6 @@ const Register: React.FC = () => {
               </Field>
             </FieldGroup>
           </form>
-
-          {/* OR Divider */}
-          <div className="relative my-6">
-            <div className="bg-black w-full h-[1px]"></div>
-            <div className="absolute w-full flex items-center justify-center top-1/2 -translate-y-1/2">
-              <span className="bg-gray-50 px-3 text-gray-500">OR</span>
-            </div>
-          </div>
-
-          {/* Social Login */}
-          <div className={`flex gap-4`}>
-            {[<FcGoogle size={25} />].map((item, index) => (
-              <div
-                key={index}
-                className="flex bg-white justify-center h-10 items-center border-2 border-black/50 p-3 rounded-lg w-full cursor-pointer hover:bg-gray-100 transition"
-              >
-                {item}
-              </div>
-            ))}
-          </div>
 
           {/* Login Link */}
           <div className="text-center text-gray-700 mt-2">

@@ -45,14 +45,10 @@ const FlyToLocation: React.FC<FlyProps> = ({ location }) => {
   return null;
 };
 
-const MapComponent: React.FC<Props> = ({
-  incidents,
-  myLocation,
-  usersLocations,
-}) => {
+const MapComponent: React.FC<Props> = ({ incidents, myLocation, usersLocations }) => {
   const [showIncidents, setShowIncidents] = useState(true);
   const [showResponders, setShowResponders] = useState(true);
-  const [showLegend, setShowLegend] = useState(true);
+  const [showLegend, setShowLegend] = useState(false);
 
   const getIncidentIcon = useCallback((severity: string) => {
     switch (severity) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -7,12 +7,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { CiSearch } from "react-icons/ci";
 import { BsThreeDots } from "react-icons/bs";
-import type { User } from "@/types/User";
-import { avatarHue, roleConfig, statusConfig } from "./constant";
-import { getUsers } from "@/services/getUsers";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -21,167 +19,215 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
 import {
   Select,
+  SelectTrigger,
   SelectContent,
   SelectGroup,
   SelectItem,
   SelectLabel,
-  SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+import type { User } from "@/types/User";
+import { avatarHue, roleConfig, statusConfig } from "./constant";
+import { getUsers } from "@/services/getUsers";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "@/redux/app/hooks";
 
-const OldUsersTable: React.FC = () => {
+const UsersTable: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [totalUsers, setTotalUsers] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
-  const stateUsers = useAppSelector((state) => state.users.users)
 
-  const fetchUsers = async () => {
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+
+  const stateUsers = useAppSelector((state) => state.users.users);
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { page } = useParams();
+  const navigate = useNavigate();
+  const currentPage = Math.max(1, Number(page) || 1);
+
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
-      const result = await getUsers(1);
+      const result = await getUsers(
+        currentPage,
+        debouncedSearch,
+        roleFilter,
+        statusFilter,
+      );
+
       setUsers(result.users ?? []);
+      setTotalUsers(result.totalUsers ?? 0);
+      setTotalPages(result.totalPages ?? 1);
     } catch (error) {
       console.error("Failed to fetch users:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, debouncedSearch, roleFilter, statusFilter]);
 
   useEffect(() => {
+    if(!stateUsers && stateUsers != 0) return;
     fetchUsers();
-  }, [stateUsers]);
+  }, [fetchUsers, stateUsers]);
+
+  const changePage = (pageTo: number) => {
+    if (pageTo < 1 || pageTo > totalPages) return;
+    navigate(`/users/${pageTo}`);
+  };
 
   return (
-    <div className="flex flex-col gap-5">
-      <div
-        className="bg-white rounded-2xl overflow-hidden"
-        style={{
-          boxShadow:
-            "0 0 0 1px rgba(0,0,0,0.06), 0 4px 6px -1px rgba(0,0,0,0.04), 0 12px 32px -4px rgba(0,0,0,0.08)",
-        }}
-      >
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between gap-4 flex-wrap">
-          <div>
-            <h2 className="text-base font-bold text-gray-900">All Users</h2>
-            <p className="text-sm text-gray-400 mt-0.5">
-              <span className="font-semibold text-gray-700">
-                {users.length}
-              </span>{" "}
-              users
-            </p>
-          </div>
-
-          {/* Controls (UI only) */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="relative">
-              <CiSearch
-                size={16}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              />
-              <Input
-                placeholder="Search users…"
-                className="pl-8 h-9 text-sm bg-gray-50 border-gray-200 rounded-lg w-52"
-              />
-            </div>
-
-            <Select>
-              <SelectTrigger className="h-9 px-3 w-min text-sm bg-gray-50 border border-gray-200 rounded-lg text-gray-600">
-                <SelectValue placeholder="Select Role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Roles</SelectLabel>
-                  <SelectItem value="all">All Roles</SelectItem>
-                  <SelectItem value="admin">Admin</SelectItem>
-                  <SelectItem value="supervisor">Supervisor</SelectItem>
-                  <SelectItem value="responder">Responder</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-
-            <Select>
-              <SelectTrigger className="h-9 px-3 w-min text-sm bg-gray-50 border border-gray-200 rounded-lg text-gray-600">
-                <SelectValue placeholder="Select Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Statuses</SelectLabel>
-                  <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
-                  <SelectItem value="suspended">Suspended</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
+    <div className="flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      {/* Header */}
+      <div className="px-6 py-4 border-b flex md:items-center justify-between flex-col md:flex-row gap-4">
+        <div>
+          <h1 className="text-lg font-semibold text-gray-900">Users</h1>
+          <p className="text-sm text-gray-500">{totalUsers} total user{totalUsers > 1 && "s"}</p>
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-50/80 border-b border-gray-100">
-                {["User", "Role", "Team", "Status", "Joined", ""].map((col) => (
-                  <TableHead
-                    key={col}
-                    className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest py-3"
-                  >
-                    {col}
-                  </TableHead>
-                ))}
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Search */}
+          <div className="relative">
+            <CiSearch
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            />
+
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search users..."
+              className="pl-8 h-9 w-52 bg-white"
+            />
+          </div>
+
+          {/* Role Filter */}
+          <Select value={roleFilter} onValueChange={setRoleFilter}>
+            <SelectTrigger className="h-9 w-[140px] bg-gray-50">
+              <SelectValue placeholder="Role" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Roles</SelectLabel>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="admin">Admin</SelectItem>
+                <SelectItem value="supervisor">Supervisor</SelectItem>
+                <SelectItem value="responder">Responder</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+
+          {/* Status Filter */}
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="h-9 w-[140px] bg-gray-50">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Status</SelectLabel>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="Active">Active</SelectItem>
+                <SelectItem value="Inactive">Inactive</SelectItem>
+                <SelectItem value="Suspended">Suspended</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-gray-50">
+              {["User", "Role", "Team", "Status", "Joined", ""].map((col) => (
+                <TableHead
+                  key={col}
+                  className="text-xs text-gray-500 font-medium"
+                >
+                  {col}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {/* Loading */}
+            {loading &&
+              Array.from({ length: 5 }).map((_, idx) => (
+                <TableRow key={idx}>
+                  <TableCell className="py-3">
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="w-8 h-8 rounded-full" />
+                      <div className="flex flex-col gap-1">
+                        <Skeleton className="h-3 w-24 rounded-md" />
+                        <Skeleton className="h-2 w-32 rounded-md" />
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-3 w-16 rounded-full" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-3 w-20 rounded-md" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-3 w-16 rounded-full" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-3 w-20 rounded-md" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-8 w-8 rounded-full" />
+                  </TableCell>
+                </TableRow>
+              ))}
+
+            {/* Empty */}
+            {!loading && users.length === 0 && (
+              <TableRow>
+                <TableCell
+                  colSpan={6}
+                  className="text-center py-12 text-gray-500"
+                >
+                  No users found
+                </TableCell>
               </TableRow>
-            </TableHeader>
+            )}
 
-            <TableBody>
-              {loading && (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-12">
-                    Loading users...
-                  </TableCell>
-                </TableRow>
-              )}
-
-              {!loading && users.length === 0 && (
-                <TableRow>
-                  <TableCell
-                    colSpan={5}
-                    className="text-center py-12 text-gray-500"
-                  >
-                    No users found
-                  </TableCell>
-                </TableRow>
-              )}
-
-              {loading || users.map((user, index) => {
-                const sc = statusConfig[user.status];
+            {/* Data */}
+            {!loading &&
+              users.map((user) => {
                 const rc = roleConfig[user.role];
+                const sc = statusConfig[user.status];
 
                 return (
-                  <TableRow
-                    key={index}
-                    className="group border-b border-gray-50 hover:bg-blue-50/20"
-                  >
+                  <TableRow key={user.id} className="hover:bg-gray-50">
                     {/* User */}
-                    <TableCell className="py-4">
+                    <TableCell>
                       <div className="flex items-center gap-3">
                         <div
-                          className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold"
-                          style={{
-                            background: avatarHue(user.name),
-                          }}
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-semibold"
+                          style={{ background: avatarHue(user.name) }}
                         >
                           {user.name.charAt(0)}
                         </div>
+
                         <div>
-                          <p className="font-semibold text-gray-900 text-sm">
+                          <p className="font-medium text-gray-900">
                             {user.name}
                           </p>
-                          <p className="text-[11px] text-gray-400">
-                            {user.email}
-                          </p>
+                          <p className="text-xs text-gray-500">{user.email}</p>
                         </div>
                       </div>
                     </TableCell>
@@ -189,20 +235,21 @@ const OldUsersTable: React.FC = () => {
                     {/* Role */}
                     <TableCell>
                       <span
-                        className={`inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${rc.className}`}
+                        className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${rc.className}`}
                       >
                         {user.role}
                       </span>
                     </TableCell>
 
-                    <TableCell className="text-sm text-gray-400 text-nowrap min-w-[100px]">
+                    {/* Team */}
+                    <TableCell className="text-sm text-gray-700">
                       {user.team}
                     </TableCell>
 
                     {/* Status */}
                     <TableCell>
                       <span
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${sc.className}`}
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${sc.className}`}
                       >
                         <span
                           className={`w-1.5 h-1.5 rounded-full ${sc.dot}`}
@@ -212,7 +259,7 @@ const OldUsersTable: React.FC = () => {
                     </TableCell>
 
                     {/* Joined */}
-                    <TableCell className="text-sm text-gray-400 text-nowrap">
+                    <TableCell className="text-sm text-gray-500 whitespace-nowrap">
                       {new Date(user.createdAt).toLocaleDateString("en-GB", {
                         day: "2-digit",
                         month: "short",
@@ -224,11 +271,14 @@ const OldUsersTable: React.FC = () => {
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="outline"
-                            className="w-7 h-7 bg-transparent border-transparent shadow-none rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100">
+                          <Button
+                            variant="ghost"
+                            className="w-8 h-8 flex items-center justify-center"
+                          >
                             <BsThreeDots size={14} />
                           </Button>
                         </DropdownMenuTrigger>
+
                         <DropdownMenuContent>
                           <DropdownMenuGroup>
                             <DropdownMenuItem>Edit Profile</DropdownMenuItem>
@@ -240,33 +290,36 @@ const OldUsersTable: React.FC = () => {
                   </TableRow>
                 );
               })}
-            </TableBody>
-          </Table>
-        </div>
+          </TableBody>
+        </Table>
+      </div>
 
-        {/* Footer */}
-        <div className="px-6 py-3 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between">
-          <p className="text-xs text-gray-400">
-            Showing{" "}
-            <span className="font-semibold text-gray-600">{users.length}</span>{" "}
-            users
-          </p>
+      {/* Footer */}
+      <div className="px-6 py-3 border-t flex items-center justify-between text-sm text-gray-500">
+        <p>
+          Page {currentPage} of {totalPages}
+        </p>
 
-          <div className="flex gap-1">
-            <button className="text-xs px-3 py-1.5 rounded-lg text-gray-500 hover:bg-gray-200">
-              ← Prev
-            </button>
-            <button className="text-xs px-3 py-1.5 rounded-lg bg-gray-900 text-white font-semibold">
-              1
-            </button>
-            <button className="text-xs px-3 py-1.5 rounded-lg text-gray-500 hover:bg-gray-200">
-              Next →
-            </button>
-          </div>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => changePage(currentPage - 1)}
+            disabled={currentPage <= 1}
+          >
+            Prev
+          </Button>
+
+          <Button variant="outline">{currentPage}</Button>
+
+          <Button
+            onClick={() => changePage(currentPage + 1)}
+            disabled={currentPage >= totalPages}
+          >
+            Next
+          </Button>
         </div>
       </div>
     </div>
   );
 };
 
-export default OldUsersTable;
+export default UsersTable;
