@@ -14,7 +14,7 @@ export const resetPassword = async (data: {
     const result = await axios.post(`${apiUrl}auth/reset-password`, data, {
       withCredentials: true,
     });
-    if (result.status == 200) {
+    if (result.status == 204) {
       return { success: true, message: result.data };
     }
     return { success: false, message: "Failed to reset password" };

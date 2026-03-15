@@ -31,9 +31,6 @@ internal sealed class UpdateIncidentHandler
         if (incident.Category != command.Category)
             changes.Add($"Category: {incident.Category} → {command.Category}");
 
-        if (incident.AssignedToId != command.AssignedToId)
-            changes.Add($"AssignedTo changed");
-
         List<Guid> userIds = [incident.ReporterId, context.Identity.Id];
 
         if (command.AssignedToId.HasValue)
@@ -69,6 +66,9 @@ internal sealed class UpdateIncidentHandler
         incident.UpdateIncident(command);
         var users = await userApiClient.GetUsersByIds(userIds);
         var usersDict = users.ToDictionary(u => u.Id);
+
+        if (incident.AssignedToId != command.AssignedToId && command.AssignedToId.HasValue)
+            changes.Add($"Reassigned to {usersDict[command.AssignedToId.Value]}");
 
         var changesString = string.Join("\n", changes);
 
