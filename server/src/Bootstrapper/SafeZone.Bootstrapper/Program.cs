@@ -6,6 +6,7 @@ using SafeZone.Shared.Infrastructure.Logging;
 using SafeZone.Shared.Infrastructure.Modules;
 using SafeZone.Shared.Infrastructure.SignalR.ActivitiesHub;
 using SafeZone.Shared.Infrastructure.SignalR.IncidentsHub;
+using SafeZone.Shared.Infrastructure.SignalR.LocationsHub;
 
 var builder = WebApplication
     .CreateBuilder(args);
@@ -44,6 +45,7 @@ foreach (var module in modules)
 }
 app.MapHub<IncidentHub>("/Incidents");
 app.MapHub<ActivityHub>("/Activities");
+app.MapHub<LocationHub>("/Locations");
 
 assemblies.Clear();
 modules.Clear();

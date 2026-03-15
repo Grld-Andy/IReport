@@ -8,8 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import { userRegisterSchema } from "@/types/User";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import axios from "axios";
+import {  z } from "zod";
 import {
   Select,
   SelectContent,
@@ -19,7 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { apiUrl } from "@/constants";
+import { registerUser } from "@/services/register";
+import { toast } from "sonner";
 
 export type RegisterUser = z.infer<typeof userRegisterSchema>;
 
@@ -37,24 +37,14 @@ const Register: React.FC = () => {
   });
 
   const onSubmit = async (data: RegisterUser) => {
-    try {
-      setIsSubmitting(true);
-      const response = await axios.post(`${apiUrl}auth/register`, {
-        user: {
-          name: data.name,
-          email: data.email,
-          role: "user",
-          team: data.team,
-          password: data.password,
-          confirmPassword: data.confirmPassword,
-        },
-      });
-      console.log(response);
-      navigate("/auth/login"); // todo: register toast to show error
-    } catch (e) {
-      console.error(e);
-      setIsSubmitting(false);
+    setIsSubmitting(true);
+    const response = await registerUser(data);
+    if (response.success) {
+      navigate("/auth/login");
+    } else {
+      toast.error(response.message, { position: "top-center" });
     }
+    setIsSubmitting(false);
   };
 
   const onError: SubmitErrorHandler<RegisterUser> = (errors) => {

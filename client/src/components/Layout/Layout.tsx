@@ -16,12 +16,14 @@ import NotFound from "@/pages/NotFound";
 import { getActivities } from "@/services/getActivities";
 import { saveActivitiesState } from "@/redux/features/activities/activitiesSlice";
 import { useActivityHub } from "@/hooks/useActivitiesHook";
+import { useLocationsHub } from "@/hooks/useLocationsHook";
 
 const Layout: React.FC = () => {
   const dispatch = useAppDispatch()
   const user : User|null = useAppSelector((state) => state.auth.user)
   useIncidentHub()
   useActivityHub()
+  useLocationsHub()
 
   useEffect(() => {
     const setUser = async () => {

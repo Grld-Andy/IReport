@@ -10,15 +10,18 @@ import { userLoginSchema } from "@/types/User";
 import { useForm, type SubmitErrorHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { RegisterUser } from "./Register";
-import { apiUrl } from "@/constants";
-import axios from "axios";
 import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
-import { loginStart, loginSuccess, loginStop } from "@/redux/features/auth/authSlice";
+import {
+  loginStart,
+  loginSuccess,
+  loginStop,
+} from "@/redux/features/auth/authSlice";
 import { toast } from "sonner";
+import { login } from "@/services/login";
 
 const Login: React.FC = () => {
-  const isSubmitting : boolean = useAppSelector((state) => state.auth.isLoading)
-  const dispatch = useAppDispatch()
+  const isSubmitting: boolean = useAppSelector((state) => state.auth.isLoading);
+  const dispatch = useAppDispatch();
   const [apiError, setApiError] = useState<string>("");
   const navigate = useNavigate();
 
@@ -33,26 +36,18 @@ const Login: React.FC = () => {
   });
 
   const onSubmit = async (data: LoginUser) => {
-    try {
-      setApiError("")
-      dispatch(loginStart());
-      const response = await axios.post(`${apiUrl}auth/login`, data, {withCredentials: true});
-      
-      if(response.status == 200){
-        dispatch(loginSuccess(response.data))
-        navigate("/")
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setApiError(error.response?.data.errors[0].message);
-        toast.error(apiError, {position: "top-center"})
-      } else {
-        console.error("Unexpected error:", error);
-        toast.error("Unexpected error", {position: "top-center"})
-      }
-    } finally {
-      dispatch(loginStop());
+    setApiError("");
+    dispatch(loginStart());
+    const response = await login(data);
+
+    if (response.success) {
+      dispatch(loginSuccess(response.message));
+      navigate("/");
+    } else {
+      setApiError(response.message);
+      toast.error(apiError, { position: "top-center" });
     }
+    dispatch(loginStop());
   };
 
   const onError: SubmitErrorHandler<RegisterUser> = (errors) => {
@@ -129,7 +124,11 @@ const Login: React.FC = () => {
               {apiError && <p className="text-red-500 text-sm">{apiError}</p>}
               <Field>
                 <Button type="submit" className="w-full h-10">
-                  {isSubmitting ? <div className="loader bg-white w-[25px]"></div> : <span>Sign In</span>}
+                  {isSubmitting ? (
+                    <div className="loader bg-white w-[25px]"></div>
+                  ) : (
+                    <span>Sign In</span>
+                  )}
                 </Button>
               </Field>
             </FieldGroup>

@@ -15,10 +15,10 @@ export function useActivityHub() {
     hubConnection
       .start()
       .then(() => console.log("Connected to ActivityHub"))
-      .catch((err) => console.error("SignalR connection error: ", err));
+      .catch((err) => console.error("Failed to connect to activityHub: ", err));
 
     hubConnection.on("ActivityCreated", (activity) => {
-        console.log("activity added: ", activity)
+      console.log("activity added: ", activity)
       dispatch(addActivitieState(activity));
     });
 

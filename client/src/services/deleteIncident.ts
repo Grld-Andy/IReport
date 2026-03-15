@@ -11,7 +11,7 @@ export const deleteIncident = async (id: string) => {
     if (response.status == 204) {
       return { success: true, message: "Deleted successfully" };
     } else {
-      return { success: false, message: "Unknown error" };
+      return { success: false, message: "Failed to delete incident" };
     }
   } catch (err) {
     return getAxiosError(err)

@@ -14,7 +14,6 @@ namespace SafeZone.Shared.Infrastructure.SignalR.ActivitiesHub.ActivityCreated
 
         async public Task HandleAsync(ActivityCreatedEvent @event, CancellationToken cancellationToken = default)
         {
-            Console.WriteLine($"======================= got activity: {@event.ActorName}");
             ActivityEntity activity = await activityApiClient.AddAsync(new CreateActivityCommand(@event), cancellationToken);
             await _hub.Clients.All.SendAsync("ActivityCreated", activity, cancellationToken);
         }

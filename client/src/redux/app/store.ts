@@ -3,13 +3,15 @@ import authSlice from "@/redux/features/auth/authSlice";
 import incidentsSlice from "../features/incidents/incidentsSlice";
 import usersSlice from "../features/users/usersSlice";
 import activitiesSlice from "../features/activities/activitiesSlice";
+import locationSlice from "../features/location/locationSlice";
 
 const store = configureStore({
     reducer : {
         auth: authSlice,
         incidents: incidentsSlice,
         users: usersSlice,
-        activities: activitiesSlice
+        activities: activitiesSlice,
+        location: locationSlice,
     }
 })
 
