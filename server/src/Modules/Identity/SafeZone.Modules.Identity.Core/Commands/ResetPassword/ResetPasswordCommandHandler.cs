@@ -20,8 +20,7 @@ internal class ResetPasswordCommandHandler(
             throw new BadRequestException("Passwords do not match, please try again.");
         }
 
-        var userEmail = context.Identity.Claims["email"].First();
-        System.Console.WriteLine($"====================== {userEmail}");
+        var userEmail = context.Identity.Claims["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"].First();
 
         var user = await userRepository.GetByEmailAsync(userEmail, cancellationToken)
             ?? throw new UserNotFoundException(userEmail);

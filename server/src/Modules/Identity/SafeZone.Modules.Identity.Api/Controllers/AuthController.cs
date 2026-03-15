@@ -33,8 +33,6 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     public async Task<ActionResult> CheckAuth()
     {
         var currentUserId = context.Identity.Id;
-        var userEmail = context.Identity.Claims["email"].First();
-        Console.WriteLine($"====================== {userEmail}");
         var result = await dispatcher.QueryAsync(new GetSingleUserQuery(currentUserId));
         return Ok(result);
     }
@@ -44,6 +42,9 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordCommand command, CancellationToken cancellationToken)
     {
         await dispatcher.SendAsync(command, cancellationToken);
+        Response.Cookies.Delete(
+            "__access_token"
+        );
         return NoContent();
     }
 
