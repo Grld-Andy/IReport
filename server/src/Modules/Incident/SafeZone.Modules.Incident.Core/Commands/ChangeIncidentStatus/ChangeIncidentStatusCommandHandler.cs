@@ -43,7 +43,8 @@ internal sealed class ChangeIncidentStatusHandler(
                 throw new BadRequestException("Invalid status transition");
         }
 
-        List<Guid> userIds = [incident.ReporterId];
+
+        List<Guid> userIds = [incident.ReporterId, userContext.Identity.Id];
         if (incident.AssignedToId.HasValue)
             userIds.Add(incident.AssignedToId.Value);
 
@@ -55,13 +56,13 @@ internal sealed class ChangeIncidentStatusHandler(
                 IncidentMapper.FromEntity(incident, usersDict)),
             cancellationToken);
 
-        var actor = users.First(u => u.Id == userContext.Identity.Id);
+        var actor = users.FirstOrDefault(u => u.Id == userContext.Identity.Id);
 
         string details = $"Status changed: {oldStatus} → {incident.Status}";
         await messageBroker.PublishAsync(
             new ActivityCreatedEvent(
                 incident.ReporterId,
-                actor.Name,
+                actor?.Name ?? "Unknown user",
                 "changed incident status",
                 details,
                 "Incident"),

@@ -1,7 +1,3 @@
-using SafeZone.Modules.Incident.Core.Events;
-using SafeZone.Shared.Abstractions.Contexts;
-using SafeZone.Shared.Abstractions.Messaging;
-
 namespace SafeZone.Modules.Incident.Core.Commands.DeleteIncident;
 
 internal class DeleteIncidentHandler

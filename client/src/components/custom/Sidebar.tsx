@@ -1,5 +1,5 @@
 import React from "react";
-import { SiGoogleauthenticator } from "react-icons/si";
+// import { SiGoogleauthenticator } from "react-icons/si";
 import { CiLogout } from "react-icons/ci";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
@@ -27,12 +27,13 @@ const Sidebar: React.FC = () => {
       {/* upper */}
       <div className="flex flex-col gap-8">
         {/* logo */}
-        <div className="flex items-center justify-center gap-2 py-5">
+        {/* <div className="flex items-center justify-center gap-2 py-5">
           <SiGoogleauthenticator size={25} />
-          {/* <span className="text-[20px] font-bold font-serif hidden md:block">
+          <span className="text-[20px] font-bold font-serif hidden md:block">
             SafeZone
-          </span> */}
-        </div>
+          </span>
+        </div> */}
+        <div className="h-[20]"></div>
 
         {/* navitems */}
         <div className="flex flex-col gap-3">
