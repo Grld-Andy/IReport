@@ -71,7 +71,7 @@ public static class Extensions
                     //     .WithExposedHeaders(exposedHeaders.ToArray());
                     corsBuilder.AllowAnyHeader()
                         .AllowAnyMethod()
-                        .WithOrigins("http://localhost:5173")
+                        .WithOrigins([.. origins])
                         .AllowCredentials();
                 });
             });
