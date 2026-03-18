@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using SafeZone.Modules.Identity.Core.Services;
 using SafeZone.Shared.Infrastructure.Auth.JWT;
 using SafeZone.Shared.Infrastructure.Security;
@@ -20,7 +21,9 @@ internal class LoginCommandHandler(ITokenStorage _tokenStorage, IUserRepository 
             throw new BadRequestException("Login failed, please try again with valid credentials.");
         }
 
-        var token = jsonWebTokenManager.CreateToken(user.Id.ToString(), user.Email, user.Role.ToString());
+        var claims = new Dictionary<string, IEnumerable<string>>{[ClaimTypes.Name] = [user.Name.Value], ["Team"] = [user.Team]};
+
+        var token = jsonWebTokenManager.CreateToken(user.Id.ToString(), user.Email, user.Role.ToString(), claims);
         tokenStorage.Set(token);
 
         return UserMapper.FromEntity(user);

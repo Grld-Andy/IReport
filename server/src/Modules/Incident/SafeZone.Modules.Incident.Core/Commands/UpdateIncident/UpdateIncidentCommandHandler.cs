@@ -1,12 +1,13 @@
+using System.Security.Claims;
+
 namespace SafeZone.Modules.Incident.Core.Commands.UpdateIncident;
 
 internal sealed class UpdateIncidentHandler
-    (IIncidentRepository _repository, IMessageBroker _messageBroker, IContext _context, IUserApiClient _userApiClient)
+    (IIncidentRepository _repository, IMessageBroker _messageBroker, IContext _context)
     : ICommandHandler<UpdateIncidentCommand>
 {
     private readonly IIncidentRepository repository = _repository;
     private readonly IMessageBroker messageBroker = _messageBroker;
-    private readonly IUserApiClient userApiClient = _userApiClient;
     private readonly IContext context = _context;
 
     public async Task HandleAsync(
@@ -64,22 +65,19 @@ internal sealed class UpdateIncidentHandler
             changes.Add($"Status: {command.Status} → {incident.Status}");
 
         incident.UpdateIncident(command);
-        var users = await userApiClient.GetUsersByIds(userIds);
-        var usersDict = users.ToDictionary(u => u.Id);
 
         if (incident.AssignedToId != command.AssignedToId && command.AssignedToId.HasValue)
-            changes.Add($"Reassigned to {usersDict[command.AssignedToId.Value]}");
+            changes.Add($"Reassigned to {incident.AssignedTo?.Name ?? "Guest"}");
 
         var changesString = string.Join("\n", changes);
 
-        await messageBroker.PublishAsync(
-            new IncidentUpdatedEvent(
-                IncidentMapper.FromEntity(incident, usersDict)), cancellationToken);
+        _ = messageBroker.PublishAsync(
+            new IncidentUpdatedEvent(IncidentMapper.FromEntity(incident)), cancellationToken);
 
-        await messageBroker.PublishAsync(
+        _ = messageBroker.PublishAsync(
             new ActivityCreatedEvent(
                 incident.ReporterId,
-                usersDict[context.Identity.Id].Name,
+                context.Identity.Claims[ClaimTypes.Name].First(),
                 "updated incident",
                 changesString,
                 "Incident"

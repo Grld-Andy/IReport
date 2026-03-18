@@ -6,7 +6,6 @@ using SafeZone.Modules.Incident.Core.Commands.ChangeIncidentStatus;
 using SafeZone.Modules.Incident.Core.Commands.UpdateIncident;
 using SafeZone.Modules.Incident.Core.Queries.GetIncidentById;
 using SafeZone.Modules.Incident.Core.Queries.GetIncidents;
-using SafeZone.Modules.Incident.Core.Queries.GetAssignedIncidents;
 using SafeZone.Shared.Abstractions.Dispatchers;
 using SafeZone.Modules.Incident.Core.Domain.Enums;
 using SafeZone.Shared.Abstractions.Contexts;
@@ -42,15 +41,6 @@ internal class IncidentsController(IDispatcher _dispatcher, IContext _context) :
     public async Task<ActionResult<IncidentDto>> GetIncidentById([FromRoute] Guid id)
     {
         var result = await dispatcher.QueryAsync(new GetIncidentByIdQuery(id));
-        return Ok(result);
-    }
-
-    [HttpGet("assigned/me")]
-    public async Task<ActionResult<Paged<IncidentDto>>> GetIncidentsAssignedToUser()
-    {
-        var currentUserId = context.Identity.Id;
-        var result = await dispatcher.QueryAsync(new GetAssignedIncidentsQuery(){UserId = currentUserId});
-
         return Ok(result);
     }
 

@@ -62,8 +62,23 @@ internal sealed class IncidentConfiguration : IEntityTypeConfiguration<IncidentE
         builder.Property(x => x.UpdatedAt)
             .IsRequired();
 
-        builder.HasIndex(x => x.Status);
-        builder.HasIndex(x => x.Severity);
-        builder.HasIndex(x => x.Category);
+        builder.HasIndex(x => x.ReporterId);
+        builder.HasIndex(x => x.AssignedToId);
+
+        builder.Property(x => x.ReporterId)
+            .IsRequired();
+
+        builder.Property(x => x.AssignedToId)
+            .IsRequired(false);
+
+        builder.HasOne(x => x.Reporter)
+            .WithMany()
+            .HasForeignKey(x => x.ReporterId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(x => x.AssignedTo)
+            .WithMany()
+            .HasForeignKey(x => x.AssignedToId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

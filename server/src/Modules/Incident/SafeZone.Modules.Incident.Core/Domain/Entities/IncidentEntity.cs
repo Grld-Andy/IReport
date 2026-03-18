@@ -7,7 +7,7 @@ internal class IncidentEntity
     public IncidentSubject Subject { get; private set; } = default!;
     public IncidentDescription Description { get; private set; } = default!;
     public IncidentCategory Category { get; private set; }
-    public string Team {get; set;} = string.Empty;
+    public string Team {get; set;} = default!;
     public IncidentSeverity Severity { get; private set; }
     public IncidentStatus Status { get; private set; }
     public Guid ReporterId { get; private set; }
@@ -16,6 +16,10 @@ internal class IncidentEntity
     public IncidentLocation Location { get; private set; } = default!;
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
+
+    // navigation props
+    public IncidentUser Reporter { get; private set; } = default!;
+    public IncidentUser? AssignedTo { get; private set; } = default!;
 
     private IncidentEntity() { }
 

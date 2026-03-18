@@ -1,27 +1,34 @@
 
 
+using System.Security.Claims;
+
 namespace SafeZone.Modules.Incident.Core.Commands.CreateIncident;
 
 internal sealed class CreateIncidentHandler
-    (IIncidentRepository _repository, IMessageBroker _messageBroker,
-    IUserApiClient _userApiClient, IContext _context)
+    (IIncidentRepository _incidentRepository, IMessageBroker _messageBroker,
+    IUserRepository _userRepository, IContext _context)
     : ICommandHandler<CreateIncidentCommand, Guid>
 {
-    private readonly IIncidentRepository repository = _repository;
+    private readonly IIncidentRepository incidentRepository = _incidentRepository;
+    private readonly IUserRepository userRepository = _userRepository;
     private readonly IMessageBroker messageBroker = _messageBroker;
-    private readonly IUserApiClient userApiClient = _userApiClient;
     private readonly IContext context = _context;
 
     public async Task<Guid> HandleAsync(CreateIncidentCommand command, CancellationToken cancellationToken = default)
     {
+        var user = new CreateIncidentUserDto()
+        {
+            Name= context.Identity.Claims[ClaimTypes.Name].First(),
+            Email= context.Identity.Claims[ClaimTypes.Email].First(),
+            Role= context.Identity.Claims[ClaimTypes.Role].First(),
+        };
+
+        await userRepository.AddUserAsync(context.Identity.Id, user, cancellationToken);
 
         var location = new IncidentLocation(
             command.Longitude,
             command.Latitude,
             command.LocationDetails);
-        var users = await userApiClient.GetUsersByIds([command.ReporterId]);
-        var usersDict = users.ToDictionary(u => u.Id);
-        var team = usersDict[context.Identity.Id].Team;
 
         var incident = IncidentEntity.Report(
             command.Subject,
@@ -30,16 +37,16 @@ internal sealed class CreateIncidentHandler
             command.Severity,
             command.ReporterId,
             location,
-            team
+            context.Identity.Claims["Team"].First()
         );
 
-        await repository.AddAsync(incident, cancellationToken);
-        await repository.SaveAsync(cancellationToken);
+        await incidentRepository.AddAsync(incident, cancellationToken);
+        await incidentRepository.SaveAsync(cancellationToken);
 
-        await messageBroker.PublishAsync(new IncidentAddedEvent(IncidentMapper.FromEntity(incident, usersDict)), cancellationToken);
-        await messageBroker.PublishAsync(new ActivityCreatedEvent(
+        _ = messageBroker.PublishAsync(new IncidentAddedEvent(IncidentMapper.FromEntity(incident)), cancellationToken);
+        _ = messageBroker.PublishAsync(new ActivityCreatedEvent(
             incident.ReporterId,
-            usersDict[incident.ReporterId].Name,
+            incident.Reporter.Name,
             "reported incident",
             $"Incident: {incident.Subject.Value}",
             "Incident"

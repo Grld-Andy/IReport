@@ -1,21 +1,8 @@
-using SafeZone.Modules.Incident.Core.Clients.DTO;
 namespace SafeZone.Modules.Incident.Core.DAL;
-
 internal static class IncidentMapper
 {
-    public static IncidentDto FromEntity(IncidentEntity incident, IReadOnlyDictionary<Guid, UserDto> usersById)
+    public static IncidentDto FromEntity(IncidentEntity incident)
     {
-        if (!usersById.TryGetValue(incident.ReporterId, out var reporter))
-        {
-            throw new NotFoundException($"Reporter with ID {incident.ReporterId} not found in provided users dictionary.");
-        }
-
-        UserDto? assigned = null;
-        if (incident.AssignedToId.HasValue)
-        {
-            usersById.TryGetValue(incident.AssignedToId.Value, out assigned);
-        }
-
         return new IncidentDto
         {
             Id = incident.Id,
@@ -24,8 +11,20 @@ internal static class IncidentMapper
             Category = incident.Category.ToString(),
             Severity = incident.Severity.ToString(),
             Status = incident.Status.ToString(),
-            Reporter = reporter,
-            AssignedTo = assigned,
+            Reporter = new IncidentUserDto
+            {
+                Id = incident.Reporter.Id,
+                Name = incident.Reporter.Name,
+                Email = incident.Reporter.Email,
+                Role = incident.Reporter.Role
+            },
+            AssignedTo = incident.AssignedTo == null ? null : new IncidentUserDto
+            {
+                Id = incident.AssignedTo.Id,
+                Name = incident.AssignedTo.Name,
+                Email = incident.AssignedTo.Email,
+                Role = incident.AssignedTo.Role
+            },
             Team = incident.Team,
             Latitude = incident.Location.Latitude,
             Longitude = incident.Location.Longitude,

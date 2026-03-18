@@ -1,51 +1,48 @@
-using SafeZone.Modules.Incident.Core.Events;
-using SafeZone.Shared.Abstractions.Contexts;
-using SafeZone.Shared.Abstractions.Messaging;
+using System.Security.Claims;
 
 namespace SafeZone.Modules.Incident.Core.Commands.AssignIncident;
 
 internal class AssignIncidentCommandHandler
-    (IIncidentRepository _repository,
+    (IIncidentRepository _incidentRepository,
+     IUserRepository _userRepository,
      IMessageBroker _messageBroker,
-     IContext _userContext,
-     IUserApiClient _userApiClient)
+     IContext _userContext)
     : ICommandHandler<AssignIncidentCommand>
 {
-    private readonly IIncidentRepository repository = _repository;
+    private readonly IUserRepository userRepository = _userRepository;
+    private readonly IIncidentRepository incidentRepository = _incidentRepository;
     private readonly IMessageBroker messageBroker = _messageBroker;
     private readonly IContext userContext = _userContext;
-    private readonly IUserApiClient userApiClient = _userApiClient;
 
     public async Task HandleAsync(AssignIncidentCommand command, CancellationToken cancellationToken = default)
     {
-        var incident = await repository.GetByIdAsync(command.IncidentId, cancellationToken) 
+        var incident = await incidentRepository.GetByIdAsync(command.IncidentId, cancellationToken) 
             ?? throw new NotFoundException("Incident", command.IncidentId);
 
         var oldAssignedId = incident.AssignedToId;
 
         incident.AssignTo(command.UserId);
 
-        await repository.SaveAsync(cancellationToken);
+        await incidentRepository.SaveAsync(cancellationToken);
 
-        var users = await userApiClient.GetUsersByIds([command.UserId, userContext.Identity.Id]);
-        var usersDict = users.ToDictionary(u => u.Id);
-        var actor = users.First(u => u.Id == userContext.Identity.Id);
-        var assignedUser = users.First(u => u.Id == command.UserId);
+        var assignedUser = await userRepository.GetByIdAsync(command.UserId, cancellationToken);
+
+        var actorName = userContext.Identity.Claims[ClaimTypes.Name].First();
 
         string details = oldAssignedId.HasValue
             ? $"Assigned changed from {oldAssignedId} → {command.UserId} ({assignedUser.Name})"
             : $"Assigned to {assignedUser.Name}";
 
-        await messageBroker.PublishAsync(
+        _ = messageBroker.PublishAsync(
             new ActivityCreatedEvent(
                 incident.ReporterId,
-                actor.Name,
+                actorName,
                 "assigned incident",
                 details,
                 "Incident"
             ), cancellationToken);
 
-        await messageBroker.PublishAsync(
-            new IncidentUpdatedEvent(IncidentMapper.FromEntity(incident, usersDict)), cancellationToken);
+        _ = messageBroker.PublishAsync(
+            new IncidentUpdatedEvent(IncidentMapper.FromEntity(incident)), cancellationToken);
     }
 }

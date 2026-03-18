@@ -1,16 +1,16 @@
+using System.Security.Claims;
+
 namespace SafeZone.Modules.Incident.Core.Commands.ChangeIncidentStatus;
 
 internal sealed class ChangeIncidentStatusHandler(
     IIncidentRepository _repository,
     IncidentDbContext _context,
     IMessageBroker _messageBroker,
-    IUserApiClient _userApiClient,
     IContext _userContext)
     : ICommandHandler<ChangeIncidentStatusCommand>
 {
     private readonly IIncidentRepository repository = _repository;
     private readonly IMessageBroker messageBroker = _messageBroker;
-    private readonly IUserApiClient userApiClient = _userApiClient;
     private readonly IncidentDbContext context = _context;
     private readonly IContext userContext = _userContext;
 
@@ -43,26 +43,17 @@ internal sealed class ChangeIncidentStatusHandler(
                 throw new BadRequestException("Invalid status transition");
         }
 
+        var incidentDto = IncidentMapper.FromEntity(incident);
 
-        List<Guid> userIds = [incident.ReporterId, userContext.Identity.Id];
-        if (incident.AssignedToId.HasValue)
-            userIds.Add(incident.AssignedToId.Value);
 
-        var users = await userApiClient.GetUsersByIds(userIds);
-        var usersDict = users.ToDictionary(u => u.Id);
+        var actorName = userContext.Identity.Claims[ClaimTypes.Name].First();
 
-        await messageBroker.PublishAsync(
-            new IncidentUpdatedEvent(
-                IncidentMapper.FromEntity(incident, usersDict)),
-            cancellationToken);
-
-        var actor = users.FirstOrDefault(u => u.Id == userContext.Identity.Id);
-
+        _ = messageBroker.PublishAsync(new IncidentUpdatedEvent(incidentDto), cancellationToken);
         string details = $"Status changed: {oldStatus} → {incident.Status}";
-        await messageBroker.PublishAsync(
+        _ = messageBroker.PublishAsync(
             new ActivityCreatedEvent(
-                incident.ReporterId,
-                actor?.Name ?? "Unknown user",
+                incidentDto.ReporterId,
+                actorName ?? "Guest",
                 "changed incident status",
                 details,
                 "Incident"),

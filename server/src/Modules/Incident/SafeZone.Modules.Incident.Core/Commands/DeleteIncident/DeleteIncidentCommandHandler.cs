@@ -1,18 +1,18 @@
+using System.Security.Claims;
+
 namespace SafeZone.Modules.Incident.Core.Commands.DeleteIncident;
 
 internal class DeleteIncidentHandler
     (IIncidentRepository _repository,
      IncidentDbContext _context,
      IMessageBroker _messageBroker,
-     IContext _userContext,
-     IUserApiClient _userApiClient)
+     IContext _userContext)
     : ICommandHandler<DeleteIncidentCommand>
 {
     private readonly IIncidentRepository repository = _repository;
     private readonly IncidentDbContext context = _context;
     private readonly IMessageBroker messageBroker = _messageBroker;
     private readonly IContext userContext = _userContext;
-    private readonly IUserApiClient userApiClient = _userApiClient;
 
     public async Task HandleAsync(
         DeleteIncidentCommand command,
@@ -24,30 +24,25 @@ internal class DeleteIncidentHandler
 
         var details = string.Join("\n", new[]
         {
-            $"Subject: {incident.Subject.Value}",
+            $"Subject: {incident.Subject}",
             $"Severity: {incident.Severity}",
             $"Category: {incident.Category}"
         });
 
-        var users = await userApiClient.GetUsersByIds(
-            [userContext.Identity.Id]);
+        var actor = userContext.Identity.Claims[ClaimTypes.Name].First();
 
-        var actor = users.First();
-
-        incident.Delete();
-
-        await messageBroker.PublishAsync(
+        _ = messageBroker.PublishAsync(
             new IncidentDeletedEvent(incident.Id), cancellationToken);
 
-        await messageBroker.PublishAsync(
+        _ =  messageBroker.PublishAsync(
             new ActivityCreatedEvent(
                 incident.ReporterId,
-                actor.Name,
+                actor,
                 "deleted incident",
                 details,
                 "Incident"
             ), cancellationToken);
 
-        await context.SaveChangesAsync(cancellationToken);
+        await repository.DeleteAsync(incident.Id, cancellationToken);
     }
 }

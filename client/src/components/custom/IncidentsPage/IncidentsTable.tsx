@@ -68,7 +68,6 @@ const IncidentsTable: React.FC = () => {
       setIncidents(result.incidents ?? []);
       setTotalIncidents(result.totalIncidents ?? 0);
       setTotalPages(result.totalPages ?? 1);
-      console.log("no errors")
     } catch (error) {
       console.error("Failed to fetch incidents:", error);
     } finally {
@@ -78,7 +77,6 @@ const IncidentsTable: React.FC = () => {
   }, [currentPage, debouncedSearch, orderBy, user?.team]);
 
   useEffect(() => {
-    console.log('fetching data')
     if(!stateTotalIncidents && stateTotalIncidents != 0) return;
     fetchIncidents();
   }, [fetchIncidents, stateTotalIncidents]);

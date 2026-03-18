@@ -1,5 +1,3 @@
-using SafeZone.Modules.Incident.Core.Clients.DTO;
-
 namespace SafeZone.Modules.Incident.Core.DTO;
 
 internal sealed class IncidentDto
@@ -11,8 +9,10 @@ internal sealed class IncidentDto
     public string Severity { get; init; } = default!;
     public string Status { get; init; } = default!;
     public string Team { get; init; } = default!;
-    public UserDto? Reporter { get; init; }
-    public UserDto? AssignedTo { get; init; }
+    public Guid ReporterId { get; set; }
+    public Guid? AssignedToId { get; set; }
+    public IncidentUserDto? Reporter { get; init; }
+    public IncidentUserDto? AssignedTo { get; init; }
     public double Latitude { get; init; }
     public double Longitude { get; init; }
     public string LocationDetails { get; init; } = default!;
