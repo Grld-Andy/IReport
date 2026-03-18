@@ -8,7 +8,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
     private readonly UsersDbContext dbContext = _dbContext;
     private readonly IContext context = _context;
 
-    public async Task CreateAsync(User userDto, CancellationToken cancellationToken = default)
+    public async Task<Guid> CreateAsync(User userDto, CancellationToken cancellationToken = default)
     {
         var userExists = dbContext.Users.AsNoTracking().FirstOrDefault(u => u.Email.Equals(userDto.Email));
         if (userExists is not null)
@@ -27,6 +27,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
 
         dbContext.Users.Add(user);
         await SaveAsync(cancellationToken);
+        return user.Id;
     }
 
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)

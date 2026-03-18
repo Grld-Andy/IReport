@@ -170,10 +170,8 @@ export default function UpdateIncidentModal({
             id: updatedIncident.assignedTo?.id ?? "",
           },
         });
-        toast.success("Incident Reported Successfully", {
-          position: "top-center",
-        });
       }
+      toast.success("Updated incident successfully", {position: "top-center"})
       setIsOpen(false);
     } else {
       toast.error(response.message, { position: "top-center" });

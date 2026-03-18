@@ -3,7 +3,7 @@ import { SiGoogleauthenticator } from "react-icons/si";
 import React, { useState } from "react";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import type z from "zod";
 import { userLoginSchema } from "@/types/User";
 import { useForm, type SubmitErrorHandler } from "react-hook-form";
@@ -135,12 +135,11 @@ const Login: React.FC = () => {
           {/* Signup link */}
           <div className="text-center text-gray-700 mt-2">
             Don't have an account?{" "}
-            <Link
-              to={"/auth/register"}
-              className="font-bold text-black cursor-pointer"
+            <span
+              className="font-bold text-black"
             >
-              Register Now
-            </Link>
+              Contact Admin
+            </span>
           </div>
         </div>
       </div>

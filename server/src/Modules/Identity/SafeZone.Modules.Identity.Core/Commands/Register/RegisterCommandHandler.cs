@@ -1,12 +1,16 @@
+using SafeZone.Modules.Identity.Core.Events;
 using SafeZone.Shared.Abstractions.Contexts;
+using SafeZone.Shared.Abstractions.Messaging;
 using SafeZone.Shared.Infrastructure.Security;
 
 namespace SafeZone.Modules.Identity.Core.Commands.Register;
 
-internal class RegisterCommandHandler(IUserRepository _userRepository, IPasswordManager _passwordManager, IContext _context) : ICommandHandler<RegisterCommand>
+internal class RegisterCommandHandler(IUserRepository _userRepository, IMessageBroker _messageBroker, IPasswordManager _passwordManager, IContext _context) : ICommandHandler<RegisterCommand>
 {
     private readonly IUserRepository userRepository = _userRepository;
     private readonly IContext context = _context;
+    private readonly IMessageBroker messageBroker = _messageBroker;
+
     private readonly IPasswordManager passwordManager = _passwordManager;
 
     public async Task HandleAsync(RegisterCommand command, CancellationToken cancellationToken = default)
@@ -22,6 +26,8 @@ internal class RegisterCommandHandler(IUserRepository _userRepository, IPassword
         {
             userDto.Team = "Admin";
         }
-        await userRepository.CreateAsync(UserMapper.ToEntity(userDto), cancellationToken);
+        var id = await userRepository.CreateAsync(UserMapper.ToEntity(userDto), cancellationToken);
+
+        _ = messageBroker.PublishAsync(new UserRegistered(id, userDto.Name, userDto.Email, userDto.Role), cancellationToken);
     }
 }

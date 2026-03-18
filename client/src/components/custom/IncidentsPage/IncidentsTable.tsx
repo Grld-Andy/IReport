@@ -57,7 +57,6 @@ const IncidentsTable: React.FC = () => {
 
   const fetchIncidents = useCallback(async () => {
     try {
-      setLoading(true);
       console.log('fetching data')
       const result = await getIncidents(
         currentPage,
@@ -77,7 +76,10 @@ const IncidentsTable: React.FC = () => {
   }, [currentPage, debouncedSearch, orderBy, user?.team]);
 
   useEffect(() => {
-    if(!stateTotalIncidents && stateTotalIncidents != 0) return;
+    if(!stateTotalIncidents && stateTotalIncidents != 0) {
+      setLoading(true);
+      return
+    };
     fetchIncidents();
   }, [fetchIncidents, stateTotalIncidents]);
 

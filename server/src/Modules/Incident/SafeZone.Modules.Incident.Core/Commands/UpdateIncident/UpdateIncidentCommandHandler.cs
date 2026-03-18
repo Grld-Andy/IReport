@@ -77,7 +77,7 @@ internal sealed class UpdateIncidentHandler
         _ = messageBroker.PublishAsync(
             new ActivityCreatedEvent(
                 incident.ReporterId,
-                context.Identity.Claims[ClaimTypes.Name].First(),
+                context.Identity.Claims["Name"].First(),
                 "updated incident",
                 changesString,
                 "Incident"

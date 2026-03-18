@@ -7,7 +7,7 @@ internal interface IUserRepository
     Task<List<UserDetailsDto>> GetAllByIdsAsync(List<Guid> guids, CancellationToken cancellationToken = default);
     Task<Paged<UserDetailsDto>> GetAllAsync(IPagedQuery query, Dictionary<string, string>? filters = null, CancellationToken cancellationToken = default);
     Task SaveAsync(CancellationToken cancellationToken = default);
-    Task CreateAsync(User user, CancellationToken cancellationToken = default);
+    Task<Guid> CreateAsync(User user, CancellationToken cancellationToken = default);
     Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
     Task<bool> SoftDeleteAsync(Guid id, CancellationToken cancellationToken = default);
 }

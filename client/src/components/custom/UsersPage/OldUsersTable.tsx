@@ -75,7 +75,11 @@ const UsersTable: React.FC = () => {
   }, [currentPage, debouncedSearch, roleFilter, statusFilter]);
 
   useEffect(() => {
-    if(!stateUsers && stateUsers != 0) return;
+    setLoading(true);
+    if(!stateUsers && stateUsers != 0) {
+      setLoading(true);
+      return
+    };
     fetchUsers();
   }, [fetchUsers, stateUsers]);
 
