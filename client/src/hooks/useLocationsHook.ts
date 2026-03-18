@@ -1,3 +1,4 @@
+import { socketUrl } from "@/constants";
 import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
 import {
   setMyLocation,
@@ -17,7 +18,7 @@ export function useLocationsHub() {
 
   useEffect(() => {
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl("http://localhost:5000/Locations")
+      .withUrl(`${socketUrl}Locations`)
       .withAutomaticReconnect()
       .build();
 

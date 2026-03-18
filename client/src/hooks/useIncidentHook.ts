@@ -6,6 +6,7 @@ import {
   deleteIncidentState,
   updateIncidentState,
 } from "@/redux/features/incidents/incidentsSlice";
+import { socketUrl } from "@/constants";
 
 export function useIncidentHub() {
   const dispatch = useAppDispatch();
@@ -13,7 +14,7 @@ export function useIncidentHub() {
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl("http://localhost:5000/Incidents")
+      .withUrl(`${socketUrl}Incidents`)
       .withAutomaticReconnect()
       .build();
 

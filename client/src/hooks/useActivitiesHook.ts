@@ -2,13 +2,14 @@ import { useEffect } from "react";
 import * as signalR from "@microsoft/signalr";
 import { useAppDispatch } from "@/redux/app/hooks";
 import { addActivitieState } from "@/redux/features/activities/activitiesSlice";
+import { socketUrl } from "@/constants";
 
 export function useActivityHub() {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     const hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl("http://localhost:5000/Activities")
+      .withUrl(`${socketUrl}Activities`)
       .withAutomaticReconnect()
       .build();
 
