@@ -24,8 +24,7 @@ internal class IncidentsController(IDispatcher _dispatcher, IContext _context) :
     [HttpPost]
     public async Task<ActionResult<Guid>> CreateIncident([FromBody] CreateIncidentDto dto)
     {
-        var currentUserId = context.Identity.Id;
-        var command = new CreateIncidentCommand(dto.Subject, dto.Description, dto.Category, dto.Severity, currentUserId, dto.Latitude, dto.Longitude, dto.LocationDetails);
+        var command = new CreateIncidentCommand(dto.Subject, dto.Description, dto.Category, dto.Severity, dto.Latitude, dto.Longitude, dto.LocationDetails);
         var id = await dispatcher.SendAsync<CreateIncidentCommand, Guid>(command);
         return CreatedAtAction(nameof(GetIncidentById), new { id }, null);
     }

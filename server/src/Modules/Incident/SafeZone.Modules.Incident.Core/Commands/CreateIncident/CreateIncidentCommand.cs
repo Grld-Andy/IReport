@@ -5,7 +5,6 @@ internal record CreateIncidentCommand(
     string Description,
     IncidentCategory Category,
     IncidentSeverity Severity,
-    Guid ReporterId,
     double Latitude,
     double Longitude,
     string LocationDetails

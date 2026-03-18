@@ -10,6 +10,7 @@ internal class CreateActivityCommandHandler(IActivityRepository _activityReposit
 
     public async Task<ActivityEntity> HandleAsync(CreateActivityCommand command, CancellationToken cancellationToken = default)
     {
+        Console.WriteLine("====================== Creating a new activity ===========================");
         var activity = await activityRepository.AddAsync(command.Activity, cancellationToken);
         return activity;
     }

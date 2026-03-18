@@ -20,7 +20,7 @@ internal sealed class CreateIncidentHandler
             command.Description,
             command.Category,
             command.Severity,
-            command.ReporterId,
+            context.Identity.Id,
             location,
             context.Identity.Claims["Team"].First()
         );
@@ -28,6 +28,8 @@ internal sealed class CreateIncidentHandler
         await incidentRepository.AddAsync(incident, cancellationToken);
         await incidentRepository.SaveAsync(cancellationToken);
 
+        incident = await incidentRepository.GetByIdAsync(incident.Id, cancellationToken);
+        
         _ = messageBroker.PublishAsync(new IncidentAddedEvent(IncidentMapper.FromEntity(incident)), cancellationToken);
         _ = messageBroker.PublishAsync(new ActivityCreatedEvent(
             incident.ReporterId,
