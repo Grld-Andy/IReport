@@ -20,13 +20,12 @@ internal class AssignIncidentCommandHandler
             ?? throw new NotFoundException("Incident", command.IncidentId);
 
         var oldAssignedId = incident.AssignedToId;
-
-        var assignedUser = await userRepository.GetByIdAsync(command.UserId, cancellationToken);
-        incident.AssignTo(command.UserId, assignedUser);
+        incident.AssignTo(command.UserId);
 
         await incidentRepository.SaveAsync(cancellationToken);
 
         var actorName = userContext.Identity.Claims[ClaimTypes.Name].First();
+        var assignedUser = await userRepository.GetByIdAsync(command.UserId, cancellationToken);
 
         string details = oldAssignedId.HasValue
             ? $"Assigned changed from {oldAssignedId} → {command.UserId} ({assignedUser.Name})"
@@ -41,7 +40,10 @@ internal class AssignIncidentCommandHandler
                 "Incident"
             ), cancellationToken);
 
+        var incidentDto = IncidentMapper.FromEntity(incident);
+        incidentDto.AssignedTo = assignedUser;
+        
         _ = messageBroker.PublishAsync(
-            new IncidentUpdatedEvent(IncidentMapper.FromEntity(incident)), cancellationToken);
+            new IncidentUpdatedEvent(incidentDto), cancellationToken);
     }
 }

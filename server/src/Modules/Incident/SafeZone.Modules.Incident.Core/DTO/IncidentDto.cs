@@ -12,7 +12,7 @@ internal sealed class IncidentDto
     public Guid ReporterId { get; set; }
     public Guid? AssignedToId { get; set; }
     public IncidentUserDto? Reporter { get; init; }
-    public IncidentUserDto? AssignedTo { get; init; }
+    public IncidentUserDto? AssignedTo { get; set; }
     public double Latitude { get; init; }
     public double Longitude { get; init; }
     public string LocationDetails { get; init; } = default!;

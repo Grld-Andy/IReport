@@ -1,5 +1,3 @@
-using System.Security.Claims;
-
 namespace SafeZone.Modules.Incident.Core.Commands.UpdateIncident;
 
 internal sealed class UpdateIncidentHandler
@@ -35,8 +33,7 @@ internal sealed class UpdateIncidentHandler
 
         if (command.AssignedToId.HasValue)
         {
-            var assignedUser = await userRepository.GetByIdAsync(command.AssignedToId.Value, cancellationToken);
-            incident.AssignTo(command.AssignedToId.Value, assignedUser);
+            incident.AssignTo(command.AssignedToId.Value);
         }
         switch (command.Status)
         {
@@ -70,7 +67,14 @@ internal sealed class UpdateIncidentHandler
 
         var changesString = string.Join("\n", changes);
 
+        await repository.SaveAsync(cancellationToken);
+
         var incidentDto = IncidentMapper.FromEntity(incident);
+
+        if(command.AssignedToId.HasValue){
+            var assignedUser = await userRepository.GetByIdAsync(command.AssignedToId.Value, cancellationToken);
+            incidentDto.AssignedTo = assignedUser;
+        }
         Console.WriteLine($"======================= assigned to : {incidentDto.AssignedTo?.Name}");
 
         _ = messageBroker.PublishAsync(
@@ -84,7 +88,5 @@ internal sealed class UpdateIncidentHandler
                 changesString,
                 "Incident"
             ), cancellationToken);
-
-        await repository.SaveAsync(cancellationToken);
     }
 }
