@@ -3,10 +3,11 @@ using System.Security.Claims;
 namespace SafeZone.Modules.Incident.Core.Commands.UpdateIncident;
 
 internal sealed class UpdateIncidentHandler
-    (IIncidentRepository _repository, IMessageBroker _messageBroker, IContext _context)
+    (IIncidentRepository _repository, IMessageBroker _messageBroker, IContext _context, IUserRepository _userRepository)
     : ICommandHandler<UpdateIncidentCommand>
 {
     private readonly IIncidentRepository repository = _repository;
+    private readonly IUserRepository userRepository = _userRepository;
     private readonly IMessageBroker messageBroker = _messageBroker;
     private readonly IContext context = _context;
 
@@ -32,12 +33,10 @@ internal sealed class UpdateIncidentHandler
         if (incident.Category != command.Category)
             changes.Add($"Category: {incident.Category} → {command.Category}");
 
-        List<Guid> userIds = [incident.ReporterId, context.Identity.Id];
-
         if (command.AssignedToId.HasValue)
         {
-            userIds.Add(command.AssignedToId.Value);
-            incident.AssignTo(command.AssignedToId.Value);
+            var assignedUser = await userRepository.GetByIdAsync(command.AssignedToId.Value, cancellationToken);
+            incident.AssignTo(command.AssignedToId.Value, assignedUser);
         }
         switch (command.Status)
         {
@@ -71,8 +70,11 @@ internal sealed class UpdateIncidentHandler
 
         var changesString = string.Join("\n", changes);
 
+        var incidentDto = IncidentMapper.FromEntity(incident);
+        Console.WriteLine($"======================= assigned to : {incidentDto.AssignedTo?.Name}");
+
         _ = messageBroker.PublishAsync(
-            new IncidentUpdatedEvent(IncidentMapper.FromEntity(incident)), cancellationToken);
+            new IncidentUpdatedEvent(incidentDto), cancellationToken);
 
         _ = messageBroker.PublishAsync(
             new ActivityCreatedEvent(

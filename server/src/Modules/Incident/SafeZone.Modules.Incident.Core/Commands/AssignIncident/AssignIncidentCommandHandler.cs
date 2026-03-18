@@ -21,11 +21,10 @@ internal class AssignIncidentCommandHandler
 
         var oldAssignedId = incident.AssignedToId;
 
-        incident.AssignTo(command.UserId);
+        var assignedUser = await userRepository.GetByIdAsync(command.UserId, cancellationToken);
+        incident.AssignTo(command.UserId, assignedUser);
 
         await incidentRepository.SaveAsync(cancellationToken);
-
-        var assignedUser = await userRepository.GetByIdAsync(command.UserId, cancellationToken);
 
         var actorName = userContext.Identity.Claims[ClaimTypes.Name].First();
 

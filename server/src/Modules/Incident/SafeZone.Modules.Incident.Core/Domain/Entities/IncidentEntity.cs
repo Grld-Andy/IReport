@@ -66,12 +66,13 @@ internal class IncidentEntity
             team);
     }
 
-    public void AssignTo(Guid userId)
+    public void AssignTo(Guid userId, IncidentUser assignedTo)
     {
         if (Status == IncidentStatus.Closed)
             throw new BadRequestException("Cannot assign a closed incident.");
 
         AssignedToId = userId;
+        AssignedTo = assignedTo;
         Status = IncidentStatus.InProgress;
 
         Touch();
