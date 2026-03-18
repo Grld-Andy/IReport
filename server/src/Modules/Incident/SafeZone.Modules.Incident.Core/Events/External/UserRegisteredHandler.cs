@@ -18,6 +18,5 @@ internal class UserRegisteredHandler(IUserRepository _userRepository) : IEventHa
             };
             await userRepository.AddUserAsync(@event.Id, user, cancellationToken);
         }
-        System.Console.WriteLine("===================== Created incident user successfull");
     }
 }

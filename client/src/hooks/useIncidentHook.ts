@@ -33,7 +33,6 @@ export function useIncidentHub() {
     });
 
     hubConnection.on("IncidentUpdated", ({ incident }) => {
-      console.log("Incident updated: ", incident, currentUser?.team);
       if (incident.team == currentUser?.team || currentUser?.team == "Admin") {
         dispatch(updateIncidentState(incident));
       }

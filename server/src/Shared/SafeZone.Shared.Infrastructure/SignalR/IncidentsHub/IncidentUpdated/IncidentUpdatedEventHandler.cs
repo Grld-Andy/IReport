@@ -12,7 +12,6 @@ public class IncidentUpdatedEventHandler(IHubContext<IncidentHub> _hubContext) :
 
     async Task IEventHandler<IncidentUpdatedEvent>.HandleAsync(IncidentUpdatedEvent @event, CancellationToken cancellationToken)
     {
-        Console.WriteLine($"======================= assigned to : {@event.Incident.AssignedTo?.Name}");
         await hubContext.Clients.All.SendAsync("IncidentUpdated", new IncidentUpdatedEvent(@event.Incident), cancellationToken);
     }
 }

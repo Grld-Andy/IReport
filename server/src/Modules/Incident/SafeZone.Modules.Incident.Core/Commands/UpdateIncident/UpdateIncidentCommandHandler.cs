@@ -75,7 +75,6 @@ internal sealed class UpdateIncidentHandler
             var assignedUser = await userRepository.GetByIdAsync(command.AssignedToId.Value, cancellationToken);
             incidentDto.AssignedTo = assignedUser;
         }
-        Console.WriteLine($"======================= assigned to : {incidentDto.AssignedTo?.Name}");
 
         _ = messageBroker.PublishAsync(
             new IncidentUpdatedEvent(incidentDto), cancellationToken);

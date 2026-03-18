@@ -57,7 +57,6 @@ const IncidentsTable: React.FC = () => {
 
   const fetchIncidents = useCallback(async () => {
     try {
-      console.log('fetching data')
       const result = await getIncidents(
         currentPage,
         debouncedSearch,
@@ -70,7 +69,6 @@ const IncidentsTable: React.FC = () => {
     } catch (error) {
       console.error("Failed to fetch incidents:", error);
     } finally {
-      console.log("set loading to false")
       setLoading(false);
     }
   }, [currentPage, debouncedSearch, orderBy, user?.team]);
