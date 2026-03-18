@@ -153,13 +153,13 @@ public static class Extensions
         app.UseCorrelationId();
         app.UseErrorHandling();
 
-        // var webSocketOptions = new WebSocketOptions
-        // {
-        //     KeepAliveInterval = TimeSpan.FromMinutes(2)
-        // };
-        // webSocketOptions.AllowedOrigins.Add("http://localhost:3000");
-        // webSocketOptions.AllowedOrigins.Add("http://www.localhost:3000");
-        // app.UseWebSockets(webSocketOptions);
+        var webSocketOptions = new WebSocketOptions
+        {
+            KeepAliveInterval = TimeSpan.FromMinutes(2)
+        };
+        webSocketOptions.AllowedOrigins.Add("http://localhost:81");
+        webSocketOptions.AllowedOrigins.Add("http://www.localhost:81");
+        app.UseWebSockets(webSocketOptions);
 
         app.UseSwagger();
         app.UseSwaggerUI();
