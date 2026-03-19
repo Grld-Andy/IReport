@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 
 namespace SafeZone.Modules.Activity.Core.DAL;
 
@@ -13,9 +12,9 @@ internal sealed class ActivitiesDbContextFactory
 
         // Hardcoded or read from env
         var connectionString =
-            "Host=localhost;Port=5432;Database=safezone;Username=postgres;Password=postgres";
+            "Data Source=PSL-AANSONG\\SQLEXPRESS;Database=SafeZone;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Application Name=\"SQL Server Management Studio\";Command Timeout=0";
 
-        optionsBuilder.UseNpgsql(connectionString);
+        optionsBuilder.UseSqlServer(connectionString);
 
         return new ActivitiesDbContext(optionsBuilder.Options);
     }

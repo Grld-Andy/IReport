@@ -73,7 +73,7 @@ public static class Extensions
         services.AddSingleton(new UnitOfWorkTypeRegistry());
         
         // Temporary fix for EF Core issue related to https://github.com/npgsql/efcore.pg/issues/2000
-        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+        // AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
         return services;
     }
@@ -91,7 +91,7 @@ public static class Extensions
         var section = configuration.GetSection(SectionName);
         var options = section.BindOptions<PostgresOptions>();
         services.AddDbContext<T>(x => x
-            .UseNpgsql(options.ConnectionString)
+            .UseSqlServer(options.ConnectionString)
             .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning)));
 
         return services;

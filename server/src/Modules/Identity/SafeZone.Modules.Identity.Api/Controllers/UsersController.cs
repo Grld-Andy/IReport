@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SafeZone.Modules.Identity.Core.DTO;
 using SafeZone.Modules.Identity.Core.Queries.GetSingleUser;
@@ -9,6 +10,7 @@ namespace SafeZone.Modules.Identity.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 internal class UsersController(IDispatcher _dispatcher) : ControllerBase
 {
     private readonly IDispatcher dispatcher = _dispatcher;

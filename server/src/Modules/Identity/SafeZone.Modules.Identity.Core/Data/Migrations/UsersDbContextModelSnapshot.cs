@@ -2,13 +2,13 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SafeZone.Modules.Identity.Core.DAL;
 
 #nullable disable
 
-namespace SafeZone.Modules.Identity.Core.DAL.Migrations
+namespace SafeZone.Modules.Identity.Core.Data.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
     partial class UsersDbContextModelSnapshot : ModelSnapshot
@@ -18,26 +18,26 @@ namespace SafeZone.Modules.Identity.Core.DAL.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("users")
-                .HasAnnotation("ProductVersion", "10.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("ProductVersion", "10.0.5")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("SafeZone.Modules.Identity.Core.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Team")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -49,11 +49,11 @@ namespace SafeZone.Modules.Identity.Core.DAL.Migrations
                     b.OwnsOne("SafeZone.Modules.Identity.Core.Domain.Entities.UserRole", "Role", b1 =>
                         {
                             b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasColumnType("text")
+                                .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Role");
 
                             b1.HasKey("UserId");
@@ -67,11 +67,11 @@ namespace SafeZone.Modules.Identity.Core.DAL.Migrations
                     b.OwnsOne("SafeZone.Modules.Identity.Core.Domain.ValueObjects.UserEmail", "Email", b1 =>
                         {
                             b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasColumnType("text")
+                                .HasColumnType("nvarchar(450)")
                                 .HasColumnName("Email");
 
                             b1.HasKey("UserId");
@@ -88,11 +88,11 @@ namespace SafeZone.Modules.Identity.Core.DAL.Migrations
                     b.OwnsOne("SafeZone.Modules.Identity.Core.Domain.ValueObjects.UserName", "Name", b1 =>
                         {
                             b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasColumnType("text")
+                                .HasColumnType("nvarchar(max)")
                                 .HasColumnName("UserName");
 
                             b1.HasKey("UserId");
@@ -106,11 +106,11 @@ namespace SafeZone.Modules.Identity.Core.DAL.Migrations
                     b.OwnsOne("SafeZone.Modules.Identity.Core.Domain.ValueObjects.UserPassword", "Password", b1 =>
                         {
                             b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasColumnType("text")
+                                .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Password");
 
                             b1.HasKey("UserId");
@@ -124,11 +124,11 @@ namespace SafeZone.Modules.Identity.Core.DAL.Migrations
                     b.OwnsOne("SafeZone.Modules.Identity.Core.Domain.ValueObjects.UserStatus", "Status", b1 =>
                         {
                             b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasColumnType("text")
+                                .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Status");
 
                             b1.HasKey("UserId");

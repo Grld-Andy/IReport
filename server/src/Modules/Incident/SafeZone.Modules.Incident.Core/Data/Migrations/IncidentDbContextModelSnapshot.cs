@@ -2,9 +2,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SafeZone.Modules.Incident.Core.DAL;
 
 #nullable disable
@@ -12,75 +11,111 @@ using SafeZone.Modules.Incident.Core.DAL;
 namespace SafeZone.Modules.Incident.Core.Data.Migrations
 {
     [DbContext(typeof(IncidentDbContext))]
-    [Migration("20260313104951_AddTeam")]
-    partial class AddTeam
+    partial class IncidentDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("incidents")
-                .HasAnnotation("ProductVersion", "10.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("ProductVersion", "10.0.5")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("SafeZone.Modules.Incident.Core.Domain.Entities.IncidentEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("AssignedToId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Category")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("ReporterId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Severity")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("Team")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Category");
+                    b.HasIndex("AssignedToId");
 
-                    b.HasIndex("Severity");
-
-                    b.HasIndex("Status");
+                    b.HasIndex("ReporterId");
 
                     b.ToTable("Incidents", "incidents");
                 });
 
+            modelBuilder.Entity("SafeZone.Modules.Incident.Core.Domain.Entities.IncidentUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IncidentUsers", "incidents");
+                });
+
             modelBuilder.Entity("SafeZone.Modules.Incident.Core.Domain.Entities.IncidentEntity", b =>
                 {
+                    b.HasOne("SafeZone.Modules.Incident.Core.Domain.Entities.IncidentUser", "AssignedTo")
+                        .WithMany()
+                        .HasForeignKey("AssignedToId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SafeZone.Modules.Incident.Core.Domain.Entities.IncidentUser", "Reporter")
+                        .WithMany()
+                        .HasForeignKey("ReporterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.OwnsOne("SafeZone.Modules.Incident.Core.Domain.ValueObjects.IncidentDescription", "Description", b1 =>
                         {
                             b1.Property<Guid>("IncidentEntityId")
-                                .HasColumnType("uuid");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasMaxLength(2000)
-                                .HasColumnType("character varying(2000)")
+                                .HasColumnType("nvarchar(2000)")
                                 .HasColumnName("Description");
 
                             b1.HasKey("IncidentEntityId");
@@ -94,20 +129,20 @@ namespace SafeZone.Modules.Incident.Core.Data.Migrations
                     b.OwnsOne("SafeZone.Modules.Incident.Core.Domain.ValueObjects.IncidentLocation", "Location", b1 =>
                         {
                             b1.Property<Guid>("IncidentEntityId")
-                                .HasColumnType("uuid");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("ExtraDetails")
                                 .IsRequired()
                                 .HasMaxLength(500)
-                                .HasColumnType("character varying(500)")
+                                .HasColumnType("nvarchar(500)")
                                 .HasColumnName("LocationDetails");
 
                             b1.Property<double>("Latitude")
-                                .HasColumnType("double precision")
+                                .HasColumnType("float")
                                 .HasColumnName("Latitude");
 
                             b1.Property<double>("Longitude")
-                                .HasColumnType("double precision")
+                                .HasColumnType("float")
                                 .HasColumnName("Longitude");
 
                             b1.HasKey("IncidentEntityId");
@@ -121,12 +156,12 @@ namespace SafeZone.Modules.Incident.Core.Data.Migrations
                     b.OwnsOne("SafeZone.Modules.Incident.Core.Domain.ValueObjects.IncidentSubject", "Subject", b1 =>
                         {
                             b1.Property<Guid>("IncidentEntityId")
-                                .HasColumnType("uuid");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasMaxLength(200)
-                                .HasColumnType("character varying(200)")
+                                .HasColumnType("nvarchar(200)")
                                 .HasColumnName("Subject");
 
                             b1.HasKey("IncidentEntityId");
@@ -137,11 +172,15 @@ namespace SafeZone.Modules.Incident.Core.Data.Migrations
                                 .HasForeignKey("IncidentEntityId");
                         });
 
+                    b.Navigation("AssignedTo");
+
                     b.Navigation("Description")
                         .IsRequired();
 
                     b.Navigation("Location")
                         .IsRequired();
+
+                    b.Navigation("Reporter");
 
                     b.Navigation("Subject")
                         .IsRequired();

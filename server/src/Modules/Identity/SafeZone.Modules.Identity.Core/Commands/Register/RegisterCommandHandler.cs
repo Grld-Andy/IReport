@@ -22,7 +22,7 @@ internal class RegisterCommandHandler(IUserRepository _userRepository, IMessageB
         }
         userDto.Password = passwordManager.Secure(userDto.Password);
 
-        if(context.Identity.Role == "admin")
+        if(context.Identity.Role == "admin" && userDto.Role == "admin")
         {
             userDto.Team = "Admin";
         }

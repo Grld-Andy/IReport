@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SafeZone.Modules.Identity.Core.Commands.Login;
@@ -21,6 +22,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     
 
     [HttpPost("register")]
+    [Authorize("admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterCommand command, CancellationToken cancellationToken)
     {
