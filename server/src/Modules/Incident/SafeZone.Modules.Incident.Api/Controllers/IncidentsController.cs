@@ -11,10 +11,12 @@ using SafeZone.Modules.Incident.Core.Domain.Enums;
 using SafeZone.Shared.Abstractions.Contexts;
 using SafeZone.Modules.Incident.Core.DTO;
 using SafeZone.Shared.Abstractions.Queries;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SafeZone.Modules.Incident.Api.Controllers;
 
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 internal class IncidentsController(IDispatcher _dispatcher, IContext _context) : ControllerBase
 {

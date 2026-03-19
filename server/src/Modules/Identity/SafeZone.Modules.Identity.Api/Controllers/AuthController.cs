@@ -39,6 +39,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
         return Ok(result);
     }
 
+    [Authorize]
     [HttpPost("reset-password")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordCommand command, CancellationToken cancellationToken)

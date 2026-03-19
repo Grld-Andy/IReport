@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SafeZone.Modules.Activity.Core.Domain.Repositories;
 
 namespace SafeZone.Modules.Activity.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 internal class ActivitiesController(IActivityRepository repository) : ControllerBase
 {
