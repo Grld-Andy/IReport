@@ -10,11 +10,11 @@ internal class RegisterCommandHandler(IUserRepository _userRepository, IMessageB
     private readonly IUserRepository userRepository = _userRepository;
     private readonly IContext context = _context;
     private readonly IMessageBroker messageBroker = _messageBroker;
-
     private readonly IPasswordManager passwordManager = _passwordManager;
 
     public async Task HandleAsync(RegisterCommand command, CancellationToken cancellationToken = default)
     {
+        await userRepository.EnsureEmailNotTakenAsync(command.User.Email, cancellationToken);
         var userDto = command.User;
         if(userDto.Password != userDto.ConfirmPassword)
         {

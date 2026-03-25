@@ -10,7 +10,6 @@
     <ProjectReference Include="..\..\Modules\Activity\SafeZone.Modules.Activity.Api\SafeZone.Modules.Activity.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Identity\SafeZone.Modules.Identity.Api\SafeZone.Modules.Identity.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Incident\SafeZone.Modules.Incident.Api\SafeZone.Modules.Incident.Api.csproj" />
-    <ProjectReference Include="..\..\Modules\Location\SafeZone.Modules.Location.Api\SafeZone.Modules.Location.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

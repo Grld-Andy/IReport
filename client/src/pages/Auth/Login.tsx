@@ -44,7 +44,7 @@ const Login: React.FC = () => {
       navigate("/");
     } else {
       setApiError(response.message);
-      toast.error(apiError, { position: "top-center" });
+      toast.error(response.message, { position: "top-center" });
     }
     dispatch(loginStop());
   };

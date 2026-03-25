@@ -30,6 +30,24 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
         return user.Id;
     }
 
+    public async Task EnsureEmailNotTakenAsync(
+        string email,
+        CancellationToken cancellationToken = default)
+    {
+        var normalizedEmail = email.ToLower();
+
+        var exists = await dbContext.Users
+            .AsNoTracking()
+            .AnyAsync(
+                u => u.Email.Value == normalizedEmail,
+                cancellationToken);
+
+        if (exists)
+        {
+            throw new BadRequestException("A user with this email already exists");
+        }
+    }
+
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
@@ -103,10 +121,23 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
         return UserMapper.FromEntity(user);
     }
 
-    public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public async Task<User> GetByEmailAsync(
+        string email,
+        CancellationToken cancellationToken = default)
     {
-        var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Email.Value.Equals(email.ToLower()), cancellationToken: cancellationToken)
-            ?? throw new UserNotFoundException(email);
+        var normalizedEmail = email.ToLower();
+
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .SingleOrDefaultAsync(
+                u => u.Email.Value == normalizedEmail,
+                cancellationToken);
+
+        if (user is null)
+        {
+            throw new UserNotFoundException(email);
+        }
+
         return user;
     }
 

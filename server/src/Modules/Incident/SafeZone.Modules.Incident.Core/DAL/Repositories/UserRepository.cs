@@ -14,19 +14,20 @@ internal sealed class UserRepository(IncidentDbContext _dbcontext) : IUserReposi
         return await dbcontext.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(i => i.Id == id, cancellationToken)
-            ?? throw new NotFoundException("User", id);
+            ?? throw new NotFoundException("User not found");
     }
 
     public async Task AddUserAsync(Guid id, CreateIncidentUserDto dto, CancellationToken cancellationToken = default)
     {
         var user = IncidentUser.Create(id, dto.Name, dto.Email, dto.Role);
         await dbcontext.Users.AddAsync(user, cancellationToken);
+        await SaveAsync(cancellationToken);
     }
 
-    public Task UpdateUserAsync(IncidentUser user, CancellationToken cancellationToken = default)
+    public async Task UpdateUserAsync(IncidentUser user, CancellationToken cancellationToken = default)
     {
         dbcontext.Users.Update(user);
-        return Task.CompletedTask;
+        await SaveAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
