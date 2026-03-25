@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
 using SafeZone.Shared.Abstractions;
 using SafeZone.Shared.Abstractions.Dispatchers;
 using SafeZone.Shared.Abstractions.Modules;
@@ -33,6 +32,7 @@ using SafeZone.Shared.Infrastructure.Serialization;
 using SafeZone.Shared.Infrastructure.Services;
 using SafeZone.Shared.Infrastructure.SignalR.ActivitiesHub.Clients;
 using SafeZone.Shared.Infrastructure.Storage;
+using SafeZone.Shared.Infrastructure.Swagger;
 using SafeZone.Shared.Infrastructure.Time;
 
 namespace SafeZone.Shared.Infrastructure;
@@ -71,31 +71,7 @@ public static class Extensions
         services.AddCorsPolicy(configuration);
         services.AddEndpointsApiExplorer();
         services.AddSignalR();
-        services.AddSwaggerGen(options =>
-        {
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-            {
-                Name = "Authorization",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.Http,
-                Scheme = "Bearer"
-            });
-
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    Array.Empty<string>()
-                }
-            });
-        });
+        services.AddSwagger();
         
         services.AddMemoryCache();
         services.AddHttpClient();

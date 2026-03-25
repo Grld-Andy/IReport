@@ -18,7 +18,7 @@ internal sealed class IdentityModule : IModule
         
     public IEnumerable<string> Policies { get; } =
     [
-        "identity"
+        "admin"
     ];
 
     public void Register(IServiceCollection services, IConfiguration configuration)

@@ -22,7 +22,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     
 
     [HttpPost("register")]
-    // [Authorize("admin")]
+    [Authorize(Policy = "admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterCommand command, CancellationToken cancellationToken)
     {
@@ -51,7 +51,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
         return NoContent();
     }
 
-
+    [AllowAnonymous]
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult<UserDetailsDto>> LoginUser([FromBody] LoginCommand command, CancellationToken cancellationToken)
