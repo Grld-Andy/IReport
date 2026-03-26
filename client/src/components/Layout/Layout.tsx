@@ -17,6 +17,7 @@ import { getActivities } from "@/services/getActivities";
 import { saveActivitiesState } from "@/redux/features/activities/activitiesSlice";
 import { useActivityHub } from "@/hooks/useActivitiesHook";
 import { useLocationsHub } from "@/hooks/useLocationsHook";
+import useUsersHub from "@/hooks/useUsersHook";
 
 const Layout: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -24,6 +25,7 @@ const Layout: React.FC = () => {
   useIncidentHub()
   useActivityHub()
   useLocationsHub()
+  useUsersHub();
 
   useEffect(() => {
     const setUser = async () => {

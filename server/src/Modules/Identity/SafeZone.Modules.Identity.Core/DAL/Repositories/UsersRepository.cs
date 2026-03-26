@@ -121,6 +121,13 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
         return UserMapper.FromEntity(user);
     }
 
+    public async Task<User> GetIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken)
+            ?? throw new UserNotFoundException(id);
+        return user;
+    }
+
     public async Task<User> GetByEmailAsync(
         string email,
         CancellationToken cancellationToken = default)

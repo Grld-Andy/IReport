@@ -4,6 +4,7 @@ internal interface IUserRepository
 {
     Task<UserDetailsDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
+    Task<User> GetIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task EnsureEmailNotTakenAsync(string email, CancellationToken cancellationToken = default);
     Task<List<UserDetailsDto>> GetAllByIdsAsync(List<Guid> guids, CancellationToken cancellationToken = default);
     Task<Paged<UserDetailsDto>> GetAllAsync(IPagedQuery query, Dictionary<string, string>? filters = null, CancellationToken cancellationToken = default);

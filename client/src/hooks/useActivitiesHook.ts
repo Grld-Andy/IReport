@@ -19,7 +19,6 @@ export function useActivityHub() {
       .catch((err) => console.error("Failed to connect to activityHub: ", err));
 
     hubConnection.on("ActivityCreated", (activity) => {
-      console.log("activity added: ", activity)
       dispatch(addActivitieState(activity));
     });
 

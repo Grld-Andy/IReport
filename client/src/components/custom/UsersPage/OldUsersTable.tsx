@@ -36,6 +36,8 @@ import { getUsers } from "@/services/getUsers";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "@/redux/app/hooks";
+import { changeUserStatus } from "@/services/changeUserStatus";
+import { toast } from "sonner";
 
 const UsersTable: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -87,6 +89,15 @@ const UsersTable: React.FC = () => {
     if (pageTo < 1 || pageTo > totalPages) return;
     navigate(`/users/${pageTo}`);
   };
+
+  const updateUserStatus = async (id: string, status: string) => {
+    const {success, message} = await changeUserStatus(id, status)
+    if(success){
+      toast.message(`${message} to ${status}`, {position: 'top-center'})
+    }else{
+      toast.error(message, {position: 'top-center'})
+    }
+  }
 
   return (
     <div className="flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -286,7 +297,14 @@ const UsersTable: React.FC = () => {
                         <DropdownMenuContent>
                           <DropdownMenuGroup>
                             <DropdownMenuItem>Edit Profile</DropdownMenuItem>
-                            <DropdownMenuItem>Suspend</DropdownMenuItem>
+                            {/* <DropdownMenuItem>Suspend</DropdownMenuItem> */}
+                          </DropdownMenuGroup>
+                          <DropdownMenuGroup>
+                            {
+                              ["Active", "Suspended"].filter(s => s != user.status).map((s, index) => (
+                                <DropdownMenuItem key={index} onClick={() => {updateUserStatus(user.id, s)}}>{s == "Suspended" ? "Suspend" : s}</DropdownMenuItem>
+                              ))
+                            }
                           </DropdownMenuGroup>
                         </DropdownMenuContent>
                       </DropdownMenu>

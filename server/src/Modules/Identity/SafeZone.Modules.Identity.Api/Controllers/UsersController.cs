@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SafeZone.Modules.Identity.Core.Commands.ChangeStatus;
+using SafeZone.Modules.Identity.Core.Domain.ValueObjects;
 using SafeZone.Modules.Identity.Core.DTO;
 using SafeZone.Modules.Identity.Core.Queries.GetSingleUser;
 using SafeZone.Modules.Identity.Core.Queries.GetUsers;
@@ -28,5 +30,12 @@ internal class UsersController(IDispatcher _dispatcher) : ControllerBase
     {
         var user = await dispatcher.QueryAsync(new GetSingleUserQuery(id), cancellationToken);
         return Ok(user);
+    }
+
+    [HttpPatch("updateStatus/{id:guid}")]
+    public async Task<ActionResult> UpdateUserStatus([FromRoute] Guid id, [FromBody] ChangeStatusCommand command, CancellationToken cancellationToken)
+    {
+        await dispatcher.SendAsync(command with {Id = id}, cancellationToken);
+        return Ok();
     }
 }

@@ -25,7 +25,7 @@ const usersSlice = createSlice({
       state.totalUsers =
         currentLength != initialLength ? currentLength : initialLength;
     },
-    udpateUser(state, action: PayloadAction<User>) {
+    updateUser(state, action: PayloadAction<User>) {
       state.users = state.users.map((u) => {
         if (u.id != action.payload.id) {
           return u;
@@ -41,5 +41,5 @@ const usersSlice = createSlice({
   },
 });
 
-export const { saveUsers, deleteUser, udpateUser, addUser } = usersSlice.actions;
+export const { saveUsers, deleteUser, updateUser, addUser } = usersSlice.actions;
 export default usersSlice.reducer;
