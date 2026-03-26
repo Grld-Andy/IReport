@@ -295,10 +295,9 @@ const UsersTable: React.FC = () => {
                         </DropdownMenuTrigger>
 
                         <DropdownMenuContent>
-                          <DropdownMenuGroup>
+                          {/* <DropdownMenuGroup>
                             <DropdownMenuItem>Edit Profile</DropdownMenuItem>
-                            {/* <DropdownMenuItem>Suspend</DropdownMenuItem> */}
-                          </DropdownMenuGroup>
+                          </DropdownMenuGroup> */}
                           <DropdownMenuGroup>
                             {
                               ["Active", "Suspended"].filter(s => s != user.status).map((s, index) => (
