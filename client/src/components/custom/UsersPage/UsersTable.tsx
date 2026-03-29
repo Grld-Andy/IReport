@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -15,9 +14,10 @@ import { useAppSelector } from "@/redux/app/hooks";
 import { changeUserStatus } from "@/services/changeUserStatus";
 import { toast } from "sonner";
 import UserRow from "./TableUI/UserRow";
-import UsersTableFooter from "./TableUI/UsersTableFooter";
+import UsersTableFooter from "../PaginationFooter";
 import UsersTableHeader from "./TableUI/UsersTableHeader";
 import UsersTableColumns from "./TableUI/UsersTableColumns";
+import EmptyRow from "../EmptyRow";
 
 const UsersTable: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -82,7 +82,6 @@ const UsersTable: React.FC = () => {
 
   return (
     <div className="flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      {/* Header */}
       <UsersTableHeader
         totalUsers={totalUsers}
         search={search} setSearch={setSearch}
@@ -107,21 +106,13 @@ const UsersTable: React.FC = () => {
           </TableHeader>
 
           <TableBody>
-            {/* Loading */}
             {loading &&
               Array.from({ length: 5 }).map((_, idx) => (
                 <UsersTableColumns key={idx}/>
               ))}
 
             {(!loading && users.length === 0) && (
-              <TableRow>
-                <TableCell
-                  colSpan={6}
-                  className="text-center py-12 text-gray-500"
-                >
-                  No users found
-                </TableCell>
-              </TableRow>
+              <EmptyRow text={"No users found"}/>
             )}
 
             {/* Data */}

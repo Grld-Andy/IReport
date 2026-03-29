@@ -50,7 +50,7 @@ export type IncidentForm = z.infer<typeof incidentSchema>;
 interface IncidentUpdateModalProps {
   incident: Incident;
   trigger: ReactNode;
-  onUpdate?: (incident: Incident) => void;
+  onUpdate?: (incident: Incident) => void; // only include this for kanban board udpate 
 }
 
 export default function UpdateIncidentModal({

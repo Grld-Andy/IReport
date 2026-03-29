@@ -1,7 +1,7 @@
 import React from "react";
 import { LuShield, LuUsers, LuUserCheck, LuUserX } from "react-icons/lu";
 import PageHeader from "@/components/custom/PageHeader";
-import OldUsersTable from "@/components/custom/UsersPage/OldUsersTable";
+import OldUsersTable from "@/components/custom/UsersPage/UsersTable";
 import StatCard from "@/components/custom/UsersPage/StatCard";
 import { useAppSelector } from "@/redux/app/hooks";
 import CreateUserModal from "@/components/custom/CreateUserModal";

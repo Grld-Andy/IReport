@@ -84,9 +84,6 @@ const UserRow: React.FC<Props> = ({ user, updateUserStatus }) => {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent>
-            {/* <DropdownMenuGroup>
-                            <DropdownMenuItem>Edit Profile</DropdownMenuItem>
-                          </DropdownMenuGroup> */}
             <DropdownMenuGroup>
               {["Active", "Suspended"]
                 .filter((s) => s != user.status)

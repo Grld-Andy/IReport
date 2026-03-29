@@ -6,7 +6,7 @@ interface Props {
   totalPages: number;
   changePage: (pageTo: number) => void;
 }
-const UsersTableFooter: React.FC<Props> = ({
+const PaginationFooter: React.FC<Props> = ({
   currentPage,
   totalPages,
   changePage,
@@ -38,4 +38,4 @@ const UsersTableFooter: React.FC<Props> = ({
   );
 };
 
-export default UsersTableFooter;
+export default PaginationFooter;
