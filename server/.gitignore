@@ -336,3 +336,6 @@ logs/
 
 appsettings.local.json
 module.*.local.json
+
+.env
+*/**/.env

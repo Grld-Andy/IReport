@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <UserSecretsId>87cbffdb-b88f-4f3c-8366-e3eaede95076</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,6 +11,7 @@
     <ProjectReference Include="..\..\Modules\Activity\SafeZone.Modules.Activity.Api\SafeZone.Modules.Activity.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Identity\SafeZone.Modules.Identity.Api\SafeZone.Modules.Identity.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Incident\SafeZone.Modules.Incident.Api\SafeZone.Modules.Incident.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Notifications\SafeZone.Modules.Notifications.Api\SafeZone.Modules.Notifications.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>
