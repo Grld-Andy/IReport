@@ -16,11 +16,7 @@ internal class RegisterCommandHandler(IUserRepository _userRepository, IMessageB
     {
         await userRepository.EnsureEmailNotTakenAsync(command.User.Email, cancellationToken);
         var userDto = command.User;
-        if(userDto.Password != userDto.ConfirmPassword)
-        {
-            throw new BadRequestException("Passwords do not match, please try again.");
-        }
-        userDto.Password = passwordManager.Secure(userDto.Password);
+        userDto.Password = passwordManager.Secure("pleaseresetpassword");
 
         if(context.Identity.Role == "admin" && userDto.Role == "admin")
         {
@@ -28,6 +24,6 @@ internal class RegisterCommandHandler(IUserRepository _userRepository, IMessageB
         }
         var id = await userRepository.CreateAsync(UserMapper.ToEntity(userDto), cancellationToken);
 
-        _ = messageBroker.PublishAsync(new UserRegistered(id, userDto.Name, userDto.Email, userDto.Role), cancellationToken);
+        _ = messageBroker.PublishAsync(new UserRegisteredEvent(new Guid(), userDto.Name, userDto.Email, userDto.Role, userDto.Team), cancellationToken);
     }
 }

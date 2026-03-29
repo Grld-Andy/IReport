@@ -70,7 +70,9 @@ const IncidentsTable: React.FC = () => {
   }, [currentPage, debouncedSearch, orderBy, user?.team]);
 
   useEffect(() => {
+    console.log("fetching incidents")
     if(!stateIncidentsIsSet) {
+      console.log('cancel fetcing incidents')
       setLoading(true);
       return
     };

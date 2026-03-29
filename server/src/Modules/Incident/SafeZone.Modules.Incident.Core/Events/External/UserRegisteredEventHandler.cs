@@ -1,11 +1,12 @@
 namespace SafeZone.Modules.Incident.Core.Events.External;
 
-internal class UserRegisteredHandler(IUserRepository _userRepository) : IEventHandler<UserRegistered>
+internal class UserRegisteredEventHandler(IUserRepository _userRepository) : IEventHandler<UserRegisteredEvent>
 {
     private readonly IUserRepository userRepository = _userRepository;
 
-    public async Task HandleAsync(UserRegistered @event, CancellationToken cancellationToken = default)
+    public async Task HandleAsync(UserRegisteredEvent @event, CancellationToken cancellationToken = default)
     {
+        Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@ event called in incidents");
         var existingUser = await userRepository.ExistsAsync(@event.Id, cancellationToken);
 
         if(!existingUser)
@@ -18,5 +19,6 @@ internal class UserRegisteredHandler(IUserRepository _userRepository) : IEventHa
             };
             await userRepository.AddUserAsync(@event.Id, user, cancellationToken);
         }
+        Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@ event processed in incidents");
     }
 }

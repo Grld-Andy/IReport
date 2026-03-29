@@ -1,0 +1,184 @@
+@model SafeZone.Modules.Notifications.Core.DTO.RegisteredEmailModel
+
+
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" style="padding: 40px 10px;">
+
+        <table border="0" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+
+          <tr>
+            <td align="center" style="background-color: #0d3b66; padding: 36px 40px 28px 40px;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td align="center" style="padding-top: 16px;">
+                    <span style="font-size: 26px; font-weight: bold; color: #ffffff; letter-spacing: 2px; text-transform: uppercase;">SAFE<span style="color: #4db8ff;">ZONE</span></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style="padding-top: 6px;">
+                    <span style="font-size: 12px; color: #a8c8e8; letter-spacing: 1px; text-transform: uppercase;">Account Registered Successfully</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="background-color: #1a5fa8; height: 4px; font-size: 0; line-height: 0;">&nbsp;</td>
+          </tr>
+
+          <tr>
+            <td style="padding: 40px 40px 20px 40px;">
+              <p style="margin: 0 0 8px 0; font-size: 13px; color: #1a5fa8; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Account Created</p>
+              <h1 style="margin: 0 0 16px 0; font-size: 28px; font-weight: bold; color: #0d3b66; line-height: 1.3;">Welcome, @Model.Name!</h1>
+              <p style="margin: 0; font-size: 15px; color: #4a5568; line-height: 1.7;">
+                Your SafeZone account has been set up by an administrator. You now have access to the platform with the details outlined below. Please review your account information and get started.
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 40px;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="border-top: 1px solid #e2e8f0; font-size: 0; line-height: 0;">&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 28px 40px 16px 40px;">
+              <p style="margin: 0; font-size: 13px; font-weight: bold; color: #0d3b66; text-transform: uppercase; letter-spacing: 1px;">Your Account Details</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 40px 28px 40px;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border: 1px solid #e2e8f0; border-radius: 6px;">
+
+                <tr>
+                  <td width="38%" style="padding: 14px 18px; background-color: #f7fafc; border-bottom: 1px solid #e2e8f0;">
+                    <span style="font-size: 12px; font-weight: bold; color: #718096; text-transform: uppercase; letter-spacing: 0.5px;">Full Name</span>
+                  </td>
+                  <td width="62%" style="padding: 14px 18px; background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                    <span style="font-size: 14px; color: #2d3748; font-weight: bold;">@Model.Name</span>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td width="38%" style="padding: 14px 18px; background-color: #f7fafc; border-bottom: 1px solid #e2e8f0;">
+                    <span style="font-size: 12px; font-weight: bold; color: #718096; text-transform: uppercase; letter-spacing: 0.5px;">Email</span>
+                  </td>
+                  <td width="62%" style="padding: 14px 18px; background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                    <span style="font-size: 14px; color: #1a5fa8;">@Model.Email</span>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td width="38%" style="padding: 14px 18px; background-color: #f7fafc; border-bottom: 1px solid #e2e8f0;">
+                    <span style="font-size: 12px; font-weight: bold; color: #718096; text-transform: uppercase; letter-spacing: 0.5px;">Role</span>
+                  </td>
+                  <td width="62%" style="padding: 14px 18px; background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                    <table border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="background-color: #ebf8ff; border-radius: 4px; padding: 3px 10px;">
+                          <span style="font-size: 13px; color: #1a5fa8; font-weight: bold;">@Model.Role</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td width="38%" style="padding: 14px 18px; background-color: #f7fafc; border-bottom: 1px solid #e2e8f0;">
+                    <span style="font-size: 12px; font-weight: bold; color: #718096; text-transform: uppercase; letter-spacing: 0.5px;">Team</span>
+                  </td>
+                  <td width="62%" style="padding: 14px 18px; background-color: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                    <span style="font-size: 14px; color: #2d3748;">@Model.Team</span>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td width="38%" style="padding: 14px 18px; background-color: #f7fafc;">
+                    <span style="font-size: 12px; font-weight: bold; color: #718096; text-transform: uppercase; letter-spacing: 0.5px;">One-Time Password</span>
+                  </td>
+                  <td width="62%" style="padding: 14px 18px; background-color: #ffffff;">
+                    <table border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="background-color: #fff8e1; border: 1px dashed #f6ad55; border-radius: 4px; padding: 4px 12px;">
+                          <span style="font-size: 16px; color: #b7560a; font-weight: bold; font-family: 'Courier New', Courier, monospace; letter-spacing: 3px;">@Model.OTP</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 40px 28px 40px;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #fff5f5; border-left: 4px solid #e53e3e; border-radius: 0 4px 4px 0;">
+                <tr>
+                  <td style="padding: 14px 16px;">
+                    <p style="margin: 0; font-size: 13px; color: #742a2a; line-height: 1.6;">
+                      <strong>&#9888; Important:</strong> This one-time password expires after first use. You will be prompted to set a new password upon your first login. Do not share this password with anyone.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center" style="padding: 0 40px 36px 40px;">
+              <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="background-color: #0d3b66; border-radius: 6px;">
+                    <a href="@Model.LoginUrl" style="display: inline-block; padding: 14px 36px; font-size: 15px; font-weight: bold; color: #ffffff; text-decoration: none; font-family: Arial, Helvetica, sans-serif; letter-spacing: 0.5px;">Log In to SafeZone &rarr;</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 40px;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="border-top: 1px solid #e2e8f0; font-size: 0; line-height: 0;">&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 28px 40px 36px 40px;">
+              <p style="margin: 0 0 8px 0; font-size: 14px; color: #4a5568; line-height: 1.6;">
+                If you have any trouble accessing your account or did not expect to receive this email, please contact your administrator or reach out to our support team.
+              </p>
+              <p style="margin: 0; font-size: 14px; color: #4a5568;">
+                Need help? <a href="mailto:admin@gmail.com" style="color: #1a5fa8; text-decoration: underline;">support@safezone.com</a>
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="background-color: #f7fafc; border-top: 1px solid #e2e8f0; padding: 24px 40px;" align="center">
+              <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: bold; color: #0d3b66;">SafeZone</p>
+              <p style="margin: 0 0 10px 0; font-size: 12px; color: #a0aec0;">Secure Access Management Platform</p>
+              <p style="margin: 0; font-size: 11px; color: #cbd5e0;">
+                This is an automated message. Please do not reply directly to this email.<br />
+                &copy; 2026 SafeZone. All rights reserved.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>

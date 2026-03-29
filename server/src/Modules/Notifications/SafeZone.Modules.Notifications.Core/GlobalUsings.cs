@@ -1,0 +1,1 @@
+global using SafeZone.Shared.Abstractions.Events;

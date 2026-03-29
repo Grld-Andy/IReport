@@ -49,8 +49,6 @@ export default function CreateUserModal() {
     defaultValues: {
       name: "",
       email: "",
-      password: "",
-      confirmPassword: "",
       role: "",
       team: "",
     },
@@ -109,26 +107,6 @@ export default function CreateUserModal() {
                 <Input {...register("email")} placeholder="user@email.com" />
                 {errors.email && (
                   <p className="text-red-500 text-xs">{errors.email.message}</p>
-                )}
-              </Field>
-
-              <Field>
-                <Label>Password</Label>
-                <Input type="password" {...register("password")} />
-                {errors.password && (
-                  <p className="text-red-500 text-xs">
-                    {errors.password.message}
-                  </p>
-                )}
-              </Field>
-
-              <Field>
-                <Label>Confirm Password</Label>
-                <Input type="password" {...register("confirmPassword")} />
-                {errors.confirmPassword && (
-                  <p className="text-red-500 text-xs">
-                    {errors.confirmPassword.message}
-                  </p>
                 )}
               </Field>
 

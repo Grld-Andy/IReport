@@ -66,7 +66,7 @@ const DeleteIncidentModal: React.FC<Props> = ({
             variant={"destructive"}
             disabled={isSubmitting}
           >
-            {isSubmitting ? <div className="loader"></div> : "Update Incident"}
+            {isSubmitting ? <div className="loader"></div> : "Delete Incident"}
           </Button>
         </DialogFooter>
       </DialogContent>
