@@ -4,10 +4,12 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 export interface IncidentsState {
     incidents: Array<Incident>
     totalIncidents: number
+    isSet: boolean
 }
 const initialState : IncidentsState = {
     incidents: [],
-    totalIncidents: 0
+    totalIncidents: 0,
+    isSet: false
 }
 
 const incidentsSlice = createSlice({
@@ -17,6 +19,7 @@ const incidentsSlice = createSlice({
         saveIncidentsState(state, action: PayloadAction<IncidentsState>){
             state.incidents = action.payload.incidents
             state.totalIncidents = action.payload.totalIncidents
+            state.isSet = true
         },
         deleteIncidentState(state, action: PayloadAction<string>){
             state.incidents = state.incidents.filter((i) => i.id != action.payload)

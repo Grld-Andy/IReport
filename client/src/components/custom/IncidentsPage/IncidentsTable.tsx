@@ -35,6 +35,7 @@ const IncidentsTable: React.FC = () => {
   const user = useAppSelector((state) => state.auth.user);
   const [search, setSearch] = useState<string>("");
   const [orderBy, setOrderBy] = useState<string>("");
+  const stateIncidentsIsSet = useAppSelector((state) => state.incidents.isSet);
   const stateTotalIncidents = useAppSelector(
     (state) => state.incidents.totalIncidents,
   );
@@ -74,12 +75,12 @@ const IncidentsTable: React.FC = () => {
   }, [currentPage, debouncedSearch, orderBy, user?.team]);
 
   useEffect(() => {
-    if(!stateTotalIncidents && stateTotalIncidents != 0) {
+    if(!stateIncidentsIsSet) {
       setLoading(true);
       return
     };
     fetchIncidents();
-  }, [fetchIncidents, stateTotalIncidents]);
+  }, [fetchIncidents, stateIncidentsIsSet, stateTotalIncidents]);
 
   const changePage = (pageTo: number) => {
     if (pageTo < 1 || pageTo > totalPages) return;

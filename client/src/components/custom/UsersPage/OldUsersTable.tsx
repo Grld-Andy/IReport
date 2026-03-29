@@ -50,6 +50,7 @@ const UsersTable: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState("all");
 
   const stateUsers = useAppSelector((state) => state.users.users);
+  const stateUsersIsSet = useAppSelector((state) => state.users.isSet);
   const debouncedSearch = useDebounce(search, 500);
 
   const { page } = useParams();
@@ -78,12 +79,14 @@ const UsersTable: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    if(!stateUsers && stateUsers != 0) {
+    console.log('fetching here: ', stateUsers)
+    if(!stateUsersIsSet) {
+      console.log('fetching users')
       setLoading(true);
       return
     };
     fetchUsers();
-  }, [fetchUsers, stateUsers]);
+  }, [fetchUsers, stateUsers, stateUsersIsSet]);
 
   const changePage = (pageTo: number) => {
     if (pageTo < 1 || pageTo > totalPages) return;

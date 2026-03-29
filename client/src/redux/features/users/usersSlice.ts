@@ -4,10 +4,12 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 export interface UsersState {
   users: Array<User>;
   totalUsers: number;
+  isSet: boolean;
 }
 const initialState: UsersState = {
   users: [],
   totalUsers: 0,
+  isSet: false,
 };
 
 const usersSlice = createSlice({
@@ -17,6 +19,7 @@ const usersSlice = createSlice({
     saveUsers(state, action: PayloadAction<UsersState>) {
       state.users = action.payload.users;
       state.totalUsers = action.payload.totalUsers;
+      state.isSet = true;
     },
     deleteUser(state, action: PayloadAction<string>) {
       const initialLength = state.users.length;
