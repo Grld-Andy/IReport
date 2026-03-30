@@ -229,10 +229,7 @@ export default function CreateIncidentModal() {
                   </Button>
                 </div>
 
-                <div
-                  className="border rounded-md overflow-hidden
-                "
-                >
+                <div className="border rounded-md overflow-hidden">
                   <LocationPicker
                     latitude={latitude}
                     longitude={longitude}

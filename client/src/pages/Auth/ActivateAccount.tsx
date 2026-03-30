@@ -48,7 +48,7 @@ const ActivateAccount: React.FC = () => {
       toast.success("Account activated successfully!", {
         position: "top-center",
       });
-      navigate("/login");
+      navigate("/auth/login");
     } else {
       setApiError(response.message);
       toast.error(response.message, { position: "top-center" });

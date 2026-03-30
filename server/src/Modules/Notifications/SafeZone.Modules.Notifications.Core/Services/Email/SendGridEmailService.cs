@@ -18,7 +18,6 @@ public class SendGridEmailSender : IEmailSender
     {
         var c = new HttpClient();
         var result = await c.GetAsync("https://api.sendgrid.com");
-        Console.WriteLine($"================= checking sendgrid: {result.StatusCode}");
         
         var client = new SendGridClient(_settings.ApiKey);
         var from = new EmailAddress(_settings.FromEmail, _settings.FromName);

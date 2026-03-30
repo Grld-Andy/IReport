@@ -136,16 +136,10 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
         var normalizedEmail = email.ToLower();
 
         var user = await dbContext.Users
-            .AsNoTracking()
             .SingleOrDefaultAsync(
                 u => u.Email.Value == normalizedEmail,
-                cancellationToken);
-
-        if (user is null)
-        {
-            throw new UserNotFoundException(email);
-        }
-
+                cancellationToken)
+            ?? throw new UserNotFoundException(email);
         return user;
     }
 

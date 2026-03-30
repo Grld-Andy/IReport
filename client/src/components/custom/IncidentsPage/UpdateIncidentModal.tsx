@@ -211,6 +211,54 @@ export default function UpdateIncidentModal({
                 )}
               </Field>
 
+              <div className="flex gap-2 z-100">
+                <Field>
+                  <Label htmlFor="status">Status</Label>
+                  <Select
+                    defaultValue={IncidentStatus[
+                      incident.status as unknown as keyof typeof IncidentStatus
+                    ].toString()}
+                    onValueChange={(val) => setValue("status", Number(val))}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Status</SelectLabel>
+                        {statusOptions.map((status, idx) => (
+                          <SelectItem key={idx} value={status[1].toString()}>
+                            {status[0]}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {errors.status && (
+                    <p className="text-red-500 text-xs">
+                      {errors.status.message}
+                    </p>
+                  )}
+                </Field>
+
+                <Field>
+                  <Label htmlFor="assignedTo">Assigned To</Label>
+
+                  <UserCombobox
+                    users={users}
+                    value={getValues("assignedTo")}
+                    initialUser={incident.assignedTo}
+                    onChange={(id) => setValue("assignedTo", id)}
+                  />
+
+                  {errors.assignedTo && (
+                    <p className="text-red-500 text-xs">
+                      {errors.assignedTo.message}
+                    </p>
+                  )}
+                </Field>
+              </div>
+
               <div className="flex gap-2">
                 <Field>
                   <Label htmlFor="category">Category</Label>
@@ -271,54 +319,6 @@ export default function UpdateIncidentModal({
                 </Field>
               </div>
 
-              <div className="flex gap-2 z-100">
-                <Field>
-                  <Label htmlFor="status">Status</Label>
-                  <Select
-                    defaultValue={IncidentStatus[
-                      incident.status as unknown as keyof typeof IncidentStatus
-                    ].toString()}
-                    onValueChange={(val) => setValue("status", Number(val))}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Status</SelectLabel>
-                        {statusOptions.map((status, idx) => (
-                          <SelectItem key={idx} value={status[1].toString()}>
-                            {status[0]}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                  {errors.status && (
-                    <p className="text-red-500 text-xs">
-                      {errors.status.message}
-                    </p>
-                  )}
-                </Field>
-
-                <Field>
-                  <Label htmlFor="assignedTo">Assigned To</Label>
-
-                  <UserCombobox
-                    users={users}
-                    value={getValues("assignedTo")}
-                    initialUser={incident.assignedTo}
-                    onChange={(id) => setValue("assignedTo", id)}
-                  />
-
-                  {errors.assignedTo && (
-                    <p className="text-red-500 text-xs">
-                      {errors.assignedTo.message}
-                    </p>
-                  )}
-                </Field>
-              </div>
-
               <Field>
                 <div className="flex gap-5 justify-between">
                   <div className="flex flex-col gap-2">
@@ -344,7 +344,7 @@ export default function UpdateIncidentModal({
                   </Button>
                 </div>
 
-                <div className="border rounded-md overflow-hidden z-[-10]">
+                <div className="border rounded-md overflow-hidden">
                   <LocationPicker
                     latitude={latitude}
                     longitude={longitude}

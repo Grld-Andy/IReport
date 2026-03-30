@@ -8,7 +8,6 @@ internal class UserRegisteredEventHandler(NotificationService notificationServic
     private readonly NotificationService _notificationService = notificationService;
     public async Task HandleAsync(UserRegisteredEvent @event, CancellationToken cancellationToken = default)
     {
-        Console.WriteLine("============================= Email services called after user registration");
         var context = new RegisteredEmailModel
         {
             Name = @event.Name,
@@ -27,6 +26,5 @@ internal class UserRegisteredEventHandler(NotificationService notificationServic
         };
 
        await _notificationService.SendEmailAsync(emailRequest);
-        Console.WriteLine("============================= Email sent to new user");
     }
 }

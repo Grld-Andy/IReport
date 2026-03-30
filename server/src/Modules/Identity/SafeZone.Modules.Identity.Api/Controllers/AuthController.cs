@@ -28,7 +28,6 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> RegisterUser([FromBody] UserDto dto, CancellationToken cancellationToken)
     {
-        Console.WriteLine($"====================== {dto.Name}");
         var userCreateDto = new UserCreateDto
         {
             Name = dto.Name,
