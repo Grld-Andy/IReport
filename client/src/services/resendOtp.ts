@@ -4,7 +4,7 @@ import { getAxiosError } from "./getAxiosError";
 
 export const resendOtp = async (email: string) => {
     try{
-        const response = await axios.patch(
+        const response = await axios.post(
             `${apiUrl}auth/resend-otp`,
             {email: email},
             {withCredentials: true}

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SafeZone.Modules.Identity.Core.Commands.ChangeStatus;
-using SafeZone.Modules.Identity.Core.Domain.ValueObjects;
 using SafeZone.Modules.Identity.Core.DTO;
 using SafeZone.Modules.Identity.Core.Queries.GetSingleUser;
 using SafeZone.Modules.Identity.Core.Queries.GetUsers;
@@ -18,6 +17,7 @@ internal class UsersController(IDispatcher _dispatcher) : ControllerBase
     private readonly IDispatcher dispatcher = _dispatcher;
     
 
+    [Authorize(Policy = "admin")]
     [HttpGet]
     public async Task<ActionResult<Paged<UserDetailsDto>>> GetAllUsers([FromQuery] GetUsersQuery query, CancellationToken cancellationToken)
     {

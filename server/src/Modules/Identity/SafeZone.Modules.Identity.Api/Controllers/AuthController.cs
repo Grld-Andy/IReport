@@ -21,7 +21,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     private readonly IDispatcher dispatcher = _dispatcher;
     private readonly IContext context = _context;
     private readonly ITokenStorage tokenStorage = _tokenStorage;
-    
+
 
     [HttpPost("register")]
     [Authorize(Policy = "admin")]
@@ -50,7 +50,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
         return Ok(result);
     }
 
-    
+
     [HttpPost("activate-account")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> ActivateAccount([FromBody] ActivateAccountCommand command, CancellationToken cancellationToken)
@@ -75,6 +75,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     [Authorize(Policy = "admin")]
     public async Task<IActionResult> ResendOTP([FromBody] ResendOtpCommand command, CancellationToken cancellationToken)
     {
+        Console.WriteLine("############################## resending email to user");
         await dispatcher.SendAsync(command, cancellationToken);
         return NoContent();
     }
@@ -88,8 +89,9 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
         Response.Cookies.Append(
             "__access_token",
             jwt.AccessToken,
-            new CookieOptions{ 
-                HttpOnly=true,
+            new CookieOptions
+            {
+                HttpOnly = true,
                 // Secure = true // uncomment once deployed over https
             }
         );

@@ -16,6 +16,11 @@ internal class LoginCommandHandler(ITokenStorage _tokenStorage, IUserRepository 
     {
         var user = await userRepository.GetByEmailAsync(command.Email.ToLowerInvariant(), cancellationToken);
 
+        if (!user.Status.ToString().Equals("Active"))
+        {
+            throw new UnauthorizedException("Login failed, please activate your account before proceeding");
+        }
+
         if(!passwordManager.IsValid(command.Password, user.Password))
         {
             throw new BadRequestException("Login failed, please try again with valid credentials.");

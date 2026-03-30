@@ -190,6 +190,7 @@ public static class Extensions
         {
             foreach (var policy in policies)
             {
+                Console.WriteLine($"============= got policy: {policy}");
                 authorization.AddPolicy(policy, x => x.RequireClaim("permissions", policy));
             }
         });

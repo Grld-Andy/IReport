@@ -6,9 +6,8 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import type z from "zod";
 import { userLoginSchema } from "@/types/User";
-import { useForm, type SubmitErrorHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { RegisterUser } from "./Register";
 import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
 import {
   loginStart,
@@ -49,10 +48,6 @@ const Login: React.FC = () => {
     dispatch(loginStop());
   };
 
-  const onError: SubmitErrorHandler<RegisterUser> = (errors) => {
-    console.error("Validation errors:", errors);
-  };
-
   return (
     <div className="grid md:grid-cols-2 h-screen">
       <div className="relative p-1 hidden md:block">
@@ -88,7 +83,7 @@ const Login: React.FC = () => {
           </div>
 
           {/* Actual form */}
-          <form onSubmit={handleSubmit(onSubmit, onError)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="fieldgroup-email">Email</FieldLabel>
