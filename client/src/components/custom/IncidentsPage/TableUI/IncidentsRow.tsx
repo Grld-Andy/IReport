@@ -28,9 +28,6 @@ interface Props {
   deleteIncident: (id: string) => void;
 }
 
-/**
- * 🔁 Reusable Incident Actions (DRY)
- */
 const IncidentActionsMenuItems: React.FC<{
   incident: Incident;
   deleteIncident: (id: string) => void;

@@ -25,9 +25,6 @@ interface Props {
   updateUserStatus: (id: string, status: string) => Promise<void>;
 }
 
-/**
- * 🔁 Reusable menu items (DRY)
- */
 const UserActionsMenuItems: React.FC<{
   user: User;
   updateUserStatus: (id: string, status: string) => Promise<void>;

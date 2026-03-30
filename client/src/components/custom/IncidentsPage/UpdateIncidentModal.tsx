@@ -50,7 +50,7 @@ export type IncidentForm = z.infer<typeof incidentSchema>;
 interface IncidentUpdateModalProps {
   incident: Incident;
   trigger: ReactNode;
-  onUpdate?: (incident: Incident) => void; // only include this for kanban board udpate 
+  onUpdate?: (incident: Incident) => void; // only include this for kanban board udpate
 }
 
 export default function UpdateIncidentModal({
@@ -171,7 +171,9 @@ export default function UpdateIncidentModal({
           },
         });
       }
-      toast.success("Updated incident successfully", {position: "top-center"})
+      toast.success("Updated incident successfully", {
+        position: "top-center",
+      });
       setIsOpen(false);
     } else {
       toast.error(response.message, { position: "top-center" });
@@ -192,7 +194,12 @@ export default function UpdateIncidentModal({
 
             <FieldGroup className="p-5 overflow-y-scroll max-h-[350px] hide-scrollbar">
               <Field>
-                <Label htmlFor="subject">Subject</Label>
+                <div className="flex justify-between items-center gap-3">
+                  <Label htmlFor="subject">Subject</Label>
+                  <div className="text-gray-600 font-semibold text-sm">
+                    <p>By: {incident.reporter.name}</p>
+                  </div>
+                </div>
                 <Input id="subject" {...register("subject")} />
                 {errors.subject && (
                   <p className="text-red-500 text-xs">
