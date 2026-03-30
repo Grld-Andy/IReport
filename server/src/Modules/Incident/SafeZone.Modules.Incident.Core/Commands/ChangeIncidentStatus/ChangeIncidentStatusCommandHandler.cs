@@ -46,7 +46,7 @@ internal sealed class ChangeIncidentStatusHandler(
         var incidentDto = IncidentMapper.FromEntity(incident);
 
 
-        var actorName = userContext.Identity.Claims[ClaimTypes.Name].First();
+        var actorName = userContext.Identity.Claims["Name"].First();
 
         _ = messageBroker.PublishAsync(new IncidentUpdatedEvent(incidentDto), cancellationToken);
         string details = $"Status changed: {oldStatus} → {incident.Status}";

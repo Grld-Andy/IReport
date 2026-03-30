@@ -7,8 +7,14 @@ internal class IncidentUserDto
     public string Email { get; set; } = default!;
     public string Role { get; set; } = default!;
 
-    public static implicit operator IncidentUserDto(IncidentUser v)
+    public static implicit operator IncidentUserDto(IncidentUser incidentUser)
     {
-        throw new NotImplementedException();
+        return new IncidentUserDto
+        {
+            Id = incidentUser.Id,
+            Name = incidentUser.Name,
+            Email = incidentUser.Email,
+            Role = incidentUser.Role,
+        };
     }
 }
