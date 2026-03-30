@@ -5,8 +5,8 @@ services:
   # distributedcache:
   #   image: redis
   
-  # seq:
-  #   image: datalust/seq:latest
+  seq:
+    image: datalust/seq:latest
   
   # messagebus:
   #   image: rabbitmq:3-management

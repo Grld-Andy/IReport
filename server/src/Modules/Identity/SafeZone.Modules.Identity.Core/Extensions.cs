@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SafeZone.Modules.Identity.Core.Services;
+using SafeZone.Shared.Infrastructure;
 using SafeZone.Shared.Infrastructure.Postgres;
 
 [assembly: InternalsVisibleTo("SafeZone.Modules.Identity.Api")]
@@ -14,7 +15,8 @@ internal static class Extensions
         services
             .AddSingleton<ITokenStorage, HttpContextTokenStorage>()
             .AddScoped<IUserRepository, UsersRepository>()
-            .AddPostgres<UsersDbContext>(configuration);
+            .AddPostgres<UsersDbContext>(configuration)
+            .AddInitializer<UsersInitializer>();
         return services;
     }
 }
