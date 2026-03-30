@@ -20,9 +20,9 @@ internal class RegisterCommandHandler(IUserRepository _userRepository, IMessageB
         {
             userDto.Team = "Admin";
         }
-        // var id = await userRepository.CreateAsync(UserMapper.ToEntity(userDto), cancellationToken);
+        var id = await userRepository.CreateAsync(UserMapper.ToEntity(userDto), cancellationToken);
 
-        _ = messageBroker.PublishAsync(new UserRegisteredEvent(new Guid(), userDto.Name, userDto.Email, userDto.Role, userDto.Team, userDto.OTP), cancellationToken);
+        _ = messageBroker.PublishAsync(new UserRegisteredEvent(id, userDto.Name, userDto.Email, userDto.Role, userDto.Team, userDto.OTP), cancellationToken);
         _ = messageBroker.PublishAsync(new ActivityCreatedEvent(
             context.Identity.Id,
             context.Identity.Claims["Name"].First(),
