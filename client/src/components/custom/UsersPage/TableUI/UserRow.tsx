@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { BsThreeDots } from "react-icons/bs";
+import { resendOtp } from "@/services/resendOtp";
+import { toast } from "sonner";
 
 interface Props {
   user: User;
@@ -20,7 +22,16 @@ interface Props {
 const UserRow: React.FC<Props> = ({ user, updateUserStatus }) => {
   const rc = roleConfig[user.role];
   const sc = statusConfig[user.status];
-  
+
+  const resendOTP = async (email: string) => {
+    const response = await resendOtp(email);
+    if (response.success) {
+      toast.success(response.message, { position: "top-center" });
+    } else {
+      toast.error(response.message, { position: "top-center" });
+    }
+  };
+
   return (
     <TableRow key={user.id} className="hover:bg-gray-50">
       {/* User */}
@@ -84,20 +95,30 @@ const UserRow: React.FC<Props> = ({ user, updateUserStatus }) => {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent>
-            <DropdownMenuGroup>
-              {["Active", "Suspended"]
-                .filter((s) => s != user.status)
-                .map((s, index) => (
-                  <DropdownMenuItem
-                    key={index}
-                    onClick={() => {
-                      updateUserStatus(user.id, s);
-                    }}
-                  >
-                    {s == "Suspended" ? "Suspend" : s}
-                  </DropdownMenuItem>
-                ))}
-            </DropdownMenuGroup>
+            {user.status == "Inactive" ? (
+              <DropdownMenuItem
+                onClick={() => {
+                  resendOTP(user.email);
+                }}
+              >
+                Resend Otp
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuGroup>
+                {["Active", "Suspended"]
+                  .filter((s) => s != user.status)
+                  .map((s, index) => (
+                    <DropdownMenuItem
+                      key={index}
+                      onClick={() => {
+                        updateUserStatus(user.id, s);
+                      }}
+                    >
+                      {s == "Suspended" ? "Suspend" : s}
+                    </DropdownMenuItem>
+                  ))}
+              </DropdownMenuGroup>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </TableCell>

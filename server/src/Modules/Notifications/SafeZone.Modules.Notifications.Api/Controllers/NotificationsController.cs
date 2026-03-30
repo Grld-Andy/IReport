@@ -24,19 +24,4 @@ public class NotificationsController(NotificationService notificationService) : 
         await _notificationService.SendEmailAsync(emailRequest);
         return Ok(new { Message = "Welcome email sent!" });
     }
-
-    [HttpPost("resend-otp")]
-    public async Task<IActionResult> ResendOTP([FromBody] WelcomeEmailModel model)
-    {
-        var emailRequest = new EmailRequest
-        {
-            To = $"{model.Email}",
-            Subject = "Welcome to SafeZone!",
-            TemplateName = "WelcomeEmail",
-            Context = model,
-        };
-
-        await _notificationService.SendEmailAsync(emailRequest);
-        return Ok(new { Message = "Welcome email sent!" });
-    }
 }

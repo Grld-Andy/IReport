@@ -1,4 +1,5 @@
 using SafeZone.Modules.Identity.Core.Events.External;
+using SafeZone.Modules.Identity.Core.Security;
 using SafeZone.Shared.Abstractions.Contexts;
 
 namespace SafeZone.Modules.Identity.Core.Commands.Register;
@@ -13,6 +14,7 @@ internal class RegisterCommandHandler(IUserRepository _userRepository, IMessageB
     {
         await userRepository.EnsureEmailNotTakenAsync(command.User.Email, cancellationToken);
         var userDto = command.User;
+        userDto.OTP = OTPGenerator.GenerateOTP();
 
         if(context.Identity.Role == "admin" && userDto.Role == "admin")
         {

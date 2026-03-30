@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using SafeZone.Modules.Identity.Core.Commands.ActivateAccount;
 using SafeZone.Modules.Identity.Core.Commands.Login;
 using SafeZone.Modules.Identity.Core.Commands.Register;
+using SafeZone.Modules.Identity.Core.Commands.ResendOtp;
 using SafeZone.Modules.Identity.Core.Commands.ResetPassword;
 using SafeZone.Modules.Identity.Core.DTO;
 using SafeZone.Modules.Identity.Core.Queries.GetSingleUser;
-using SafeZone.Modules.Identity.Core.Security;
 using SafeZone.Modules.Identity.Core.Services;
 using SafeZone.Shared.Abstractions.Contexts;
 using SafeZone.Shared.Abstractions.Dispatchers;
@@ -34,7 +34,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
             Email = dto.Email,
             Role = dto.Role,
             Team = dto.Team,
-            OTP = OTPGenerator.GenerateOTP()
+            OTP = ""
         };
         await dispatcher.SendAsync(new RegisterCommand(userCreateDto), cancellationToken);
         return NoContent();
@@ -67,6 +67,13 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
         Response.Cookies.Delete(
             "__access_token"
         );
+        return NoContent();
+    }
+
+    [HttpPost("resend-otp")]
+    public async Task<IActionResult> ResendOTP([FromBody] ResendOtpCommand command, CancellationToken cancellationToken)
+    {
+        await dispatcher.SendAsync(command, cancellationToken);
         return NoContent();
     }
 

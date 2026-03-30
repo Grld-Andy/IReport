@@ -7,12 +7,15 @@ internal class ActivateAccountCommandHandler(IUserRepository _usersRepository, I
 {
     private readonly IUserRepository usersRepository = _usersRepository;
     private readonly IMessageBroker messageBroker = _messageBroker;
-    
     private readonly IPasswordManager passwordManager = _passwordManager;
 
     public async Task HandleAsync(ActivateAccountCommand command, CancellationToken cancellationToken = default)
     {
         User user = await usersRepository.GetByEmailAsync(command.Email, cancellationToken);
+        if (user.Status.ToString().Equals("Active"))
+        {
+            throw new BadRequestException("Account already activated");
+        }
 
         if(command.Password != command.PasswordConfirm)
         {

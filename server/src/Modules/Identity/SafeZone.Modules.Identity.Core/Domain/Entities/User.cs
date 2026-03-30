@@ -1,3 +1,5 @@
+using SafeZone.Modules.Identity.Core.Security;
+
 namespace SafeZone.Modules.Identity.Core.Domain.Entities;
 
 internal class User
@@ -49,10 +51,17 @@ internal class User
         return new User(Guid.NewGuid(), name, email, password, role, team, otp, now);
     }
 
+    public void GenerateOTP()
+    {
+        OTP = OTPGenerator.GenerateOTP();
+        UpdatedAt = DateTime.UtcNow;
+    }
+
     public void ActivateAccount(string password, DateTime now)
     {
         ResetPassword(password);
-        ChangeStatus(UserStatus.From("Activate"), now);
+        ChangeStatus(UserStatus.From("Active"), now);
+        OTP = string.Empty;
     }
 
     public void ChangeStatus(UserStatus newStatus, DateTime now)

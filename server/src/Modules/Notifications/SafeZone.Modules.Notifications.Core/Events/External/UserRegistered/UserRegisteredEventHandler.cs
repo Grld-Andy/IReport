@@ -16,7 +16,7 @@ internal class UserRegisteredEventHandler(NotificationService notificationServic
             Team = @event.Team,
             Role = @event.Role,
             OTP = @event.OTP,
-            LoginUrl = "http://localhost:5173/auth/activate"
+            LoginUrl = $"http://localhost:5173/auth/activate?name={@event.Name}&email={@event.Email}"
         };
         var emailRequest = new EmailRequest
         {
