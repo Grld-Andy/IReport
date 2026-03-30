@@ -72,13 +72,13 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     }
 
     [HttpPost("resend-otp")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> ResendOTP([FromBody] ResendOtpCommand command, CancellationToken cancellationToken)
     {
         await dispatcher.SendAsync(command, cancellationToken);
         return NoContent();
     }
 
-    [AllowAnonymous]
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult<UserDetailsDto>> LoginUser([FromBody] LoginCommand command, CancellationToken cancellationToken)
