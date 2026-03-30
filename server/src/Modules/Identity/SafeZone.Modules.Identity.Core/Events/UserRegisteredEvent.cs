@@ -2,4 +2,4 @@ using SafeZone.Shared.Abstractions.Events;
 
 namespace SafeZone.Modules.Identity.Core.Events;
 
-internal record UserRegisteredEvent(Guid Id, string Name, string Email, string Role, string Team) : IEvent;
+internal record UserRegisteredEvent(Guid Id, string Name, string Email, string Role, string Team, string OTP) : IEvent;

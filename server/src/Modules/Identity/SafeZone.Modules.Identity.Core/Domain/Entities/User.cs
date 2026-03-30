@@ -8,6 +8,7 @@ internal class User
     public UserPassword Password { get; private set; } = default!;
     public string Team { get; set; } = default!;
     public UserRole Role { get; } = default!;
+    public string OTP { get; set; } = string.Empty;
     public UserStatus Status { get; private set; } = default!;
     public DateTime CreatedAt { get; private set; } = default;
     public DateTime UpdatedAt { get; private set; } = default;
@@ -21,6 +22,7 @@ internal class User
         UserPassword password,
         UserRole role,
         string team,
+        string otp,
         DateTime now)
     {
         Id = id;
@@ -28,6 +30,7 @@ internal class User
         Email = email;
         Password = password;
         Team = team;
+        OTP = otp;
         Role = role;
         Status = UserStatus.Inactive;
         CreatedAt = now;
@@ -40,9 +43,16 @@ internal class User
         UserPassword password,
         UserRole role,
         string team,
+        string otp,
         DateTime now)
     {
-        return new User(Guid.NewGuid(), name, email, password, role, team, now);
+        return new User(Guid.NewGuid(), name, email, password, role, team, otp, now);
+    }
+
+    public void ActivateAccount(string password, DateTime now)
+    {
+        ResetPassword(password);
+        ChangeStatus(UserStatus.From("Activate"), now);
     }
 
     public void ChangeStatus(UserStatus newStatus, DateTime now)

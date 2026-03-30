@@ -7,7 +7,7 @@ export const createUserService = async (data: UserForm) => {
   try {
     const response = await axios.post(
       `${apiUrl}auth/register`,
-      { user: {...data, password: "hahaha", confirmPassword: "hahaha",} },
+      { user: {...data} },
       { withCredentials: true },
     );
 

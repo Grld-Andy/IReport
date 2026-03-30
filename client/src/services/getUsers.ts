@@ -28,5 +28,5 @@ export const getAllUsers = async () => {
   });
   const users: Array<User> = response.data.items;
   const totalUsers: number = response.data.totalResults;
-  return { users, totalUsers };
+  return { users, totalUsers, isSet: true };
 };

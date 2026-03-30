@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace SafeZone.Modules.Notifications.Core.Security;
+namespace SafeZone.Modules.Identity.Core.Security;
 public static class OTPGenerator
 {
     public static string GenerateOTP()

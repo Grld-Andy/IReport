@@ -11,6 +11,7 @@ import IncidentsPage from "./pages/ProtectedPages/IncidentsPage";
 import KanbanBoardPage from "./pages/ProtectedPages/KanbanBoardPage";
 import ReportsPage from "./pages/ProtectedPages/ReportsPage";
 import UsersPage from "./pages/ProtectedPages/UsersPage";
+import ActivateAccount from "./pages/Auth/ActivateAccount";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
       </Route>
       <Route path="/" element={<AuthLayout />}>
         <Route path="auth/login" element={<Login />} />
+        <Route path="auth/activate" element={<ActivateAccount/>}/>
       </Route>
 
       <Route path="*" element={<NotFound />} />

@@ -9,9 +9,10 @@ internal static class UserMapper
         return User.Register(
             new UserName(dto.Name),
             new UserEmail(dto.Email),
-            new UserPassword(dto.Password),
+            new UserPassword("pleasechangeyourpasswordnow13d9843jk"),
             UserRole.From(dto.Role),
             team: dto.Team,
+            otp: dto.OTP,
             now
         );
     }

@@ -21,5 +21,5 @@ export const getAllIncidents = async (team = "") => {
   const response = await axios.get(`${apiUrl}incidents?results=100&team=${team}`, {withCredentials: true})
   const incidents: Array<Incident> = response.data.items
   const totalIncidents: number = response.data.totalResults
-  return {incidents, totalIncidents}
+  return {incidents, totalIncidents, isSet: true}
 }

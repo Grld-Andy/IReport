@@ -22,7 +22,8 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
             password: userDto.Password,
             role: userDto.Role,
             team: userDto.Team,
-            now: DateTime.Now
+            now: DateTime.Now,
+            otp: userDto.OTP
         );
 
         dbContext.Users.Add(user);

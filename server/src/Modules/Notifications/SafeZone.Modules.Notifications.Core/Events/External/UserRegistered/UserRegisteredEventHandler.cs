@@ -1,5 +1,4 @@
 using SafeZone.Modules.Notifications.Core.DTO;
-using SafeZone.Modules.Notifications.Core.Security;
 using SafeZone.Modules.Notifications.Core.Services;
 
 namespace SafeZone.Modules.Notifications.Core.Events.External.UserRegistered;
@@ -16,8 +15,8 @@ internal class UserRegisteredEventHandler(NotificationService notificationServic
             Email = @event.Email,
             Team = @event.Team,
             Role = @event.Role,
-            OTP = OTPGenerator.GenerateOTP(),
-            LoginUrl = "http://localhost:5173/auth/activate-account"
+            OTP = @event.OTP,
+            LoginUrl = "http://localhost:5173/auth/activate"
         };
         var emailRequest = new EmailRequest
         {

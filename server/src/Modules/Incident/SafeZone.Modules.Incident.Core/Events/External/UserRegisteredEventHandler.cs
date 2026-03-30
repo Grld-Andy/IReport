@@ -17,7 +17,7 @@ internal class UserRegisteredEventHandler(IUserRepository _userRepository) : IEv
                 Email = @event.Email,
                 Role = @event.Role
             };
-            await userRepository.AddUserAsync(@event.Id, user, cancellationToken);
+            // await userRepository.AddUserAsync(@event.Id, user, cancellationToken);
         }
         Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@ event processed in incidents");
     }

@@ -1,6 +1,3 @@
-using SafeZone.Modules.Identity.Core.Events;
-using SafeZone.Shared.Abstractions.Messaging;
-
 namespace SafeZone.Modules.Identity.Core.Commands.ChangeStatus;
 
 internal class ChangeStatusCommandHandler(IUserRepository _usersRepository, IMessageBroker _messageBroker) : ICommandHandler<ChangeStatusCommand>

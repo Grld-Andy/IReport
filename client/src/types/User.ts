@@ -29,3 +29,17 @@ export const userLoginSchema = z.object({
     email: z.email("Please enter a valid email address"),
     password: z.string().min(1, "Please enter your password")
 })
+
+export const activateAccountSchema = z.object({
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    passwordConfirm: z.string(),
+    otp: z
+      .string()
+      .min(6, "OTP must be 6 digits")
+      .max(6, "OTP must be 6 digits")
+      .regex(/^\d+$/, "OTP must be a number"),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: "Passwords do not match",
+    path: ["passwordConfirm"],
+  });

@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SafeZone.Modules.Identity.Core.Commands.ActivateAccount;
 using SafeZone.Modules.Identity.Core.Commands.Login;
 using SafeZone.Modules.Identity.Core.Commands.Register;
 using SafeZone.Modules.Identity.Core.Commands.ResetPassword;
 using SafeZone.Modules.Identity.Core.DTO;
 using SafeZone.Modules.Identity.Core.Queries.GetSingleUser;
+using SafeZone.Modules.Identity.Core.Security;
 using SafeZone.Modules.Identity.Core.Services;
 using SafeZone.Shared.Abstractions.Contexts;
 using SafeZone.Shared.Abstractions.Dispatchers;
@@ -24,9 +26,17 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     [HttpPost("register")]
     [Authorize(Policy = "admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterCommand command, CancellationToken cancellationToken)
+    public async Task<IActionResult> RegisterUser([FromBody] UserDto dto, CancellationToken cancellationToken)
     {
-        await dispatcher.SendAsync(command, cancellationToken);
+        var userCreateDto = new UserCreateDto
+        {
+            Name = dto.Name,
+            Email = dto.Email,
+            Role = dto.Role,
+            Team = dto.Team,
+            OTP = OTPGenerator.GenerateOTP()
+        };
+        await dispatcher.SendAsync(new RegisterCommand(userCreateDto), cancellationToken);
         return NoContent();
     }
 
@@ -37,6 +47,15 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
         var currentUserId = context.Identity.Id;
         var result = await dispatcher.QueryAsync(new GetSingleUserQuery(currentUserId));
         return Ok(result);
+    }
+
+    
+    [HttpPost("activate-account")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> ActivateAccount([FromBody] ActivateAccountCommand command, CancellationToken cancellationToken)
+    {
+        await dispatcher.SendAsync(command, cancellationToken);
+        return NoContent();
     }
 
     [Authorize]
