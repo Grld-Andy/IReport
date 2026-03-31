@@ -13,6 +13,7 @@ import {
 import { Button } from "../ui/button";
 import DeleteIncidentModal from "./IncidentsPage/DeleteIncidentModal";
 import UpdateIncidentModal from "./IncidentsPage/UpdateIncidentModal";
+import ViewIncidentModal from "./IncidentsPage/ViewIncidentModal";
 
 interface Props {
   incident: Incident;
@@ -53,6 +54,10 @@ const BoardCard: React.FC<Props> = ({ incident, onDelete, onUpdate }) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuGroup>
+              <ViewIncidentModal
+                incident={incident}
+                trigger={<DropdownMenuItem onSelect={(e) => e.preventDefault()}>View</DropdownMenuItem>}
+              />
               <UpdateIncidentModal
                 onUpdate={onUpdate}
                 incident={incident}

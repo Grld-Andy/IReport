@@ -40,56 +40,36 @@ const IncidentActionsMenuItems: React.FC<{
     <>
       <ViewIncidentModal
         incident={incident}
-        trigger={
-          <Item onSelect={(e) => e.preventDefault()}>
-            View
-          </Item>
-        }/>
+        trigger={<Item onSelect={(e) => e.preventDefault()}>View</Item>}
+      />
       <UpdateIncidentModal
         incident={incident}
-        trigger={
-          <Item onSelect={(e) => e.preventDefault()}>
-            Edit
-          </Item>
-        }
+        trigger={<Item onSelect={(e) => e.preventDefault()}>Edit</Item>}
       />
 
       <DeleteIncidentModal
         deleteFunc={deleteIncident}
         id={incident.id}
-        trigger={
-          <Item onSelect={(e) => e.preventDefault()}>
-            Delete
-          </Item>
-        }
+        trigger={<Item onSelect={(e) => e.preventDefault()}>Delete</Item>}
       />
     </>
   );
 };
 
-const IncidentsRow: React.FC<Props> = ({
-  incident,
-  user,
-  deleteIncident,
-}) => {
+const IncidentsRow: React.FC<Props> = ({ incident, user, deleteIncident }) => {
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>
         <TableRow className="hover:bg-gray-50 transition">
           {/* Incident */}
           <TableCell>
-            <p className="font-medium text-gray-900">
-              {incident.subject}
-            </p>
+            <p className="font-medium text-gray-900">{incident.subject}</p>
             <p className="text-xs text-gray-500 text-nowrap">
-              {new Date(incident.createdAt).toLocaleDateString(
-                "en-GB",
-                {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                }
-              )}
+              {new Date(incident.createdAt).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })}
               <span className="mx-1 text-gray-300">·</span>
               {new Date(incident.createdAt).toLocaleTimeString([], {
                 hour: "2-digit",
@@ -100,17 +80,12 @@ const IncidentsRow: React.FC<Props> = ({
 
           {/* Description */}
           <TableCell className="text-sm text-gray-600 min-w-[220px]">
-            <p className="line-clamp-2">
-              {incident.description}
-            </p>
+            <p className="line-clamp-2">{incident.description}</p>
           </TableCell>
 
           {/* Severity */}
           <TableCell>
-            <Badge
-              value={incident.severity}
-              config={severityConfig}
-            />
+            <Badge value={incident.severity} config={severityConfig} />
           </TableCell>
 
           {/* Category */}
@@ -120,10 +95,7 @@ const IncidentsRow: React.FC<Props> = ({
 
           {/* Status */}
           <TableCell>
-            <Badge
-              value={incident.status.toString()}
-              config={statusConfig}
-            />
+            <Badge value={incident.status.toString()} config={statusConfig} />
           </TableCell>
 
           {/* Assigned */}
@@ -138,31 +110,24 @@ const IncidentsRow: React.FC<Props> = ({
                 </div>
               </div>
             ) : (
-              <div className="text-sm text-gray-700">
-                Not Assigned
-              </div>
+              <div className="text-sm text-gray-700">Not Assigned</div>
             )}
           </TableCell>
 
           {/* Team */}
           {user?.role == "admin" && (
             <TableCell className="min-w-[150px]">
-              <div className="text-sm text-gray-700">
-                {incident.team}
-              </div>
+              <div className="text-sm text-gray-700">{incident.team}</div>
             </TableCell>
           )}
 
           {/* Last Updated */}
           <TableCell className="text-sm text-gray-500 whitespace-nowrap">
-            {new Date(incident.updatedAt).toLocaleDateString(
-              "en-GB",
-              {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              }
-            )}
+            {new Date(incident.updatedAt).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })}
           </TableCell>
 
           {/* Actions */}

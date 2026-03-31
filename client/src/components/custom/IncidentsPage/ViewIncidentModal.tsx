@@ -93,6 +93,7 @@ export default function ViewIncidentModal({ incident, trigger }: Props) {
                   latitude={incident.latitude}
                   longitude={incident.longitude}
                   onLocationSelect={() => {}}
+                  notDraggable={true}
                 />
               </div>
             </Field>

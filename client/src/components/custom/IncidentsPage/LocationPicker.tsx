@@ -11,6 +11,7 @@ interface Props {
   latitude?: number | null;
   longitude?: number | null;
   onLocationSelect: (lat: number, lng: number, name?: string) => void;
+  notDraggable?: boolean
 }
 
 function MapUpdater({
@@ -49,6 +50,7 @@ export default function LocationPicker({
   latitude,
   longitude,
   onLocationSelect,
+  notDraggable = false
 }: Props) {
   const markerPosition =
     latitude && longitude ? ([latitude, longitude] as [number, number]) : null;
@@ -86,7 +88,7 @@ export default function LocationPicker({
       {markerPosition && (
         <Marker
           position={markerPosition}
-          draggable
+          draggable={!notDraggable}
           eventHandlers={{
             dragend: handleDragEnd,
           }}
