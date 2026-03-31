@@ -24,16 +24,10 @@ internal sealed class MediaModule : IModule
         
     public void Use(IApplicationBuilder app)
     {
-        // Optional: add middleware here
+        app.UseStaticFiles();
     }
 
     public void Expose(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/media/status", () =>
-        {
-            return Results.Ok("Media is working");
-        })
-        .WithTags("Media")
-        .WithName("Get Media Status");
     }
 }
