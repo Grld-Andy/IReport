@@ -1,0 +1,8 @@
+﻿{
+    "media":  {
+                  "module":  {
+                                 "name":  "Media",
+                                 "enabled":  true
+                             }
+              }
+}
