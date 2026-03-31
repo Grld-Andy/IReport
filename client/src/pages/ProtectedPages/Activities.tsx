@@ -27,7 +27,9 @@ const Activities: React.FC = () => {
             <ActivitiesListView key={index} activity={activity} />
           ))
         ) : (
-          <h1 className="w-full rounded-md h-[200px] text-xl p-2 grid place-content-center">No Activities Yet</h1>
+          <h1 className="w-full text-gray-600 rounded-md h-[200px] text-lg p-2 grid place-content-center">
+            No Activities Yet
+          </h1>
         )}
       </div>
     </div>
