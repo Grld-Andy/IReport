@@ -28,9 +28,6 @@ const Dashboard: React.FC = () => {
         </div>
 
         <div>
-          {/* <Button className="bg-green-500 hover:bg-green-600 text-white rounded-full">
-            + Add Project
-          </Button> */}
         </div>
       </div>
 
@@ -79,7 +76,7 @@ const Dashboard: React.FC = () => {
           {
             activities.length == 0 && <h1 className="grid place-content-center text-gray-600">No activies</h1>
           }
-            {activities.map((item, index) => (
+            {activities.slice(0, 5).map((item, index) => (
               <DashboardActivityFeed key={index} activity={item} />
             ))}
           </div>

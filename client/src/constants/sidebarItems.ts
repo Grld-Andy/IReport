@@ -17,12 +17,6 @@ export const sidebarItems: Array<NavItem> = [
       path: "/incidents",
     },
     { icon: IoMapOutline, activeIcon: IoMap, name: "Live Map", path: "/map" },
-    {
-      icon: MdOutlineFeed,
-      activeIcon: MdFeed,
-      name: "Activities",
-      path: "/activities",
-    },
   ];
 
 
@@ -48,5 +42,11 @@ export const adminSidebarItems: Array<NavItem> = [
       activeIcon: HiUsers,
       name: "User Management",
       path: "/users",
+    },
+    {
+      icon: MdOutlineFeed,
+      activeIcon: MdFeed,
+      name: "Activities",
+      path: "/activities",
     },
 ]

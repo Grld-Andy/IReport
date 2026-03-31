@@ -4,10 +4,12 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 export interface ActivitiesState {
     activities: Array<ActivityFeed>
     totalActivities: number
+    isLoading: boolean
 }
 const initialState : ActivitiesState = {
     activities: [],
-    totalActivities: 0
+    totalActivities: 0,
+    isLoading: true
 }
 
 const ActivitiesSlice = createSlice({
@@ -17,6 +19,7 @@ const ActivitiesSlice = createSlice({
         saveActivitiesState(state, action: PayloadAction<Array<ActivityFeed>>){
             state.activities = action.payload
             state.totalActivities = action.payload.length
+            state.isLoading = false
         },
         addActivitieState(state, action: PayloadAction<ActivityFeed>){
             state.activities = [action.payload, ...state.activities.slice(0,4)]

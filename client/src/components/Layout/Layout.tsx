@@ -45,7 +45,7 @@ const Layout: React.FC = () => {
           const usersResult = await getAllUsers()
           dispatch(saveUsers(usersResult))
           
-          const activitiesResult = await getActivities(5)
+          const activitiesResult = await getActivities()
           dispatch(saveActivitiesState(activitiesResult))
         }
       } catch (e) {

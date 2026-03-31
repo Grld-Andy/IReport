@@ -1,16 +1,19 @@
 using Microsoft.Extensions.Logging;
+using SafeZone.Shared.Abstractions.Dispatchers;
 using SafeZone.Shared.Abstractions.Time;
 using SafeZone.Shared.Infrastructure;
 using SafeZone.Shared.Infrastructure.Security;
 
 namespace SafeZone.Modules.Identity.Core.DAL;
 
-internal class UsersInitializer(ILogger<UsersInitializer> _logger, IPasswordManager _passwordManager, IClock _clock, UsersDbContext _usersDbContext) : IInitializer
+internal class UsersInitializer(ILogger<UsersInitializer> _logger, IMessageBroker _messageBroker, IDispatcher _dispatcher, IPasswordManager _passwordManager, IClock _clock, UsersDbContext _usersDbContext) : IInitializer
 {
     private readonly IPasswordManager passwordManager = _passwordManager;
     private readonly UsersDbContext usersDbContext = _usersDbContext;
     private readonly IClock clock = _clock;
+    private readonly IMessageBroker messageBroker = _messageBroker;
     private readonly ILogger<UsersInitializer> logger = _logger;
+    private readonly IDispatcher dispatcher = _dispatcher;
 
     public async Task InitAsync()
     {
@@ -27,6 +30,7 @@ internal class UsersInitializer(ILogger<UsersInitializer> _logger, IPasswordMana
         user.ActivateAccount(hashedPassword, clock.CurrentDate());
         usersDbContext.Users.Add(user);
         await usersDbContext.SaveChangesAsync();
+        _ = messageBroker.PublishAsync(new UserRegisteredEvent(user.Id, user.Name, user.Email, user.Role.Value, user.Team, user.OTP));
         logger.LogInformation($"[INIT] [USER] Created users successfully");
     }
 }

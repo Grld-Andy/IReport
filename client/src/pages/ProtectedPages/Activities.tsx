@@ -1,35 +1,35 @@
-import ActivitiesListView from "@/components/custom/ActivitiesListView";
+import ActivitiesListView, {
+  ActivityCardSkeleton,
+} from "@/components/custom/ActivitiesListView";
 import PageHeader from "@/components/custom/PageHeader";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getActivities } from "@/services/getActivities";
-import type { ActivityFeed } from "@/types/ActivityFeed";
-import React, { useEffect, useState } from "react";
+import { useAppSelector } from "@/redux/app/hooks";
+import React from "react";
 
 const Activities: React.FC = () => {
-  const [activities, setActivities] = useState<Array<ActivityFeed>>([]);
-
-  // switch to use memo or callback for better performance/caching
-  useEffect(() => {
-    const fetchActivities = async () => {
-      const activitiesResult = await getActivities();
-      setActivities(activitiesResult);
-    };
-    fetchActivities();
-  }, []);
+  const activities = useAppSelector((state) => state.activities);
 
   return (
     <div className="flex flex-col gap-5">
       <div className="flex justify-between items-center">
-        <PageHeader title="Activities Feed" subtitle="all activities" />
+        <PageHeader
+          title="Activity Feed"
+          subtitle="Track recent actions and updates across your system"
+        />
       </div>
 
-      {activities ? (
-        activities.map((activity, index) => (
-          <ActivitiesListView key={index} activity={activity} />
-        ))
-      ) : (
-        <Skeleton />
-      )}
+      <div className="rounded-md flex flex-col gap-2">
+        {activities.isLoading ? (
+          Array.from({ length: 5 }).map((_, index) => (
+            <ActivityCardSkeleton key={index} />
+          ))
+        ) : activities.activities.length > 0 ? (
+          activities.activities.map((activity, index) => (
+            <ActivitiesListView key={index} activity={activity} />
+          ))
+        ) : (
+          <h1 className="w-full rounded-md h-[200px] text-xl p-2 grid place-content-center">No Activities Yet</h1>
+        )}
+      </div>
     </div>
   );
 };

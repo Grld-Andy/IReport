@@ -1,12 +1,13 @@
 namespace SafeZone.Modules.Incident.Core.Commands.UpdateIncident;
 
 internal sealed class UpdateIncidentHandler
-    (IIncidentRepository _repository, IMessageBroker _messageBroker, IContext _context, IUserRepository _userRepository)
+    (IIncidentRepository _repository, IMessageBroker _messageBroker, IContext _context, ILogger _logger, IUserRepository _userRepository)
     : ICommandHandler<UpdateIncidentCommand>
 {
     private readonly IIncidentRepository repository = _repository;
     private readonly IUserRepository userRepository = _userRepository;
     private readonly IMessageBroker messageBroker = _messageBroker;
+    private readonly ILogger logger = _logger;
     private readonly IContext context = _context;
 
     public async Task HandleAsync(
@@ -76,16 +77,20 @@ internal sealed class UpdateIncidentHandler
             incidentDto.AssignedTo = assignedUser;
         }
 
+        var actor = context.Identity.Claims["Name"].First();
+
         _ = messageBroker.PublishAsync(
             new IncidentUpdatedEvent(incidentDto), cancellationToken);
 
         _ = messageBroker.PublishAsync(
             new ActivityCreatedEvent(
                 incident.ReporterId,
-                context.Identity.Claims["Name"].First(),
+                actor,
                 "updated incident",
                 changesString,
                 "Incident"
             ), cancellationToken);
+
+        logger.LogInformation($"[INCIDENT] {actor} updated incident {incident.Subject}");
     }
 }

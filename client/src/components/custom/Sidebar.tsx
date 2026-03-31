@@ -3,7 +3,11 @@ import React from "react";
 import { CiLogout } from "react-icons/ci";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
-import { adminSidebarItems, sidebarItems, supervisorSidebarItems } from "@/constants/sidebarItems";
+import {
+  adminSidebarItems,
+  sidebarItems,
+  supervisorSidebarItems,
+} from "@/constants/sidebarItems";
 import { apiUrl } from "@/constants";
 import axios from "axios";
 import { useAppSelector } from "@/redux/app/hooks";
@@ -12,9 +16,15 @@ const Sidebar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.auth.user);
-  let sidebarNaivgation = sidebarItems
-  sidebarNaivgation = user?.role == 'responder' ? sidebarNaivgation : [...sidebarNaivgation, ...supervisorSidebarItems]
-  sidebarNaivgation = user?.role != 'admin' ? sidebarNaivgation : [...sidebarNaivgation, ...adminSidebarItems]
+  let sidebarNaivgation = sidebarItems;
+  sidebarNaivgation =
+    user?.role == "responder"
+      ? sidebarNaivgation
+      : [...sidebarNaivgation, ...supervisorSidebarItems];
+  sidebarNaivgation =
+    user?.role != "admin"
+      ? sidebarNaivgation
+      : [...sidebarNaivgation, ...adminSidebarItems];
 
   const logout = async () => {
     await axios.post(`${apiUrl}auth/logout`, {}, { withCredentials: true });
@@ -37,8 +47,7 @@ const Sidebar: React.FC = () => {
 
         {/* navitems */}
         <div className="flex flex-col gap-3">
-          {
-          sidebarNaivgation.map((item, index) => {
+          {sidebarNaivgation.map((item, index) => {
             const isActive =
               location.pathname === item.path ||
               location.pathname.startsWith(`${item.path}/`);
@@ -48,14 +57,15 @@ const Sidebar: React.FC = () => {
               <Button
                 key={index}
                 onClick={() => navigate(item.path)}
+                title={item.name}
                 className={`
-          flex items-center justify-start gap-3 shadow-none py-5
-          ${
-            isActive
-              ? "bg-green-500 text-white hover:bg-green-500"
-              : "bg-transparent text-gray-800 hover:bg-green-400"
-          }
-        `}
+                  flex items-center justify-start gap-3 shadow-none py-5
+                  ${
+                    isActive
+                      ? "bg-green-500 text-white hover:bg-green-500"
+                      : "bg-transparent text-gray-800 hover:bg-green-400"
+                  }
+                `}
               >
                 <Icon className={`scale-125 ${isActive ? "text-white" : ""}`} />
                 <p className="hidden md:block">{item.name}</p>

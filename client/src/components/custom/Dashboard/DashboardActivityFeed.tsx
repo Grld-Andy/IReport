@@ -13,8 +13,8 @@ const DashboardActivityFeed: React.FC<Props> = ({ activity }) => {
 
       <div className="flex flex-col relative bottom-[20px]">
         <p className="text-black">
-          <span className="font-semibold">{activity.actorName}</span> performed 
-          <span className="font-semibold"> {activity.action}</span>
+          <span className="font-semibold">{activity.actorName}</span> 
+          <span> {activity.action}</span>
         </p>
         <p className="text-gray-800 text-sm">{activity.details}</p>
         <p className="text-gray-600 text-sm">

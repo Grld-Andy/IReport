@@ -14,3 +14,4 @@ global using SafeZone.Modules.Incident.Core.Events;
 global using SafeZone.Modules.Incident.Core.Events.External;
 global using SafeZone.Shared.Abstractions.Messaging;
 global using SafeZone.Shared.Abstractions.Contexts;
+global using Microsoft.Extensions.Logging;
