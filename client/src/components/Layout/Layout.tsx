@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Outlet, Navigate } from "react-router-dom";
-import Sidebar from "../custom/Sidebar";
-import Navbar from "../custom/Navbar";
+import Sidebar from "./Sidebar";
+import Navbar from "./Navbar";
 import axios from "axios";
 import { apiUrl } from "@/constants";
 import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";

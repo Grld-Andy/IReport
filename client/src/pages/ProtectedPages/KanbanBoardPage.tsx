@@ -1,4 +1,4 @@
-import KanbanBoard from "@/components/custom/KanbanBoard";
+import KanbanBoard from "@/components/custom/KanbanPage/KanbanBoard";
 import PageHeader from "@/components/custom/PageHeader";
 import React from "react";
 

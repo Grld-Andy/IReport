@@ -4,7 +4,7 @@ import PageHeader from "@/components/custom/PageHeader";
 import OldUsersTable from "@/components/custom/UsersPage/UsersTable";
 import StatCard from "@/components/custom/UsersPage/StatCard";
 import { useAppSelector } from "@/redux/app/hooks";
-import CreateUserModal from "@/components/custom/CreateUserModal";
+import CreateUserModal from "@/components/custom/UsersPage/CreateUserModal";
 
 const UsersPage: React.FC = () => {
   const {users, totalUsers} = useAppSelector((state) => state.users)

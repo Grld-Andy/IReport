@@ -10,10 +10,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "../ui/button";
-import DeleteIncidentModal from "./IncidentsPage/DeleteIncidentModal";
-import UpdateIncidentModal from "./IncidentsPage/UpdateIncidentModal";
-import ViewIncidentModal from "./IncidentsPage/ViewIncidentModal";
+import { Button } from "../../ui/button";
+import DeleteIncidentModal from "../IncidentsPage/DeleteIncidentModal";
+import UpdateIncidentModal from "../IncidentsPage/UpdateIncidentModal";
+import ViewIncidentModal from "../IncidentsPage/ViewIncidentModal";
 
 interface Props {
   incident: Incident;

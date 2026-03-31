@@ -16,24 +16,29 @@ const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        loginStart(state){
+        loginStart(state: AuthState){
             state.isLoading = true;
         },
-        loginStop(state){
+        loginStop(state: AuthState){
             state.isLoading = false;
         },
-        loginSuccess(state, action: PayloadAction<User>){
+        loginSuccess(state: AuthState, action: PayloadAction<User>){
             state.user = action.payload
             state.isLoading = false
             localStorage.setItem("__safezone_user", JSON.stringify(action.payload))
         },
-        logout(state){
+        logout(state: AuthState){
             state.user = null
             state.isLoading = false
             localStorage.removeItem("__safezone_user")
+        },
+        updateProfile(state: AuthState, action: PayloadAction<string>){
+            if(!state.user) return;
+            state.user = {...state.user, profilePicUrl: action.payload}
+            localStorage.setItem("__safezone_user", JSON.stringify(action.payload))
         }
     }
 })
 
-export const { loginStart, loginStop, loginSuccess, logout } = authSlice.actions
+export const { loginStart, loginStop, loginSuccess, logout, updateProfile } = authSlice.actions
 export default authSlice.reducer

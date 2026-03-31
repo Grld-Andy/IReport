@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Http;
+using SafeZone.Modules.Identity.Core.Events.External;
 using SafeZone.Shared.Abstractions.Contexts;
 
 namespace SafeZone.Modules.Identity.Core.Commands.UpdateProfilePic;
 
-internal class UpdateProfilePicCommandHandler(IUserRepository _userRepository, IContext _context) : ICommandHandler<UpdateProfilePicCommand, string>
+internal class UpdateProfilePicCommandHandler(IUserRepository _userRepository, IContext _context, IMessageBroker _messageBroker) : ICommandHandler<UpdateProfilePicCommand, string>
 {
     private readonly IUserRepository userRepository = _userRepository;
+    private readonly IMessageBroker messageBroker = _messageBroker;
     private readonly IContext context = _context;
 
     public async Task<string> HandleAsync(UpdateProfilePicCommand command, CancellationToken cancellationToken = default)
@@ -25,6 +27,14 @@ internal class UpdateProfilePicCommandHandler(IUserRepository _userRepository, I
 
         user.UpdateProfilePic(url);
         await userRepository.SaveAsync(cancellationToken);
+
+        _ = messageBroker.PublishAsync(new ActivityCreatedEvent(
+            context.Identity.Id,
+            context.Identity.Claims["Name"].First(),
+            "updated account",
+            $"Changed profile image",
+            "User"
+        ), cancellationToken);
 
         return url;
     }

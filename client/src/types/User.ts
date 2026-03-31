@@ -15,7 +15,7 @@ export interface User{
 export const userCreateSchema = z
   .object({
     name: z.string().min(3, "Username must be greater than 3 letters"),
-    email: z.string().email("Please enter a valid email"),
+    email: z.email("Please enter a valid email"),
     role: z.string().min(1, "Role is required"),
     team: z.string().min(1, "Team is required"),
   })

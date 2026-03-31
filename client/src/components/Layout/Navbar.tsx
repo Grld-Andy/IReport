@@ -12,23 +12,36 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { User } from "@/types/User";
-import { useAppSelector } from "@/redux/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
 import { SiGoogleauthenticator } from "react-icons/si";
-import ResetPasswordModal from "./ResetPasswordModal";
+import ResetPasswordModal from "../custom/ResetPasswordModal";
 import { apiUrl } from "@/constants";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { getProfilePic } from "@/services/getProfilePic";
+import { getProfilePic } from "@/constants/getProfilePic";
+import { updateProfilePic } from "@/services/auth/updateProfilePic";
+import { toast } from "sonner";
+import { updateProfile } from "@/redux/features/auth/authSlice";
 
 const Navbar: React.FC = () => {
   const user: User | null = useAppSelector((state) => state.auth.user);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const logout = async () => {
     await axios.post(`${apiUrl}auth/logout`, {}, { withCredentials: true });
     localStorage.removeItem("__safezone_user");
     navigate("/auth/login");
+  };
+
+  const updateAvatar = async () => {
+    const response = await updateProfilePic(new File());
+    if (response.success && response.message) {
+      dispatch(updateProfile(response.message));
+    } else {
+      toast.error(response.message, { position: "top-center" });
+    }
   };
 
   return (
@@ -64,22 +77,21 @@ const Navbar: React.FC = () => {
               <DropdownMenuContent align="start">
                 <DropdownMenuGroup>
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
-
                   <h1 className="px-2 py-1 text-sm select-none">
                     {user?.role[0].toUpperCase()}
                     {user?.role.slice(1)}
                   </h1>
-
                   {user?.team != "Admin" && (
                     <h1 className="px-2 py-1 text-sm select-none">
                       {user?.team}
                     </h1>
                   )}
-
+                  <DropdownMenuItem onClick={() => {}}>
+                    Change Avatar
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsResetModalOpen(true)}>
                     Reset Password
                   </DropdownMenuItem>
-
                   <DropdownMenuSeparator />
                 </DropdownMenuGroup>
 

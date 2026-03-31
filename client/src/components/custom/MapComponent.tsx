@@ -23,8 +23,8 @@ import {
   mediumIncidentIcon,
   meIcon,
 } from "@/assets/Icon";
-import { FitBounds } from "./FitBounds";
-import AnimatedMarker from "./AnimatedMarker";
+import { FitBounds } from "./KanbanPage/FitBounds";
+import AnimatedMarker from "./KanbanPage/AnimatedMarker";
 
 interface Props {
   incidents: Array<Incident>;
