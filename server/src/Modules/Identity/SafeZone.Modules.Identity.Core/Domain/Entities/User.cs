@@ -8,9 +8,10 @@ internal class User
     public UserName Name { get; private set; } = default!;
     public UserEmail Email { get; } = default!;
     public UserPassword Password { get; private set; } = default!;
-    public string Team { get; set; } = default!;
-    public UserRole Role { get; } = default!;
-    public string OTP { get; set; } = string.Empty;
+    public string Team { get; private set; } = default!;
+    public UserRole Role { get; private set; } = default!;
+    public string OTP { get; private set; } = string.Empty;
+    public string ProfilePicUrl { get; private set; } = string.Empty;
     public UserStatus Status { get; private set; } = default!;
     public DateTime CreatedAt { get; private set; } = default;
     public DateTime UpdatedAt { get; private set; } = default;
@@ -54,6 +55,12 @@ internal class User
     public void GenerateOTP()
     {
         OTP = OTPGenerator.GenerateOTP();
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void UpdateProfilePic(string imageUrl)
+    {
+        ProfilePicUrl = imageUrl;
         UpdatedAt = DateTime.UtcNow;
     }
 

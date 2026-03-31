@@ -27,7 +27,8 @@ internal static class UserMapper
             Name = user.Name,
             Email = user.Email,
             Role = user.Role.Value,
-            Team = user.Team
+            Team = user.Team,
+            ProfilePicUrl = user.ProfilePicUrl,
         };
     }
 }

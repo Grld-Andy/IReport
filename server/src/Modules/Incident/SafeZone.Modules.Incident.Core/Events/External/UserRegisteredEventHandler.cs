@@ -6,7 +6,6 @@ internal class UserRegisteredEventHandler(IUserRepository _userRepository) : IEv
 
     public async Task HandleAsync(UserRegisteredEvent @event, CancellationToken cancellationToken = default)
     {
-        Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@ event called in incidents");
         var existingUser = await userRepository.ExistsAsync(@event.Id, cancellationToken);
 
         if(!existingUser)
@@ -19,6 +18,5 @@ internal class UserRegisteredEventHandler(IUserRepository _userRepository) : IEv
             };
             await userRepository.AddUserAsync(@event.Id, user, cancellationToken);
         }
-        Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@ event processed in incidents");
     }
 }

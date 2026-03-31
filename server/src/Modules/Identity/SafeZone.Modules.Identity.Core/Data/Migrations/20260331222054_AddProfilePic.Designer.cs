@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SafeZone.Modules.Identity.Core.DAL;
 
@@ -11,9 +12,11 @@ using SafeZone.Modules.Identity.Core.DAL;
 namespace SafeZone.Modules.Identity.Core.Data.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    partial class UsersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260331222054_AddProfilePic")]
+    partial class AddProfilePic
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

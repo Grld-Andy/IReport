@@ -6,6 +6,7 @@ using SafeZone.Modules.Identity.Core.Commands.Login;
 using SafeZone.Modules.Identity.Core.Commands.Register;
 using SafeZone.Modules.Identity.Core.Commands.ResendOtp;
 using SafeZone.Modules.Identity.Core.Commands.ResetPassword;
+using SafeZone.Modules.Identity.Core.Commands.UpdateProfilePic;
 using SafeZone.Modules.Identity.Core.DTO;
 using SafeZone.Modules.Identity.Core.Queries.GetSingleUser;
 using SafeZone.Modules.Identity.Core.Services;
@@ -74,7 +75,6 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     [Authorize(Policy = "admin")]
     public async Task<IActionResult> ResendOTP([FromBody] ResendOtpCommand command, CancellationToken cancellationToken)
     {
-        Console.WriteLine("############################## resending email to user");
         await dispatcher.SendAsync(command, cancellationToken);
         return NoContent();
     }
@@ -105,5 +105,13 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
             "__access_token"
         );
         return NoContent();
+    }
+
+    [HttpPost("upload-profile-pic")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> UploadProfilePic([FromBody] UpdateProfilePicCommand command, CancellationToken cancellationToken)
+    {
+        var url = await dispatcher.SendAsync<UpdateProfilePicCommand, string>(command, cancellationToken);
+        return Ok(new {Url = url});
     }
 }

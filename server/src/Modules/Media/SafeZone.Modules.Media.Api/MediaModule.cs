@@ -27,7 +27,7 @@ internal sealed class MediaModule : IModule
         app.UseStaticFiles();
     }
 
-    // public void Expose(IEndpointRouteBuilder endpoints)
-    // {
-    // }
+    public void Expose(IEndpointRouteBuilder endpoints)
+    {
+    }
 }
