@@ -1,6 +1,6 @@
 import { apiUrl } from "@/constants";
 import axios from "axios";
-import { getAxiosError } from "./getAxiosError";
+import { getAxiosError } from "../getAxiosError";
 
 export const resetPassword = async (data: {
   currentPassword: string;

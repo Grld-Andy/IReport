@@ -13,7 +13,7 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { resetPassword } from "@/services/resetPassword";
+import { resetPassword } from "@/services/auth/resetPassword";
 import { useNavigate } from "react-router-dom";
 
 type ResetPasswordForm = {

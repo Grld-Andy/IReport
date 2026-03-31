@@ -1,7 +1,7 @@
 import type { NavItem } from "@/types/NavItem";
 import { HiOutlineUsers, HiUsers } from "react-icons/hi2";
 import { IoMapOutline, IoMap } from "react-icons/io5";
-import { MdOutlineDashboard, MdDashboard, MdOutlineViewKanban, MdViewKanban } from "react-icons/md";
+import { MdOutlineDashboard, MdOutlineFeed, MdFeed, MdDashboard, MdOutlineViewKanban, MdViewKanban } from "react-icons/md";
 import { FaList, FaListAlt } from "react-icons/fa";
 
 export const sidebarItems: Array<NavItem> = [
@@ -17,6 +17,12 @@ export const sidebarItems: Array<NavItem> = [
       path: "/incidents",
     },
     { icon: IoMapOutline, activeIcon: IoMap, name: "Live Map", path: "/map" },
+    {
+      icon: MdOutlineFeed,
+      activeIcon: MdFeed,
+      name: "Activities",
+      path: "/activities",
+    },
   ];
 
 

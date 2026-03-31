@@ -12,6 +12,7 @@ import KanbanBoardPage from "./pages/ProtectedPages/KanbanBoardPage";
 import ReportsPage from "./pages/ProtectedPages/ReportsPage";
 import UsersPage from "./pages/ProtectedPages/UsersPage";
 import ActivateAccount from "./pages/Auth/ActivateAccount";
+import Activities from "./pages/ProtectedPages/Activities";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path=":page" element={<IncidentsPage />} />
         </Route>
         <Route path="map" element={<LiveMap />} />
+        <Route path="activities" element={<Activities />} />
         <Route path="kanban" element={<KanbanBoardPage />} />
         <Route path="reports" element={<ReportsPage />} />
         <Route path="users">

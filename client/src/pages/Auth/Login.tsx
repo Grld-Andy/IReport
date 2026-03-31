@@ -15,7 +15,7 @@ import {
   loginStop,
 } from "@/redux/features/auth/authSlice";
 import { toast } from "sonner";
-import { login } from "@/services/login";
+import { login } from "@/services/auth/login";
 
 const Login: React.FC = () => {
   const isSubmitting: boolean = useAppSelector((state) => state.auth.isLoading);

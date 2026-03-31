@@ -41,7 +41,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { useAppSelector } from "@/redux/app/hooks";
 import UserCombobox from "./UserCombobox";
 import { toast } from "sonner";
-import { updateIncident } from "@/services/updateIncident";
+import { updateIncident } from "@/services/incidents/updateIncident";
 import LocationPicker from "./LocationPicker";
 import axios from "axios";
 

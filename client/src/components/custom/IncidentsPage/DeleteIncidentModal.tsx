@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { deleteIncident as deleteIncidentService } from "@/services/deleteIncident";
+import { deleteIncident as deleteIncidentService } from "@/services/incidents/deleteIncident";
 import { toast } from "sonner";
 
 interface Props {

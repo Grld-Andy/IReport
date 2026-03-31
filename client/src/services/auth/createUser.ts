@@ -1,7 +1,7 @@
 import type { UserForm } from "@/components/custom/CreateUserModal";
 import { apiUrl } from "@/constants";
 import axios from "axios";
-import { getAxiosError } from "./getAxiosError";
+import { getAxiosError } from "../getAxiosError";
 
 export const createUserService = async (data: UserForm) => {
   try {

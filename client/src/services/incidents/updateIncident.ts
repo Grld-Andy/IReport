@@ -1,6 +1,6 @@
 import { apiUrl } from "@/constants";
 import axios from "axios";
-import { getAxiosError } from "./getAxiosError";
+import { getAxiosError } from "../getAxiosError";
 import type { IncidentForm } from "@/components/custom/IncidentsPage/UpdateIncidentModal";
 
 interface IUpdateIncident extends IncidentForm {

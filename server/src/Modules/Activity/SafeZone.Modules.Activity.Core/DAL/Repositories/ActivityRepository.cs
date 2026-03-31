@@ -15,7 +15,7 @@ internal class ActivityRepository(ActivitiesDbContext context) : IActivityReposi
         return activity;
     }
 
-    public async Task<List<ActivityEntity>> GetLatestAsync(int limit, CancellationToken ct)
+    public async Task<List<ActivityEntity>> GetAsync(int limit, CancellationToken ct)
     {
         return await _context.Activities
             .AsNoTracking()

@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import type z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { activateAccount } from "@/services/activateAccount";
+import { activateAccount } from "@/services/auth/activateAccount";
 import { activateAccountSchema } from "@/types/User";
 
 const ActivateAccount: React.FC = () => {

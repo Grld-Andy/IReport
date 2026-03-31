@@ -7,8 +7,8 @@ import { apiUrl } from "@/constants";
 import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
 import type { User } from "@/types/User";
 import { loginSuccess, logout } from "@/redux/features/auth/authSlice";
-import { getAllIncidents } from "@/services/getIncidents";
-import { getAllUsers } from "@/services/getUsers";
+import { getAllIncidents } from "@/services/incidents/getIncidents";
+import { getAllUsers } from "@/services/users/getUsers";
 import { saveIncidentsState } from "@/redux/features/incidents/incidentsSlice";
 import { saveUsers } from "@/redux/features/users/usersSlice";
 import { useIncidentHub } from "@/hooks/useIncidentHook";
@@ -45,7 +45,7 @@ const Layout: React.FC = () => {
           const usersResult = await getAllUsers()
           dispatch(saveUsers(usersResult))
           
-          const activitiesResult = await getActivities()
+          const activitiesResult = await getActivities(5)
           dispatch(saveActivitiesState(activitiesResult))
         }
       } catch (e) {

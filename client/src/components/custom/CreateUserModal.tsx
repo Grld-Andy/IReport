@@ -26,7 +26,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { userCreateSchema } from "@/types/User";
-import { createUserService } from "@/services/createUser";
+import { createUserService } from "@/services/auth/createUser";
 import { HiOutlineUserAdd } from "react-icons/hi";
 import { toast } from "sonner";
 import { useAppDispatch } from "@/redux/app/hooks";

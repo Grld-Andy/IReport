@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { BsThreeDots } from "react-icons/bs";
-import { resendOtp } from "@/services/resendOtp";
+import { resendOtp } from "@/services/auth/resendOtp";
 import {
   ContextMenu,
   ContextMenuContent,

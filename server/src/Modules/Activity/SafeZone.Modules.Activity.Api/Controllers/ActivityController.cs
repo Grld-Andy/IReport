@@ -16,7 +16,14 @@ internal class ActivitiesController(IActivityRepository repository) : Controller
         [FromQuery] int limit = 5,
         CancellationToken ct = default)
     {
-        var activities = await _repository.GetLatestAsync(limit, ct);
+        var activities = await _repository.GetAsync(limit, ct);
+        return Ok(activities);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll(CancellationToken ct)
+    {
+        var activities = await _repository.GetAsync(1000, ct);
         return Ok(activities);
     }
 }

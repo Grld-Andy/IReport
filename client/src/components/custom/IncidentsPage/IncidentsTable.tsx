@@ -12,7 +12,7 @@ import {
   primaryIncidentColumns,
   adminIncidentColumns,
 } from "@/constants/incidentColumns";
-import { getIncidents } from "@/services/getIncidents";
+import { getIncidents } from "@/services/incidents/getIncidents";
 import type { Incident } from "@/types/Incident";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "@/redux/app/hooks";

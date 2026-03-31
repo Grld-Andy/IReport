@@ -30,7 +30,7 @@ import { incidentSchema } from "@/types/Incident";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { createIncidentService } from "@/services/createInicident";
+import { createIncidentService } from "@/services/incidents/createInicident";
 import { toast } from "sonner";
 import LocationPicker from "./LocationPicker";
 import axios from "axios";

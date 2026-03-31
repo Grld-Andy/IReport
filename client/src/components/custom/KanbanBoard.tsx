@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { ReactSortable } from "react-sortablejs";
-import { getAllIncidents } from "@/services/getIncidents";
-import { updateIncidentStatus } from "@/services/updateIncidentStatus";
+import { getAllIncidents } from "@/services/incidents/getIncidents";
+import { updateIncidentStatus } from "@/services/incidents/updateIncidentStatus";
 import type { Incident } from "@/types/Incident";
 import { getStatusNum } from "@/types/StatusEnum";
 import BoardCard from "./BoardCard";

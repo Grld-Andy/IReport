@@ -7,11 +7,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { User } from "@/types/User";
-import { getUsers } from "@/services/getUsers";
+import { getUsers } from "@/services/users/getUsers";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "@/redux/app/hooks";
-import { changeUserStatus } from "@/services/changeUserStatus";
+import { changeUserStatus } from "@/services/users/changeUserStatus";
 import { toast } from "sonner";
 import UserRow from "./TableUI/UserRow";
 import UsersTableFooter from "../PaginationFooter";

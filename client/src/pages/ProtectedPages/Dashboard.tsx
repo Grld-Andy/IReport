@@ -55,11 +55,11 @@ const Dashboard: React.FC = () => {
         <div className="flex flex-col gap-2 w-full">
           <div className="flex justify-between items-center">
             <h1 className="font-bold text-[18px]">Weekly Analytics</h1>
-            {user?.role == "admin" && (
+            {/* {user?.role == "admin" && (
               <p className="text-blue-700 font-semibold cursor-pointer">
                 <Link to="/reports">See More</Link>
               </p>
-            )}
+            )} */}
           </div>
           <div className="bg-gray-50 p-5 flex flex-col gap-5 rounded-2xl border-[1px] border-black/10 shadow-sm">
             <DashboardChart />
@@ -69,6 +69,11 @@ const Dashboard: React.FC = () => {
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <h1 className="font-bold text-[18px]">Activity Feed</h1>
+            {user?.role == "admin" && (
+              <p className="text-blue-700 font-semibold cursor-pointer">
+                <Link to="/activities">See More</Link>
+              </p>
+            )}
           </div>
           <div className="bg-gray-50 min-w-[400px] p-5 flex flex-col gap-5 rounded-2xl border-[1px] border-black/10 shadow-sm">
           {
