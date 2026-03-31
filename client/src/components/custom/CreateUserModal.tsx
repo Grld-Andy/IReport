@@ -31,6 +31,7 @@ import { HiOutlineUserAdd } from "react-icons/hi";
 import { toast } from "sonner";
 import { useAppDispatch } from "@/redux/app/hooks";
 import { addUser } from "@/redux/features/users/usersSlice";
+import { teams } from "@/constants/teams";
 
 export type UserForm = z.infer<typeof userCreateSchema>;
 
@@ -150,24 +151,12 @@ export default function CreateUserModal() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Response Teams</SelectLabel>
-                        <SelectItem value="Marine Operations">
-                          Marine Operations
-                        </SelectItem>
-                        <SelectItem value="Port Security">
-                          Port Security
-                        </SelectItem>
-                        <SelectItem value="Emergency Response">
-                          Emergency Response
-                        </SelectItem>
-                        <SelectItem value="Environmental Safety">
-                          Environmental Safety
-                        </SelectItem>
-                        <SelectItem value="Logistics Control">
-                          Logistics & Cargo Control
-                        </SelectItem>
-                        <SelectItem value="Vessel Traffic Control">
-                          Vessel Traffic Control
-                        </SelectItem>
+                        {teams &&
+                          teams.map((team, index) => (
+                            <SelectItem key={index} value={team}>
+                              {team}
+                            </SelectItem>
+                          ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
