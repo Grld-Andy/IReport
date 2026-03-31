@@ -11,6 +11,7 @@
     <ProjectReference Include="..\..\Modules\Identity\SafeZone.Modules.Identity.Api\SafeZone.Modules.Identity.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Incident\SafeZone.Modules.Incident.Api\SafeZone.Modules.Incident.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Notifications\SafeZone.Modules.Notifications.Api\SafeZone.Modules.Notifications.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Media\SafeZone.Modules.Media.Api\SafeZone.Modules.Media.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

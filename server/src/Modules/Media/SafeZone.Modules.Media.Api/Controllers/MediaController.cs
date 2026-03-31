@@ -15,6 +15,10 @@ internal class MediaController : ControllerBase
             return BadRequest("Invalid file");
         }
 
+        if(!file.ContentType.StartsWith("image/")){
+            return BadRequest("Only images are allowed");
+        }
+
         var filePath = Path.Combine("Uploads", file.FileName);
         using var stream = new FileStream(filePath, FileMode.Create);
         await file.CopyToAsync(stream);

@@ -1,13 +1,13 @@
 namespace SafeZone.Modules.Incident.Core.Commands.UpdateIncident;
 
 internal sealed class UpdateIncidentHandler
-    (IIncidentRepository _repository, IMessageBroker _messageBroker, IContext _context, ILogger _logger, IUserRepository _userRepository)
+    (IIncidentRepository _repository, IMessageBroker _messageBroker, IContext _context, ILogger<UpdateIncidentHandler> _logger, IUserRepository _userRepository)
     : ICommandHandler<UpdateIncidentCommand>
 {
     private readonly IIncidentRepository repository = _repository;
     private readonly IUserRepository userRepository = _userRepository;
     private readonly IMessageBroker messageBroker = _messageBroker;
-    private readonly ILogger logger = _logger;
+    private readonly ILogger<UpdateIncidentHandler> logger = _logger;
     private readonly IContext context = _context;
 
     public async Task HandleAsync(
