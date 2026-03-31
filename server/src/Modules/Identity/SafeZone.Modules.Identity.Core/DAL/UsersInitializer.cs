@@ -24,6 +24,7 @@ internal class UsersInitializer(ILogger<UsersInitializer> _logger, IPasswordMana
         }
         var hashedPassword = passwordManager.Secure("admin");
         var user = User.Register("Andy Ansong", "andyansong3@gmail.com", hashedPassword, UserRole.From("admin"), "Admin", "", clock.CurrentDate());
+        user.ActivateAccount(hashedPassword, clock.CurrentDate());
         usersDbContext.Users.Add(user);
         await usersDbContext.SaveChangesAsync();
         logger.LogInformation($"[INIT] [USER] Created users successfully");
