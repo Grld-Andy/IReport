@@ -21,6 +21,7 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import ViewIncidentModal from "../ViewIncidentModal";
 
 interface Props {
   incident: Incident;
@@ -37,6 +38,13 @@ const IncidentActionsMenuItems: React.FC<{
 
   return (
     <>
+      <ViewIncidentModal
+        incident={incident}
+        trigger={
+          <Item onSelect={(e) => e.preventDefault()}>
+            View
+          </Item>
+        }/>
       <UpdateIncidentModal
         incident={incident}
         trigger={
