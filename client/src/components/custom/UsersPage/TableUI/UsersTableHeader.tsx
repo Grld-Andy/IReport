@@ -64,7 +64,7 @@ const UsersTableHeader: React.FC<Props> = ({
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Roles</SelectLabel>
-              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="all">All Roles</SelectItem>
               <SelectItem value="admin">Admin</SelectItem>
               <SelectItem value="supervisor">Supervisor</SelectItem>
               <SelectItem value="responder">Responder</SelectItem>
@@ -81,7 +81,7 @@ const UsersTableHeader: React.FC<Props> = ({
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Status</SelectLabel>
-              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="all">All Statuses</SelectItem>
               <SelectItem value="Active">Active</SelectItem>
               <SelectItem value="Inactive">Inactive</SelectItem>
               <SelectItem value="Suspended">Suspended</SelectItem>
