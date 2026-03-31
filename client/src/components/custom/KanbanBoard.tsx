@@ -127,7 +127,7 @@ const KanbanBoard: React.FC = () => {
               <p>{board[column.value as ColumnKey].length}</p>
             </div>
 
-            <div className="px-1 py-3 relative overflow-y-scroll h-full max-h-[395px] hide-scrollbar">
+            <div className="px-1 py-3 relative overflow-y-scroll min-h-[150px] max-h-[395px] hide-scrollbar">
               <ReactSortable
                 list={board[column.value as ColumnKey]}
                 setList={(newList) =>
