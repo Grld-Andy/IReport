@@ -108,10 +108,11 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     }
 
     [HttpPost("upload-profile-pic")]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> UploadProfilePic([FromBody] UpdateProfilePicCommand command, CancellationToken cancellationToken)
+    public async Task<ActionResult> UploadProfilePic(IFormFile file, CancellationToken cancellationToken)
     {
-        var url = await dispatcher.SendAsync<UpdateProfilePicCommand, string>(command, cancellationToken);
+        var url = await dispatcher.SendAsync<UpdateProfilePicCommand, string>(new UpdateProfilePicCommand(file), cancellationToken);
         return Ok(new {Url = url});
     }
 }

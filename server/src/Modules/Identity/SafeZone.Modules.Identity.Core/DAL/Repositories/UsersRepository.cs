@@ -51,7 +51,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
 
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
+        var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
         if (user is null)
         {
             return false;

@@ -11,14 +11,6 @@ namespace SafeZone.Modules.Identity.Core.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "OTP",
-                schema: "users",
-                table: "Users",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<string>(
                 name: "ProfilePicUrl",
                 schema: "users",
                 table: "Users",
@@ -30,11 +22,6 @@ namespace SafeZone.Modules.Identity.Core.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "OTP",
-                schema: "users",
-                table: "Users");
-
             migrationBuilder.DropColumn(
                 name: "ProfilePicUrl",
                 schema: "users",

@@ -18,6 +18,7 @@ import ResetPasswordModal from "./ResetPasswordModal";
 import { apiUrl } from "@/constants";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getProfilePic } from "@/services/getProfilePic";
 
 const Navbar: React.FC = () => {
   const user: User | null = useAppSelector((state) => state.auth.user);
@@ -51,8 +52,12 @@ const Navbar: React.FC = () => {
           <div className="flex gap-2 items-center">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <div className="grid place-content-center cursor-pointer h-[35px] w-[35px] rounded-full bg-green-500">
-                  <FaUser size={17} color="white" />
+                <div className="grid place-content-center cursor-pointer h-[35px] w-[35px] overflow-hidden rounded-full bg-green-500">
+                  {user ? (
+                    <img src={getProfilePic(user.profilePicUrl)} />
+                  ) : (
+                    <FaUser size={17} color="white" />
+                  )}
                 </div>
               </DropdownMenuTrigger>
 
@@ -71,9 +76,7 @@ const Navbar: React.FC = () => {
                     </h1>
                   )}
 
-                  <DropdownMenuItem
-                    onClick={() => setIsResetModalOpen(true)}
-                  >
+                  <DropdownMenuItem onClick={() => setIsResetModalOpen(true)}>
                     Reset Password
                   </DropdownMenuItem>
 

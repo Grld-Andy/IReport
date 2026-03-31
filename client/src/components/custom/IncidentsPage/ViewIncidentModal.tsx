@@ -32,6 +32,7 @@ export default function ViewIncidentModal({ incident, trigger }: Props) {
           <DialogHeader className="bg-gray-50 p-5 border-b-[1px] border-black/50">
             <DialogTitle>Incident Details</DialogTitle>
             <DialogDescription>
+              
               Reported by {incident.reporter.name}
             </DialogDescription>
           </DialogHeader>

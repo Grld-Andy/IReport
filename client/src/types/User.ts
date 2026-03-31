@@ -9,6 +9,7 @@ export interface User{
     team: string
     createdAt: Date
     updatedAt: Date
+    profilePicUrl: string
 }
 
 export const userCreateSchema = z
