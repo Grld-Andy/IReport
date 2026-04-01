@@ -32,7 +32,7 @@ internal class UpdateProfilePicCommandHandler(IUserRepository _userRepository, I
             context.Identity.Id,
             context.Identity.Claims["Name"].First(),
             "updated account",
-            $"Changed profile image",
+            "Changed profile image",
             "User"
         ), cancellationToken);
 

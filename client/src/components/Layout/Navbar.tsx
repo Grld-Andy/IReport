@@ -28,6 +28,8 @@ const Navbar: React.FC = () => {
   const user: User | null = useAppSelector((state) => state.auth.user);
   const navigate = useNavigate();
 
+  console.log("current user: ", user)
+
   const logout = async () => {
     await axios.post(`${apiUrl}auth/logout`, {}, { withCredentials: true });
     localStorage.removeItem("__safezone_user");
@@ -58,7 +60,10 @@ const Navbar: React.FC = () => {
                 <div className="grid place-content-center cursor-pointer h-[35px] w-[35px] overflow-hidden rounded-full bg-green-500">
                   {user ? (
                     <Avatar>
-                      <AvatarImage className="object-cover" src={getProfilePic(user.profilePicUrl)} />
+                      <AvatarImage
+                        className="object-cover"
+                        src={getProfilePic(user.profilePicUrl)}
+                      />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                   ) : (

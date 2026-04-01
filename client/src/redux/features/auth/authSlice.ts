@@ -34,8 +34,9 @@ const authSlice = createSlice({
         },
         updateProfile(state: AuthState, action: PayloadAction<string>){
             if(!state.user) return;
-            state.user = {...state.user, profilePicUrl: action.payload}
-            localStorage.setItem("__safezone_user", JSON.stringify(action.payload))
+            const updatedUser = {...state.user, profilePicUrl: action.payload}
+            state.user = updatedUser
+            localStorage.setItem("__safezone_user", JSON.stringify(updatedUser))
         }
     }
 })
