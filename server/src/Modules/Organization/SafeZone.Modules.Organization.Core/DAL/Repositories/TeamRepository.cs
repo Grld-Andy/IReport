@@ -12,10 +12,11 @@ internal class TeamRepository(OrganizationDbContext _organizationDbContext) : IT
         domainDbContext.Teams.Add(team);
         await SaveAsync(cancellationToken);
     }
-
-    public Task<List<Team>> GetAllAsync(Guid CompanyId, CancellationToken cancellationToken = default)
+    
+    public async Task AddListAsync(List<Team> teams, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        domainDbContext.Teams.AddRange(teams);
+        await SaveAsync(cancellationToken);
     }
 
     public async Task<Team> GetByIdAsync(Guid Id, Guid CompanyId, CancellationToken cancellationToken = default)

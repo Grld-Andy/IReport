@@ -6,8 +6,29 @@ internal class Company
     public string Name { get; private set; } = default!;
     public string LogoUrl { get; private set; } = default!;
     public bool IsActive { get; private set; } = true;
-    public DateTime CreatedAt { get; private set; } = new DateTime();
+    public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; private set; }
 
     public List<Team> Teams { get; set; } = [];
+
+    private Company(){}
+
+    private Company(string name, string logoUrl)
+    {
+        Name = name;
+        LogoUrl = logoUrl;
+    }
+
+    public static Company AddCompany(string name, string logoUrl)
+    {
+        return new(name, logoUrl);
+    }
+
+    public void UpdateCompany(string name, string logoUrl)
+    {
+        Name = name;
+        LogoUrl = logoUrl;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
 }
