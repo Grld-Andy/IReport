@@ -114,6 +114,7 @@ export default function UpdateAvatarModal({ open, onOpenChange }: Props) {
     setIsSubmitting(false);
 
     if (response.success && response.message) {
+        console.log("image update: ", response.message)
       dispatch(updateProfile(response.message));
       setIsSuccess(true);
       toast.success("Profile photo updated!", { position: "top-center" });
@@ -145,7 +146,6 @@ export default function UpdateAvatarModal({ open, onOpenChange }: Props) {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       {open && (
         <DialogContent className="p-0 overflow-hidden max-w-md">
-          {/* Header */}
           <DialogHeader className="px-6 py-5 border-b border-black/10">
             <DialogTitle className="text-base font-semibold">
               Update profile photo
@@ -155,9 +155,7 @@ export default function UpdateAvatarModal({ open, onOpenChange }: Props) {
             </DialogDescription>
           </DialogHeader>
 
-          {/* Body */}
           <div className="px-6 py-5">
-            {/* Drop zone */}
             <div
               onDragOver={(e) => {
                 e.preventDefault();
@@ -177,7 +175,6 @@ export default function UpdateAvatarModal({ open, onOpenChange }: Props) {
               `}
             >
               {hasImage ? (
-                /* Preview */
                 <div className="flex flex-col items-center gap-3 py-6">
                   <div className="relative">
                     <img
@@ -212,7 +209,6 @@ export default function UpdateAvatarModal({ open, onOpenChange }: Props) {
                   </p>
                 </div>
               ) : (
-                /* Empty state */
                 <div className="flex flex-col items-center gap-2 py-8">
                   <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-1">
                     <Upload className="w-5 h-5 text-gray-400" />
@@ -241,7 +237,6 @@ export default function UpdateAvatarModal({ open, onOpenChange }: Props) {
             />
           </div>
 
-          {/* Footer */}
           <DialogFooter className="px-6 py-4 border-t border-black/10 flex gap-2">
             <DialogClose asChild>
               <Button variant="outline" className="flex-1">

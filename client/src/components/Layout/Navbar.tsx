@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { GoBell } from "react-icons/go";
 import { MdOutlineEmail } from "react-icons/md";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,7 +57,10 @@ const Navbar: React.FC = () => {
               <DropdownMenuTrigger asChild>
                 <div className="grid place-content-center cursor-pointer h-[35px] w-[35px] overflow-hidden rounded-full bg-green-500">
                   {user ? (
-                    <img src={getProfilePic(user.profilePicUrl)} />
+                    <Avatar>
+                      <AvatarImage className="object-cover" src={getProfilePic(user.profilePicUrl)} />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
                   ) : (
                     <FaUser size={17} color="white" />
                   )}
