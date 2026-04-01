@@ -181,12 +181,12 @@ export default function UpdateIncidentModal({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={(open) => !isSubmitting && setIsOpen(open)}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
 
       {isOpen && (
         <DialogContent className="p-0 overflow-hidden">
-          <form onSubmit={handleSubmit(onSubmit, onError)}>
+          <form onSubmit={handleSubmit(onSubmit, onError)} className={isSubmitting ? "pointer-events-none opacity-60" : ""}>
             <DialogHeader className="bg-gray-50 p-5 border-b-[1px] border-black/50">
               <DialogTitle>Edit Incident</DialogTitle>
               <DialogDescription>Update incident details</DialogDescription>

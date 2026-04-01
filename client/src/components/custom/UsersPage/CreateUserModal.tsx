@@ -67,6 +67,7 @@ export default function CreateUserModal() {
           updatedAt: new Date(),
           status: "Inactive",
           id: crypto.randomUUID(),
+          profilePicUrl: ""
         }),
       );
       setIsOpen(false);
@@ -76,7 +77,7 @@ export default function CreateUserModal() {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={(open) => !isSubmitting && setIsOpen(open)}>
       <DialogTrigger asChild>
         <Button className="bg-green-500 hover:bg-green-600 text-white">
           <HiOutlineUserAdd size={16} />
@@ -86,7 +87,7 @@ export default function CreateUserModal() {
 
       {isOpen && (
         <DialogContent className="p-0 overflow-hidden">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)}  className={isSubmitting ? "pointer-events-none opacity-60" : ""}>
             <DialogHeader className="bg-gray-50 p-5 border-b-[1px] border-black/50">
               <DialogTitle>Create User</DialogTitle>
               <DialogDescription>
@@ -112,7 +113,6 @@ export default function CreateUserModal() {
               </Field>
 
               <div className="flex gap-2">
-                {/* ROLE SELECT */}
                 <Field>
                   <Label>Role</Label>
                   <Select onValueChange={(val) => setValue("role", val)}>

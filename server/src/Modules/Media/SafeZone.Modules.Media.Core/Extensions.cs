@@ -12,7 +12,7 @@ internal static class Extensions
     {
         services.Configure<FormOptions>(options =>
         {
-            options.MultipartBodyLengthLimit = 10 * 1024 * 1024;
+            options.MultipartBodyLengthLimit = 3 * 1024 * 1024;
         });
         return services;
     }

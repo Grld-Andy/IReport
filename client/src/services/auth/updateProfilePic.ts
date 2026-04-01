@@ -2,16 +2,23 @@ import { apiUrl } from "@/constants";
 import axios from "axios";
 import { getAxiosError } from "../getAxiosError";
 
-export const updateProfilePic = async (data: File) => {
+export const updateProfilePic = async (file: File) => {
   try {
+    const formData = new FormData();
+    formData.append("file", file);
+
     const response = await axios.post(
       `${apiUrl}auth/upload-profile-pic`,
-      { file: data },
-      { withCredentials: true },
+      formData,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
 
-    if (response.status == 200) {
-      console.log(response.data.url, ' is the data received after updating image')
+    if (response.status === 200) {
       return { success: true, message: response.data.url };
     }
 

@@ -12,36 +12,25 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { User } from "@/types/User";
-import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
+import { useAppSelector } from "@/redux/app/hooks";
 import { SiGoogleauthenticator } from "react-icons/si";
 import ResetPasswordModal from "../custom/ResetPasswordModal";
 import { apiUrl } from "@/constants";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getProfilePic } from "@/constants/getProfilePic";
-import { updateProfilePic } from "@/services/auth/updateProfilePic";
-import { toast } from "sonner";
-import { updateProfile } from "@/redux/features/auth/authSlice";
+import UpdateAvatarModal from "../custom/UpdateAvatarModal";
 
 const Navbar: React.FC = () => {
-  const user: User | null = useAppSelector((state) => state.auth.user);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
-  const dispatch = useAppDispatch();
+  const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+  const user: User | null = useAppSelector((state) => state.auth.user);
   const navigate = useNavigate();
 
   const logout = async () => {
     await axios.post(`${apiUrl}auth/logout`, {}, { withCredentials: true });
     localStorage.removeItem("__safezone_user");
     navigate("/auth/login");
-  };
-
-  const updateAvatar = async () => {
-    const response = await updateProfilePic(new File());
-    if (response.success && response.message) {
-      dispatch(updateProfile(response.message));
-    } else {
-      toast.error(response.message, { position: "top-center" });
-    }
   };
 
   return (
@@ -86,7 +75,7 @@ const Navbar: React.FC = () => {
                       {user?.team}
                     </h1>
                   )}
-                  <DropdownMenuItem onClick={() => {}}>
+                  <DropdownMenuItem onClick={() => setIsAvatarModalOpen(true)}>
                     Change Avatar
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsResetModalOpen(true)}>
@@ -109,6 +98,10 @@ const Navbar: React.FC = () => {
         </div>
       </nav>
 
+      <UpdateAvatarModal
+        open={isAvatarModalOpen}
+        onOpenChange={setIsAvatarModalOpen}
+      />
       <ResetPasswordModal
         open={isResetModalOpen}
         onOpenChange={setIsResetModalOpen}
