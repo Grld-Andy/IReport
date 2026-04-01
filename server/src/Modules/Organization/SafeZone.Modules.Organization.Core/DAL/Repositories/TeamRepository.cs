@@ -1,10 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using SafeZone.Shared.Abstractions.Exceptions.ExceptionClasses;
+
 namespace SafeZone.Modules.Organization.Core.DAL.Repositories;
 
-internal class TeamRepository : ITeamRepository
+internal class TeamRepository(OrganizationDbContext _organizationDbContext) : ITeamRepository
 {
-    public Task AddAsync(Team team, CancellationToken cancellationToken = default)
+    private readonly OrganizationDbContext domainDbContext = _organizationDbContext;
+
+    public async Task AddAsync(Team team, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        domainDbContext.Teams.Add(team);
+        await SaveAsync(cancellationToken);
     }
 
     public Task<List<Team>> GetAllAsync(Guid CompanyId, CancellationToken cancellationToken = default)
@@ -12,13 +18,14 @@ internal class TeamRepository : ITeamRepository
         throw new NotImplementedException();
     }
 
-    public Task<Team> GetByIdAsync(Guid Id, Guid CompanyId, CancellationToken cancellationToken = default)
+    public async Task<Team> GetByIdAsync(Guid Id, Guid CompanyId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return await domainDbContext.Teams.Where(t => t.CompanyId == CompanyId).FirstOrDefaultAsync(t => t.Id == Id, cancellationToken: cancellationToken)
+            ?? throw new NotFoundException("Team not found");
     }
 
-    public Task SaveAsync(CancellationToken cancellationToken = default)
+    public async Task SaveAsync(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await domainDbContext.SaveChangesAsync(cancellationToken);
     }
 }
