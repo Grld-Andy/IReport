@@ -1,0 +1,1 @@
+namespace SafeZone.Modules.Organization.Core.Commands.CreateTeam;
