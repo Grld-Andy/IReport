@@ -30,11 +30,5 @@ internal sealed class OrganizationModule : IModule
 
     public void Expose(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/organization/status", () =>
-        {
-            return Results.Ok("Organization is working");
-        })
-        .WithTags("Organization")
-        .WithName("Get Organization Status");
     }
 }

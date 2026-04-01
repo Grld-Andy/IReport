@@ -43,7 +43,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
 
     [HttpGet("me")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> CheckAuth()
+    public async Task<ActionResult<UserDetailsDto>> CheckAuth()
     {
         var currentUserId = context.Identity.Id;
         var result = await dispatcher.QueryAsync(new GetSingleUserQuery(currentUserId));

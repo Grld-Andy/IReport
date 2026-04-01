@@ -7,7 +7,7 @@ internal class Company
     public string LogoUrl { get; private set; } = default!;
     public bool IsActive { get; private set; } = true;
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; private set; }
+    public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
 
     public List<Team> Teams { get; set; } = [];
 
