@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SafeZone.Modules.Payment.Core;
 using SafeZone.Shared.Abstractions.Modules;
 
 namespace SafeZone.Modules.Payment.Api;
@@ -19,9 +20,9 @@ internal sealed class PaymentModule : IModule
 
     public void Register(IServiceCollection services, IConfiguration configuration)
     {
-        // Optional: register core services here
+        services.AddCore(configuration);
     }
-        
+    
     public void Use(IApplicationBuilder app)
     {
         // Optional: add middleware here
