@@ -26,11 +26,11 @@ internal class UsersInitializer(ILogger<UsersInitializer> _logger, IMessageBroke
             return;
         }
         var hashedPassword = passwordManager.Secure("admin");
-        var user = User.Register("Andy Ansong", "andyansong3@gmail.com", hashedPassword, UserRole.From("admin"), "Admin", "", clock.CurrentDate());
+        var user = User.Register("Andy Ansong", "andyansong3@gmail.com", hashedPassword, UserRole.From("admin"), "Admin", "0123456789", "", clock.CurrentDate());
         user.ActivateAccount(hashedPassword, clock.CurrentDate());
         usersDbContext.Users.Add(user);
         await usersDbContext.SaveChangesAsync();
-        _ = messageBroker.PublishAsync(new UserRegisteredEvent(user.Id, user.Name, user.Email, user.Role.Value, user.Team, user.OTP));
+        _ = messageBroker.PublishAsync(new UserRegisteredEvent(user.Id, user.Name, user.Email, user.Role.Value, user.Team, user.PhoneNumber, user.OTP));
         logger.LogInformation($"[INIT] [USER] Created users successfully");
     }
 }

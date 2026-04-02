@@ -1,7 +1,7 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import type { User } from "@/types/User";
 import React from "react";
-import { avatarHue, roleConfig, statusConfig } from "../constant";
+import { roleConfig, statusConfig } from "../constant";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +19,8 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getProfilePic } from "@/constants/getProfilePic";
 
 interface Props {
   user: User;
@@ -42,11 +44,7 @@ const UserActionsMenuItems: React.FC<{
   };
 
   if (user.status === "Inactive") {
-    return (
-      <Item onClick={() => resendOTP(user.email)}>
-        Resend OTP
-      </Item>
-    );
+    return <Item onClick={() => resendOTP(user.email)}>Resend OTP</Item>;
   }
 
   return (
@@ -54,10 +52,7 @@ const UserActionsMenuItems: React.FC<{
       {["Active", "Suspended"]
         .filter((s) => s !== user.status)
         .map((s) => (
-          <Item
-            key={s}
-            onClick={() => updateUserStatus(user.id, s)}
-          >
+          <Item key={s} onClick={() => updateUserStatus(user.id, s)}>
             {s === "Suspended" ? "Suspend" : s}
           </Item>
         ))}
@@ -76,12 +71,13 @@ const UserRow: React.FC<Props> = ({ user, updateUserStatus }) => {
           {/* User */}
           <TableCell>
             <div className="flex items-center gap-3">
-              <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-semibold"
-                style={{ background: avatarHue(user.name) }}
-              >
-                {user.name.charAt(0)}
-              </div>
+              <Avatar>
+                <AvatarImage
+                  className="object-cover"
+                  src={getProfilePic(user.profilePicUrl)}
+                />
+                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+              </Avatar>
 
               <div>
                 <p className="font-medium text-gray-900">{user.name}</p>
@@ -100,9 +96,7 @@ const UserRow: React.FC<Props> = ({ user, updateUserStatus }) => {
           </TableCell>
 
           {/* Team */}
-          <TableCell className="text-sm text-gray-700">
-            {user.team}
-          </TableCell>
+          <TableCell className="text-sm text-gray-700">{user.team}</TableCell>
 
           {/* Status */}
           <TableCell>

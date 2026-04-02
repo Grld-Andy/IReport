@@ -22,7 +22,7 @@ internal class RegisterCommandHandler(IUserRepository _userRepository, IMessageB
         }
         var id = await userRepository.CreateAsync(UserMapper.ToEntity(userDto), cancellationToken);
 
-        _ = messageBroker.PublishAsync(new UserRegisteredEvent(id, userDto.Name, userDto.Email, userDto.Role, userDto.Team, userDto.OTP), cancellationToken);
+        _ = messageBroker.PublishAsync(new UserRegisteredEvent(id, userDto.Name, userDto.Email, userDto.Role, userDto.Team, userDto.PhoneNumber, userDto.OTP), cancellationToken);
         _ = messageBroker.PublishAsync(new ActivityCreatedEvent(
             context.Identity.Id,
             context.Identity.Claims["Name"].First(),

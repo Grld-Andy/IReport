@@ -12,6 +12,7 @@ internal static class UserMapper
             new UserPassword("pleasechangeyourpasswordnow13d9843jk"),
             UserRole.From(dto.Role),
             team: dto.Team,
+            phoneNumber: dto.PhoneNumber,
             otp: dto.OTP,
             now
         );
