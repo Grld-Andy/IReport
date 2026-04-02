@@ -4,6 +4,6 @@ namespace SafeZone.Modules.Organization.Core.DTO;
 
 internal class CompanyDto
 {
-    public string Name { get; init; } = default!;
+    public string CompanyName { get; init; } = default!;
     public IFormFile Logo { get; init; } = default!;
 }

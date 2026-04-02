@@ -365,7 +365,7 @@ const RegisterCompany: React.FC = () => {
 
                     <div className="pt-4">
                       {paymentReference ? (
-                        <div className="bg-green-50 border border-green-200 text-green-700 p-4 rounded-xl flex items-center gap-3">
+                        <div className="bg-green-50 border border-green-200 text-green-900 p-4 rounded-xl flex items-center gap-3">
                           <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white">
                             <Check size={18} />
                           </div>
@@ -477,7 +477,7 @@ const RegisterCompany: React.FC = () => {
                     <Button
                       onClick={handleSubmit(onSubmit)}
                       disabled={isSubmitting}
-                      className="w-full h-14 text-lg bg-black hover:bg-black/90 text-white"
+                      className="w-full h-14 text-lg bg-green-600 hover:bg-green-700 text-white"
                     >
                       {isSubmitting ? (
                         <div className="flex items-center gap-2">
@@ -496,7 +496,7 @@ const RegisterCompany: React.FC = () => {
             {/* Navigation Buttons */}
             <div className="mt-10 pt-6 border-t flex items-center justify-between">
               <Button
-                variant="ghost"
+                variant="outline"
                 onClick={prevStep}
                 disabled={currentStep === 0 || isSubmitting}
                 className={cn("gap-2", currentStep === 0 && "invisible")}
@@ -525,12 +525,6 @@ const RegisterCompany: React.FC = () => {
           </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="py-8 text-center text-gray-400 text-sm">
-        &copy; {new Date().getFullYear()} SafeZone SaaS MVP. All rights
-        reserved.
-      </footer>
     </div>
   );
 };

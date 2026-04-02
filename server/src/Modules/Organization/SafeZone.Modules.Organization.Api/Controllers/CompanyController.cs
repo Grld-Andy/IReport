@@ -16,9 +16,9 @@ internal class CompanyController(IDispatcher _dispatcher) : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult> CreateCompany([FromForm] CompanyDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult> CreateCompany([FromForm] CreateCompanyCommand command, CancellationToken cancellationToken)
     {
-        await dispatcher.SendAsync(new CreateCompanyCommand(dto.Name, dto.Logo), cancellationToken);
+        await dispatcher.SendAsync(command, cancellationToken);
         return Created();
     }
 
@@ -27,7 +27,7 @@ internal class CompanyController(IDispatcher _dispatcher) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> UpdateCompany([FromRoute] Guid id, [FromForm] CompanyDto dto, CancellationToken cancellationToken)
     {
-        await dispatcher.SendAsync(new UpdateCompanyCommand(id, dto.Name, dto.Logo), cancellationToken);
+        await dispatcher.SendAsync(new UpdateCompanyCommand(id, dto.CompanyName, dto.Logo), cancellationToken);
         return Ok();
     }
 }
