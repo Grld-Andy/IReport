@@ -13,6 +13,7 @@ import ReportsPage from "./pages/ProtectedPages/ReportsPage";
 import UsersPage from "./pages/ProtectedPages/UsersPage";
 import ActivateAccount from "./pages/Auth/ActivateAccount";
 import Activities from "./pages/ProtectedPages/Activities";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import LandingPage from "./pages/LandingPage";
 import Page from "./pages/Page";
 
