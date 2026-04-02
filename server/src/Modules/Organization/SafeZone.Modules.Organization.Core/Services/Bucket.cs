@@ -4,7 +4,7 @@ namespace SafeZone.Modules.Organization.Core.Services;
 
 internal static class Bucket
 {
-    public static async Task<string> UploadFile(IFormFile file, CancellationToken cancellationToken)
+    public static async Task<BucketResult> UploadFile(Guid id, string name, IFormFile file, CancellationToken cancellationToken)
     {
         if(file.Length <= 0)
         {
@@ -21,13 +21,21 @@ internal static class Bucket
             Directory.CreateDirectory(uploadsFolder);
         }
 
-        var safeFileName = Path.GetFileName(file.FileName);
-        var fileName = $"{Guid.NewGuid()}_{safeFileName}";
+        var extension = Path.GetExtension(file.FileName);
+        var fileName = $"{id}_{name}{extension}";
         var filePath = Path.Combine(uploadsFolder, fileName);
 
         using var stream = new FileStream(filePath, FileMode.Create);
         await file.CopyToAsync(stream, cancellationToken);
 
-        return $"uploads/logos/{fileName}";
+        BucketResult result = new (){Url = $"uploads/logos/{fileName}", Extension = extension};
+        return result;
+    }
+
+    public class BucketResult
+    {
+        public string Url { get; set; } = string.Empty;
+        public string Extension { get; set; } = string.Empty;
     }
 }
+

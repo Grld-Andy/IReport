@@ -6,9 +6,9 @@ internal class UpdateCompanyCommandHandler(ICompanyRepository _companyRepository
 
     public async Task HandleAsync(UpdateCompanyCommand command, CancellationToken cancellationToken = default)
     {
-        var url = await Bucket.UploadFile(command.Logo, cancellationToken);
+        var result = await Bucket.UploadFile(command.Id, command.Name, command.Logo, cancellationToken);
         var company = await companyRepository.GetByIdAsync(command.Id, cancellationToken);
-        company.UpdateCompany(command.Name, url);
+        company.UpdateCompany(command.Name, result.Url);
         await companyRepository.SaveAsync(cancellationToken);
     }
 }

@@ -12,10 +12,11 @@ internal class CreateCompany(ICompanyRepository _companyRepository, IMessageBrok
     public async Task HandleAsync(CreateCompanyCommand command, CancellationToken cancellationToken = default)
     {
         var companyDto = command.Company;
-        var url = await Bucket.UploadFile(companyDto.Logo, cancellationToken);
-        var company = Company.AddCompany(companyDto.CompanyName, url);
+        Guid companyId = Guid.NewGuid();
+        var result = await Bucket.UploadFile(companyId, companyDto.CompanyName, companyDto.Logo, cancellationToken);
+        var company = Company.AddCompany(companyId, companyDto.CompanyName, result.Url);
 
-        await messageBroker.PublishAsync(new CompanyRegisteredEvent(companyDto.AdminName, companyDto.Email, companyDto.Password, companyDto.PhoneNumber), cancellationToken);
+        await messageBroker.PublishAsync(new CompanyRegisteredEvent(companyId, companyDto.CompanyName, result.Extension, companyDto.AdminName, companyDto.Email, companyDto.Password, companyDto.PhoneNumber), cancellationToken);
         await companyRepository.AddAsync(company, cancellationToken);
     }
 }

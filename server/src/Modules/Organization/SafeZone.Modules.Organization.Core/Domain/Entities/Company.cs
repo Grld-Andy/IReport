@@ -13,15 +13,16 @@ internal class Company
 
     private Company(){}
 
-    private Company(string name, string logoUrl)
+    private Company(Guid id, string name, string logoUrl)
     {
+        Id = id;
         Name = name;
         LogoUrl = logoUrl;
     }
 
-    public static Company AddCompany(string name, string logoUrl)
+    public static Company AddCompany(Guid id, string name, string logoUrl)
     {
-        return new(name, logoUrl);
+        return new(id, name, logoUrl);
     }
 
     public void UpdateCompany(string name, string logoUrl)

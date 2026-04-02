@@ -15,6 +15,7 @@ internal static class Extensions
         services
             .AddSingleton<ITokenStorage, HttpContextTokenStorage>()
             .AddScoped<IUserRepository, UsersRepository>()
+            .AddScoped<ICompanyRepository, CompanyRepository>()
             .AddPostgres<UsersDbContext>(configuration)
             .AddInitializer<UsersInitializer>();
         return services;

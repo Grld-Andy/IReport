@@ -1,3 +1,4 @@
+using SafeZone.Modules.Identity.Core.Commands.CreateUserCompany;
 using SafeZone.Modules.Identity.Core.Commands.Register;
 using SafeZone.Shared.Abstractions.Dispatchers;
 using SafeZone.Shared.Abstractions.Events;
@@ -20,6 +21,8 @@ internal class CompanyRegisteredEventHandler(IDispatcher _dispatcher) : IEventHa
             PhoneNumber = @event.PhoneNumber,
             OTP = ""
         };
+        var company = Company.AddCompany(@event.CompanyId, @event.CompanyName, @event.Extension);
         await dispatcher.SendAsync(new RegisterCommand(user), cancellationToken);
+        await dispatcher.SendAsync(new CreateUserCompanyCommand(company), cancellationToken);
     }
 }

@@ -12,10 +12,12 @@ internal class User
     public UserRole Role { get; private set; } = default!;
     public string PhoneNumber { get; set; } = default!;
     public string OTP { get; private set; } = string.Empty;
+    public Guid CompanyId { get; set; } = default!;
     public string ProfilePicUrl { get; private set; } = string.Empty;
     public UserStatus Status { get; private set; } = default!;
     public DateTime CreatedAt { get; private set; } = default;
     public DateTime UpdatedAt { get; private set; } = default;
+    public Company Company { get; set; } = default!;
 
     private User() { }
 
@@ -28,6 +30,7 @@ internal class User
         string team,
         string phoneNumber,
         string otp,
+        Guid companyId,
         DateTime now)
     {
         Id = id;
@@ -37,6 +40,7 @@ internal class User
         Team = team;
         PhoneNumber = phoneNumber;
         OTP = otp;
+        CompanyId = companyId;
         Role = role;
         Status = UserStatus.Inactive;
         CreatedAt = now;
@@ -51,9 +55,10 @@ internal class User
         string team,
         string phoneNumber,
         string otp,
+        Guid companyId,
         DateTime now)
     {
-        return new User(Guid.NewGuid(), name, email, password, role, team, phoneNumber, otp, now);
+        return new User(Guid.NewGuid(), name, email, password, role, team, phoneNumber, otp, companyId, now);
     }
 
     public void GenerateOTP()
