@@ -1,3 +1,4 @@
+using SafeZone.Modules.Organization.Core.Events;
 using SafeZone.Shared.Abstractions.Messaging;
 
 namespace SafeZone.Modules.Organization.Core.Commands.CreateCompany;
@@ -10,8 +11,11 @@ internal class CreateCompany(ICompanyRepository _companyRepository, IMessageBrok
 
     public async Task HandleAsync(CreateCompanyCommand command, CancellationToken cancellationToken = default)
     {
-        var url = await Bucket.UploadFile(command.Company.Logo, cancellationToken);
-        var company = Company.AddCompany(command.Company.CompanyName, url);
+        var companyDto = command.Company;
+        var url = await Bucket.UploadFile(companyDto.Logo, cancellationToken);
+        var company = Company.AddCompany(companyDto.CompanyName, url);
+
+        await messageBroker.PublishAsync(new CompanyRegisteredEvent(companyDto.AdminName, companyDto.Email, companyDto.Password, companyDto.PhoneNumber), cancellationToken);
         await companyRepository.AddAsync(company, cancellationToken);
     }
 }

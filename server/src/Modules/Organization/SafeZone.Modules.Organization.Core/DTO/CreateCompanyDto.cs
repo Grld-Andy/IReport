@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http;
-
 namespace SafeZone.Modules.Organization.Core.DTO;
 
 internal class CreateCompanyDto : CompanyDto

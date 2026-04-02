@@ -35,6 +35,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
             Email = dto.Email,
             Role = dto.Role,
             Team = dto.Team,
+            PhoneNumber = dto.PhoneNumber,
             OTP = ""
         };
         await dispatcher.SendAsync(new RegisterCommand(userCreateDto), cancellationToken);

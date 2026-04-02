@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http;
 using SafeZone.Modules.Organization.Core.DTO;
 
 namespace SafeZone.Modules.Organization.Core.Commands.CreateCompany;
