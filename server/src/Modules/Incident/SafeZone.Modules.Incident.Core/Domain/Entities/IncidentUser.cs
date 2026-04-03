@@ -6,11 +6,12 @@ internal class IncidentUser
     public string Name { get; private set; } = default!;
     public string Email { get; private set; } = default!;
     public string Role { get; private set; } = default!;
+    public Guid CompanyId { get; private set; } = default!;
     public DateTime CreatedAt { get; private set; }
 
     private IncidentUser() { }
 
-    public static IncidentUser Create(Guid id, string name, string email, string role)
+    public static IncidentUser Create(Guid id, string name, string email, string role, Guid companyId)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new BadRequestException("Full name must be provided.", nameof(name));
@@ -27,6 +28,7 @@ internal class IncidentUser
             Name = name,
             Email = email,
             Role = role,
+            CompanyId = companyId,
             CreatedAt = DateTime.UtcNow
         };
     }

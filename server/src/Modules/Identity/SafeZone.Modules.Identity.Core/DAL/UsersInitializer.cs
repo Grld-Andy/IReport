@@ -57,7 +57,7 @@ internal class UsersInitializer
         user.ActivateAccount(hashedPassword, clock.CurrentDate());
         usersDbContext.Users.Add(user);
         await usersDbContext.SaveChangesAsync();
-        _ = messageBroker.PublishAsync(new UserRegisteredEvent(user.Id, user.Name, user.Email, user.Role.Value, user.Team, user.PhoneNumber, user.OTP));
+        _ = messageBroker.PublishAsync(new UserRegisteredEvent(user.Id, user.Name, user.Email, user.Role.Value, user.Team, user.PhoneNumber, user.OTP, user.CompanyId));
         logger.LogInformation($"[INIT] [USER] Created users successfully");
     }
 }
