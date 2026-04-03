@@ -14,6 +14,7 @@ internal static class UserMapper
             team: dto.Team,
             phoneNumber: dto.PhoneNumber,
             otp: dto.OTP,
+            companyId: dto.CompanyId,
             now
         );
     }

@@ -28,7 +28,7 @@ internal static class Bucket
         using var stream = new FileStream(filePath, FileMode.Create);
         await file.CopyToAsync(stream, cancellationToken);
 
-        BucketResult result = new (){Url = $"uploads/logos/{fileName}", Extension = extension};
+        BucketResult result = new (){Url = $"uploads/companies/{fileName}", Extension = extension};
         return result;
     }
 

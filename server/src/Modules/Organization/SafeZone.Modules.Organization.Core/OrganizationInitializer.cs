@@ -21,7 +21,11 @@ internal class OrganizationInitializer(ILogger<OrganizationInitializer> _logger,
         if(await OrganizationDbContext.Teams.AnyAsync()){
             return;
         }
-        var company = Company.AddCompany("SafeZone", "");
+        var company = Company.AddCompany(
+            id: Guid.Parse("fac586f8-1ffa-4cca-9bb0-224736bbc5a4"),
+            name: "SafeZone",
+            logoUrl: "uploads/profiles/fac586f8-1ffa-4cca-9bb0-224736bbc5a4_SafeZone.webp"
+        );
         OrganizationDbContext.Companies.Add(company);
         await OrganizationDbContext.SaveChangesAsync();
 

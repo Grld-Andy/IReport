@@ -24,6 +24,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
             team: userDto.Team,
             phoneNumber: userDto.PhoneNumber,
             now: DateTime.Now,
+            companyId: userDto.CompanyId,
             otp: userDto.OTP
         );
 
