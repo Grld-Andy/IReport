@@ -3,7 +3,6 @@ using SafeZone.Shared.Abstractions.Messaging;
 
 namespace SafeZone.Modules.Organization.Core.Commands.CreateCompany;
 
-// handle company creation and user creation
 internal class CreateCompany(ICompanyRepository _companyRepository, IMessageBroker _messageBroker) : ICommandHandler<CreateCompanyCommand>
 {
     private readonly IMessageBroker messageBroker = _messageBroker;
