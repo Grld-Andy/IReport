@@ -6,4 +6,5 @@ internal class UserDetailsDto : UserDto{
     public DateTime UpdatedAt { get;  set; } = default;
     public string Status { get;  set; } = default!;
     public string ProfilePicUrl { get; set; } = string.Empty;
+    public string CompanyPicUrl { get; set; } = string.Empty;
 }

@@ -31,6 +31,8 @@ internal static class UserMapper
             Role = user.Role.Value,
             Team = user.Team,
             ProfilePicUrl = user.ProfilePicUrl,
+            CompanyId = user.CompanyId,
+            CompanyPicUrl = $"{user.Company.Id}_{user.Company.Name}{user.Company.Extension}"
         };
     }
 }

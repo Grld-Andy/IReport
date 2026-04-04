@@ -119,7 +119,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
 
     public async Task<UserDetailsDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken)
+        var user = await dbContext.Users.Include(i => i.Company).AsNoTracking().SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException(id);
         return UserMapper.FromEntity(user);
     }
