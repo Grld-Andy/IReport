@@ -37,7 +37,7 @@ internal class OrganizationInitializer(ILogger<OrganizationInitializer> _logger,
         if(await OrganizationDbContext.Teams.AnyAsync()){
             return;
         }
-        var companyId = OrganizationDbContext.Teams.First(c => c.Name == "SafeZone").CompanyId;
+        var companyId = OrganizationDbContext.Companies.First(c => c.Name == "SafeZone").Id;
         var adminTeam = Team.AddTeam("Admin", companyId);
         OrganizationDbContext.Teams.Add(adminTeam);
         await OrganizationDbContext.SaveChangesAsync();

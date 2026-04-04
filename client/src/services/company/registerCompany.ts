@@ -5,14 +5,15 @@ import type { CompanyRegistration } from "@/types/Onboarding";
 
 export const registerCompany = async (data: CompanyRegistration, paymentRef: string) => {
   try {
+    console.log(data)
     const formData = new FormData();
-    formData.append("companyName", data.companyName)
-    formData.append("email", data.adminEmail)
-    formData.append("password", data.adminPassword)
-    formData.append("adminName", data.adminName)
-    formData.append("phoneNumber", data.adminPhone)
-    formData.append("logo", data.companyLogo)
-    formData.append("paymentRef", paymentRef)
+    formData.append("Company.Email", data.adminEmail)
+    formData.append("Company.Password", data.adminPassword)
+    formData.append("Company.AdminName", data.adminName)
+    formData.append("Company.PhoneNumber", data.adminPhone)
+    formData.append("Company.PaymentRef", paymentRef)
+    formData.append("Company.CompanyName", data.companyName)
+    formData.append("Company.Logo", data.companyLogo)
 
     const response = await axios.post(
       `${apiUrl}company`,

@@ -109,8 +109,8 @@ const RegisterCompany: React.FC = () => {
     setIsSubmitting(true);
     const {success} = await registerCompany(data, paymentReference);
     if(success){
-        toast.success("Registration complete! Redirecting to dashboard...");
-        setTimeout(() => navigate("/dashboard"), 2000);
+        toast.success("Registration complete! Check email to activate account and login");
+        setTimeout(() => navigate("/auth/login"), 5000);
     }else{
         toast.error("Registration failed. Please try again.");
     }
@@ -129,7 +129,7 @@ const RegisterCompany: React.FC = () => {
           <span className="text-xl font-bold font-serif">SafeZone</span>
         </div>
         <Link
-          to="/login"
+          to="/auth/login"
           className="text-sm font-medium text-gray-600 hover:text-black transition-colors"
         >
           Back to Login

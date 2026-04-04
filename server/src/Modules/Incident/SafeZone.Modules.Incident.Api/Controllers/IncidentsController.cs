@@ -37,6 +37,13 @@ internal class IncidentsController(IDispatcher _dispatcher, IContext _context) :
         var result = await dispatcher.QueryAsync(query);
         return Ok(result);
     }
+    
+    [HttpGet("company")]
+    public async Task<ActionResult<Paged<IncidentDto>>> GetAllIncidentsByCompany([FromQuery] GetIncidentsQuery query)
+    {
+        var result = await dispatcher.QueryAsync(query);
+        return Ok(result);
+    }
 
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<IncidentDto>> GetIncidentById([FromRoute] Guid id)

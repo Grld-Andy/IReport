@@ -11,7 +11,7 @@ internal class CompanyRegisteredEventHandler(IDispatcher _dispatcher) : IEventHa
 
     public async Task HandleAsync(CompanyRegisteredEvent @event, CancellationToken cancellationToken = default)
     {
-        Console.WriteLine("Calling company Registered Event Handler");
+        Console.WriteLine("========================== Calling company Registered Event Handler");
         var user = new UserCreateDto
         {
             Name = @event.AdminName,
@@ -22,7 +22,7 @@ internal class CompanyRegisteredEventHandler(IDispatcher _dispatcher) : IEventHa
             OTP = ""
         };
         var company = Company.AddCompany(@event.CompanyId, @event.CompanyName, @event.Extension);
-        await dispatcher.SendAsync(new RegisterCommand(user), cancellationToken);
         await dispatcher.SendAsync(new CreateUserCompanyCommand(company), cancellationToken);
+        await dispatcher.SendAsync(new RegisterCommand(user), cancellationToken);
     }
 }

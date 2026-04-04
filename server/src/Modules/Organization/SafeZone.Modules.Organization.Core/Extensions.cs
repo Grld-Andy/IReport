@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SafeZone.Modules.Organization.Core.DAL;
 using SafeZone.Modules.Organization.Core.DAL.Repositories;
+using SafeZone.Shared.Infrastructure;
 using SafeZone.Shared.Infrastructure.Postgres;
 
 [assembly: InternalsVisibleTo("SafeZone.Modules.Organization.Api")]
@@ -15,6 +16,7 @@ internal static class Extensions
         services.AddScoped<ITeamRepository, TeamRepository>();
         services.AddScoped<ICompanyRepository, CompanyRepository>();
         services.AddPostgres<OrganizationDbContext>(configuration);
+        services.AddInitializer<OrganizationInitializer>();
         return services;
     }
 }
