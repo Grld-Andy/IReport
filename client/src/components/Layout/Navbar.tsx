@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { User } from "@/types/User";
 import { useAppSelector } from "@/redux/app/hooks";
-import { SiGoogleauthenticator } from "react-icons/si";
 import ResetPasswordModal from "../custom/ResetPasswordModal";
 import { apiUrl } from "@/constants";
 import { useNavigate } from "react-router-dom";
@@ -40,8 +39,16 @@ const Navbar: React.FC = () => {
     <>
       <nav className="px-5 py-3 bg-gray-100 rounded-lg w-full flex justify-between items-center gap-5">
         <div className="flex items-center gap-2 py-5">
-          <SiGoogleauthenticator size={25} />
-          <span className="text-[20px] font-bold font-serif">SafeZone</span>
+          {
+            user ?
+            <>
+              <img src={user?.companyPicUrl} className="w-[25px] h-[25px]" />
+              <span className="text-[20px] font-bold font-serif">{user?.companyPicUrl.split("_")[1].split(".")[0]}</span>
+            </>
+            : <>
+            </>
+          }
+          
         </div>
 
         <div className="flex gap-2 items-center">

@@ -68,7 +68,7 @@ const RegisterCompany: React.FC = () => {
   const nextStep = async () => {
     let fieldsToValidate: (keyof CompanyRegistration)[] = [];
     if (currentStep === 0) {
-      fieldsToValidate = ["adminName", "adminEmail", "adminPhone", "adminPassword"];
+      fieldsToValidate = ["adminName", "adminEmail", "adminPhone"];
     } else if (currentStep === 1) {
       fieldsToValidate = ["companyName"];
     }
@@ -107,12 +107,12 @@ const RegisterCompany: React.FC = () => {
     }
 
     setIsSubmitting(true);
-    const {success} = await registerCompany(data, paymentReference);
+    const {success, message} = await registerCompany(data, paymentReference);
     if(success){
         toast.success("Registration complete! Check email to activate account and login");
-        setTimeout(() => navigate("/auth/login"), 5000);
+        // setTimeout(() => navigate("/auth/login"), 5000);
     }else{
-        toast.error("Registration failed. Please try again.");
+        toast.error(message);
     }
     setIsSubmitting(false);
   };
@@ -244,20 +244,6 @@ const RegisterCompany: React.FC = () => {
                           </p>
                         )}
                       </Field>
-                      <Field>
-                        <FieldLabel>Password</FieldLabel>
-                        <Input
-                          type="password"
-                          placeholder="********"
-                          {...register("adminPassword")}
-                          className="h-11 focus:ring-black"
-                        />
-                        {errors.adminPassword && (
-                          <p className="text-red-500 text-xs mt-1">
-                            {errors.adminPassword.message}
-                          </p>
-                        )}
-                      </Field>
                     </FieldGroup>
                   </div>
                 )}
@@ -382,7 +368,7 @@ const RegisterCompany: React.FC = () => {
                           className="w-full h-14 text-lg gap-2 bg-black hover:bg-black/90 text-white"
                         >
                           <CreditCard size={20} />
-                          Simulate Payment
+                          Make Payment
                         </Button>
                       )}
                     </div>

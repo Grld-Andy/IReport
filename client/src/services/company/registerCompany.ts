@@ -8,7 +8,6 @@ export const registerCompany = async (data: CompanyRegistration, paymentRef: str
     console.log(data)
     const formData = new FormData();
     formData.append("Company.Email", data.adminEmail)
-    formData.append("Company.Password", data.adminPassword)
     formData.append("Company.AdminName", data.adminName)
     formData.append("Company.PhoneNumber", data.adminPhone)
     formData.append("Company.PaymentRef", paymentRef)
