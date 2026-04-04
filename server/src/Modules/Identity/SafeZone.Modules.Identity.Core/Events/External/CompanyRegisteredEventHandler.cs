@@ -19,7 +19,8 @@ internal class CompanyRegisteredEventHandler(IDispatcher _dispatcher) : IEventHa
             Role = "admin",
             Team = "Admin",
             PhoneNumber = @event.PhoneNumber,
-            OTP = ""
+            OTP = "",
+            CompanyId = @event.CompanyId
         };
         var company = Company.AddCompany(@event.CompanyId, @event.CompanyName, @event.Extension);
         await dispatcher.SendAsync(new CreateUserCompanyCommand(company), cancellationToken);

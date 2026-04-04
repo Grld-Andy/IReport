@@ -18,7 +18,7 @@ internal class CreateCompany(ICompanyRepository _companyRepository, ITeamReposit
         var company = Company.AddCompany(companyId, companyDto.CompanyName, result.Url);
         var team = Team.AddTeam("Admin", company.Id);
 
-        await messageBroker.PublishAsync(new CompanyRegisteredEvent(companyId, companyDto.CompanyName, result.Extension, companyDto.AdminName, companyDto.Email, companyDto.Password, companyDto.PhoneNumber), cancellationToken);
+        await messageBroker.PublishAsync(new CompanyRegisteredEvent(companyId, companyDto.CompanyName, result.Extension, companyDto.AdminName, companyDto.Email, companyDto.PhoneNumber), cancellationToken);
         await companyRepository.AddAsync(company, cancellationToken);
         await teamRepository.AddAsync(team, cancellationToken);
     }
