@@ -83,7 +83,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
         CancellationToken cancellationToken = default)
     {
         var role = context.Identity.Role;
-        var userQuery = dbContext.Users.AsNoTracking().AsQueryable();
+        var userQuery = dbContext.Users.Include(i => i.Company).AsNoTracking().AsQueryable();
 
         if (role != "admin")
         {
@@ -138,6 +138,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
         var normalizedEmail = email.ToLower();
 
         var user = await dbContext.Users
+            .Include(i => i.Company)
             .SingleOrDefaultAsync(
                 u => u.Email.Value == normalizedEmail,
                 cancellationToken)
