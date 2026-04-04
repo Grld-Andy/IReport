@@ -22,7 +22,9 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
             password: userDto.Password,
             role: userDto.Role,
             team: userDto.Team,
+            phoneNumber: userDto.PhoneNumber,
             now: DateTime.Now,
+            companyId: userDto.CompanyId,
             otp: userDto.OTP
         );
 
@@ -81,7 +83,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
         CancellationToken cancellationToken = default)
     {
         var role = context.Identity.Role;
-        var userQuery = dbContext.Users.AsNoTracking().AsQueryable();
+        var userQuery = dbContext.Users.Include(i => i.Company).AsNoTracking().AsQueryable();
 
         if (role != "admin")
         {
@@ -117,7 +119,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
 
     public async Task<UserDetailsDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken)
+        var user = await dbContext.Users.Include(i => i.Company).AsNoTracking().SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException(id);
         return UserMapper.FromEntity(user);
     }
@@ -136,6 +138,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
         var normalizedEmail = email.ToLower();
 
         var user = await dbContext.Users
+            .Include(i => i.Company)
             .SingleOrDefaultAsync(
                 u => u.Email.Value == normalizedEmail,
                 cancellationToken)

@@ -14,13 +14,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { User } from "@/types/User";
 import { useAppSelector } from "@/redux/app/hooks";
-import { SiGoogleauthenticator } from "react-icons/si";
 import ResetPasswordModal from "../custom/ResetPasswordModal";
-import { apiUrl } from "@/constants";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { getProfilePic } from "@/constants/getProfilePic";
+import { getCompanyPic, getProfilePic } from "@/constants/getProfilePic";
 import UpdateAvatarModal from "../custom/UpdateAvatarModal";
+import { logout } from "@/services/auth/logout";
 
 const Navbar: React.FC = () => {
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
@@ -28,20 +26,33 @@ const Navbar: React.FC = () => {
   const user: User | null = useAppSelector((state) => state.auth.user);
   const navigate = useNavigate();
 
-  console.log("current user: ", user)
+  console.log("current user: ", user);
 
-  const logout = async () => {
-    await axios.post(`${apiUrl}auth/logout`, {}, { withCredentials: true });
-    localStorage.removeItem("__safezone_user");
+  const logoutUser = async () => {
+    await logout();
     navigate("/auth/login");
   };
 
   return (
     <>
-      <nav className="px-5 py-3 bg-gray-100 rounded-lg w-full flex justify-between items-center gap-5">
+      <nav className="px-5 bg-gray-100 rounded-lg w-full flex justify-between items-center gap-5">
         <div className="flex items-center gap-2 py-5">
-          <SiGoogleauthenticator size={25} />
-          <span className="text-[20px] font-bold font-serif">SafeZone</span>
+          {user ? (
+            <>
+              <div className="h-[45px] w-[70px] rounded-md md:w-[100px] overflow-hidden">
+                <img
+                  src={getCompanyPic(user?.companyPicUrl)}
+                  className="w-full h-full object-cover"
+                  alt="company logo"
+                />
+              </div>
+              <span className="text-[20px] font-bold font-serif">
+                {user?.companyPicUrl.split("_")[1].split(".")[0].toUpperCase()}
+              </span>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
 
         <div className="flex gap-2 items-center">
@@ -94,7 +105,9 @@ const Navbar: React.FC = () => {
                 </DropdownMenuGroup>
 
                 <DropdownMenuGroup>
-                  <DropdownMenuItem onClick={logout}>Log out</DropdownMenuItem>
+                  <DropdownMenuItem onClick={logoutUser}>
+                    Log out
+                  </DropdownMenuItem>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>

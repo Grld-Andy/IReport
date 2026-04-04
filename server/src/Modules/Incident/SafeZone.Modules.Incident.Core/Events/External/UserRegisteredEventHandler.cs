@@ -8,13 +8,16 @@ internal class UserRegisteredEventHandler(IUserRepository _userRepository) : IEv
     {
         var existingUser = await userRepository.ExistsAsync(@event.Id, cancellationToken);
 
+        Console.WriteLine($"===================================== Company id is {@event.CompanyId}");
+
         if(!existingUser)
         {
             var user = new CreateIncidentUserDto()
             {
                 Name = @event.Name,
                 Email = @event.Email,
-                Role = @event.Role
+                Role = @event.Role,
+                CompanyId = @event.CompanyId
             };
             await userRepository.AddUserAsync(@event.Id, user, cancellationToken);
         }

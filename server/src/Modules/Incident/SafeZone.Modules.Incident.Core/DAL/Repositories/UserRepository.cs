@@ -19,7 +19,7 @@ internal sealed class UserRepository(IncidentDbContext _dbcontext) : IUserReposi
 
     public async Task AddUserAsync(Guid id, CreateIncidentUserDto dto, CancellationToken cancellationToken = default)
     {
-        var user = IncidentUser.Create(id, dto.Name, dto.Email, dto.Role);
+        var user = IncidentUser.Create(id, dto.Name, dto.Email, dto.Role, dto.CompanyId);
         await dbcontext.Users.AddAsync(user, cancellationToken);
         await SaveAsync(cancellationToken);
     }

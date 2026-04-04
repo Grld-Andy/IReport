@@ -5,4 +5,6 @@ internal class UserDto{
     public string Email { get; set; } = default!;
     public string Role { get; set; } = default!;
     public string Team { get; set; } = default!;
+    public string PhoneNumber { get; set; } = default!;
+    public Guid CompanyId { get; set; } = default!;
 }

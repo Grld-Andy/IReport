@@ -13,12 +13,16 @@ import ReportsPage from "./pages/ProtectedPages/ReportsPage";
 import UsersPage from "./pages/ProtectedPages/UsersPage";
 import ActivateAccount from "./pages/Auth/ActivateAccount";
 import Activities from "./pages/ProtectedPages/Activities";
+import LandingPage from "./pages/LandingPage";
+import RegisterCompany from "./pages/Auth/RegisterCompany";
 
 function App() {
   return (
     <Routes>
+      <Route path="/" element={<LandingPage/>}/>
+      <Route path="register" element={<RegisterCompany/>}/>
       <Route path="/" element={<Layout />}>
-        <Route index element={<Dashboard />} />
+        <Route path="dashboard" element={<Dashboard />} />
         <Route path="incidents">
           <Route index element={<IncidentsPage />} />
           <Route path=":page" element={<IncidentsPage />} />

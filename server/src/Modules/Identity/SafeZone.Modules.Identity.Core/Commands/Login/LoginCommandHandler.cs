@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using SafeZone.Modules.Identity.Core.Services;
 using SafeZone.Shared.Infrastructure.Auth.JWT;
 using SafeZone.Shared.Infrastructure.Security;

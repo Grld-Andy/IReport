@@ -40,7 +40,7 @@ const Login: React.FC = () => {
 
     if (response.success) {
       dispatch(loginSuccess(response.message));
-      navigate("/");
+      navigate("/dashboard");
     } else {
       setApiError(response.message);
       toast.error(response.message, { position: "top-center" });

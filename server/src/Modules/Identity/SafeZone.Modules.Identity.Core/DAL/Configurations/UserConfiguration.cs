@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace SafeZone.Modules.Identity.Core.DAL.Configurations;
@@ -29,5 +28,11 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
         {
             status.Property(s => s.Value).HasColumnName("Status").IsRequired();
         });
+
+        builder.Property(u => u.CompanyId).IsRequired();
+        builder.HasOne(u => u.Company)
+            .WithMany()
+            .HasForeignKey(u => u.CompanyId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

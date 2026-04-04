@@ -10,6 +10,8 @@ export interface User{
     createdAt: Date
     updatedAt: Date
     profilePicUrl: string
+    phoneNumber: string
+    companyPicUrl: string
 }
 
 export const userCreateSchema = z

@@ -29,11 +29,6 @@ internal sealed class NotificationsModule : IModule
 
     public void Expose(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/notifications/status", () =>
-        {
-            return Results.Ok("Notifications is working");
-        })
-        .WithTags("Notifications")
-        .WithName("Get Notifications Status");
+        
     }
 }

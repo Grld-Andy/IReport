@@ -20,7 +20,7 @@ internal class ResendOtpCommandHandler(IUserRepository _usersRepository, IMessag
         user.GenerateOTP();
         await usersRepository.SaveAsync(cancellationToken);
 
-        _ = messageBroker.PublishAsync(new UserRegisteredEvent(new Guid(), user.Name, user.Email, user.Role.ToString(), user.Team, user.OTP), cancellationToken);
+        _ = messageBroker.PublishAsync(new UserRegisteredEvent(new Guid(), user.Name, user.Email, user.Role.ToString(), user.Team, user.PhoneNumber, user.OTP, user.CompanyId), cancellationToken);
         _ = messageBroker.PublishAsync(new ActivityCreatedEvent(
             context.Identity.Id,
             context.Identity.Claims["Name"].First(),

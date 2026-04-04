@@ -9,7 +9,7 @@ export const sidebarItems: Array<NavItem> = [
       icon: MdOutlineDashboard,
       activeIcon: MdDashboard,
       name: "Dashboard",
-      path: "/",
+      path: "/dashboard",
     },
     {
       icon: FaList , activeIcon: FaListAlt,

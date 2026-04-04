@@ -23,16 +23,44 @@ namespace SafeZone.Modules.Identity.Core.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("SafeZone.Modules.Identity.Core.Domain.Entities.Company", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Extension")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies", "users");
+                });
+
             modelBuilder.Entity("SafeZone.Modules.Identity.Core.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OTP")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -49,11 +77,19 @@ namespace SafeZone.Modules.Identity.Core.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyId");
+
                     b.ToTable("Users", "users");
                 });
 
             modelBuilder.Entity("SafeZone.Modules.Identity.Core.Domain.Entities.User", b =>
                 {
+                    b.HasOne("SafeZone.Modules.Identity.Core.Domain.Entities.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("SafeZone.Modules.Identity.Core.Domain.Entities.UserRole", "Role", b1 =>
                         {
                             b1.Property<Guid>("UserId")
@@ -146,6 +182,8 @@ namespace SafeZone.Modules.Identity.Core.Data.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
                         });
+
+                    b.Navigation("Company");
 
                     b.Navigation("Email")
                         .IsRequired();

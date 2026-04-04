@@ -12,7 +12,9 @@ internal static class UserMapper
             new UserPassword("pleasechangeyourpasswordnow13d9843jk"),
             UserRole.From(dto.Role),
             team: dto.Team,
+            phoneNumber: dto.PhoneNumber,
             otp: dto.OTP,
+            companyId: dto.CompanyId,
             now
         );
     }
@@ -29,6 +31,8 @@ internal static class UserMapper
             Role = user.Role.Value,
             Team = user.Team,
             ProfilePicUrl = user.ProfilePicUrl,
+            CompanyId = user.CompanyId,
+            CompanyPicUrl = $"{user.Company.Id}_{user.Company.Name}{user.Company.Extension}"
         };
     }
 }

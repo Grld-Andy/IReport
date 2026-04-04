@@ -35,6 +35,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
             Email = dto.Email,
             Role = dto.Role,
             Team = dto.Team,
+            PhoneNumber = dto.PhoneNumber,
             OTP = ""
         };
         await dispatcher.SendAsync(new RegisterCommand(userCreateDto), cancellationToken);
@@ -43,7 +44,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
 
     [HttpGet("me")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> CheckAuth()
+    public async Task<ActionResult<UserDetailsDto>> CheckAuth()
     {
         var currentUserId = context.Identity.Id;
         var result = await dispatcher.QueryAsync(new GetSingleUserQuery(currentUserId));

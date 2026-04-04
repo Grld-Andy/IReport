@@ -259,3 +259,16 @@ This system is tailored for large ports and shipping terminals where real-time i
 - Multi-terminal tracking for large port operations
 - Vehicle telemetry (speed, equipment status)
 - Heatmaps for incident hotspots
+
+
+this is an mvp so it should not be for only ports, it would be used across various domains
+create the landing page, as well as the registration pages to register by paying up and entering company details(name and company logo) which will be submitted
+after create the admin account(internal class UserDto{
+    public string Name { get;  set; } = default!;
+    public string Email { get; set; } = default!;
+    public string Role { get; set; } = default!;
+    public string Team { get; set; } = default!;
+})
+
+so a multipart for would be best
+i want to make it a multitenant/saas application

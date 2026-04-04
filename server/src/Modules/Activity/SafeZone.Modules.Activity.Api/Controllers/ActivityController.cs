@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SafeZone.Modules.Activity.Core.Domain.Entities;
 using SafeZone.Modules.Activity.Core.Domain.Repositories;
 
 namespace SafeZone.Modules.Activity.Api.Controllers;
@@ -12,7 +13,7 @@ internal class ActivitiesController(IActivityRepository repository) : Controller
     private readonly IActivityRepository _repository = repository;
 
     [HttpGet]
-    public async Task<IActionResult> Get(
+    public async Task<ActionResult<List<ActivityEntity>>> Get(
         [FromQuery] int limit = 5,
         CancellationToken ct = default)
     {
