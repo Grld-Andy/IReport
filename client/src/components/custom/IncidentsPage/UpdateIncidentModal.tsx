@@ -28,11 +28,6 @@ import {
   severityArray,
   severityOptions,
 } from "@/types/SeverityEnum";
-import {
-  categoryArray,
-  categoryOptions,
-  IncidentCategory,
-} from "@/types/CategoryEnum";
 import { IncidentStatus, statusArray, statusOptions } from "@/types/StatusEnum";
 import { incidentSchema, type Incident } from "@/types/Incident";
 import { useForm } from "react-hook-form";
@@ -44,6 +39,7 @@ import { toast } from "sonner";
 import { updateIncident } from "@/services/incidents/updateIncident";
 import LocationPicker from "./LocationPicker";
 import axios from "axios";
+import { getCategories } from "@/services/company/getCategories";
 
 export type IncidentForm = z.infer<typeof incidentSchema>;
 
@@ -66,6 +62,15 @@ export default function UpdateIncidentModal({
   );
   const users = useAppSelector((state) => state.users.users);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [categories, setCategories] = useState<Array<string>>([])
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        const categoriesResult = await getCategories()
+        setCategories(categoriesResult)
+      }
+      fetchData()
+    }, [])
 
   const {
     register,
@@ -79,7 +84,7 @@ export default function UpdateIncidentModal({
     defaultValues: {
       subject: "",
       description: "",
-      category: 0,
+      category: "",
       severity: 0,
       status: 0,
       assignedTo: "",
@@ -117,10 +122,7 @@ export default function UpdateIncidentModal({
     reset({
       subject: incident.subject || "",
       description: incident.description || "",
-      category:
-        IncidentCategory[
-          incident.category as unknown as keyof typeof IncidentCategory
-        ] || 0,
+      category: incident.category || "",
       severity:
         IncidentSeverity[
           incident.severity as unknown as keyof typeof IncidentSeverity
@@ -162,9 +164,10 @@ export default function UpdateIncidentModal({
         onUpdate?.({
           ...updatedIncident,
           status: statusArray[Number(updatedIncident.status) - 1],
-          category: categoryArray[updatedIncident.category - 1],
+          category: updatedIncident.category,
           severity: severityArray[updatedIncident.severity - 1],
           assignedTo: {
+            companyId: updatedIncident.assignedTo?.companyId ?? "",
             email: updatedIncident.assignedTo?.email ?? "",
             name: updatedIncident.assignedTo?.name ?? "",
             id: updatedIncident.assignedTo?.id ?? "",
@@ -270,10 +273,8 @@ export default function UpdateIncidentModal({
                 <Field>
                   <Label htmlFor="category">Category</Label>
                   <Select
-                    defaultValue={IncidentCategory[
-                      incident?.category as unknown as keyof typeof IncidentCategory
-                    ]?.toString()}
-                    onValueChange={(val) => setValue("category", Number(val))}
+                    defaultValue={categories.indexOf(incident.category).toString()}
+                    onValueChange={(val) => setValue("category", val)}
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select category" />
@@ -281,9 +282,9 @@ export default function UpdateIncidentModal({
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Category</SelectLabel>
-                        {categoryOptions.map((category, idx) => (
-                          <SelectItem key={idx} value={category[1].toString()}>
-                            {category[0]}
+                        {categories.map((category, idx) => (
+                          <SelectItem key={idx} value={idx.toString()}>
+                            {category}
                           </SelectItem>
                         ))}
                       </SelectGroup>

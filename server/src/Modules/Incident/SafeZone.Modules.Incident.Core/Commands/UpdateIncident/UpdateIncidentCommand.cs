@@ -5,7 +5,7 @@ internal record UpdateIncidentCommand(
     string Subject,
     string Description,
     IncidentSeverity Severity,
-    IncidentCategory Category,
+    string Category,
     Guid? AssignedToId,
     IncidentStatus Status
 ) : ICommand;

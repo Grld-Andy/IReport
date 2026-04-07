@@ -5,5 +5,5 @@ export const getProfilePic = (pic: string) => {
 }
 
 export const getCompanyPic = (pic: string) => {
-    return pic ? `${socketUrl}uploads/companies/${pic}` : `${socketUrl}uploads/profiles/avatar_placeholder.png`
+    return pic ? `${socketUrl}uploads/companies/${pic}` : `/images/company_placeholder.avif`
 }

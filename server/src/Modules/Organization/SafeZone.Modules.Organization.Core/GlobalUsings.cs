@@ -3,3 +3,4 @@ global using SafeZone.Modules.Organization.Core.Domain.Entities;
 global using SafeZone.Modules.Organization.Core.Domain.Repositories;
 global using SafeZone.Shared.Abstractions.Exceptions.ExceptionClasses;
 global using SafeZone.Modules.Organization.Core.Services;
+global using SafeZone.Modules.Organization.Core.DTO;

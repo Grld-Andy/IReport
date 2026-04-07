@@ -5,7 +5,7 @@ import { getAxiosError } from "../getAxiosError";
 interface IcreateIncident {
   subject: string;
   description: string;
-  category: number;
+  category: string;
   severity: number;
   status?: number | undefined;
   assignedTo?: string | undefined;

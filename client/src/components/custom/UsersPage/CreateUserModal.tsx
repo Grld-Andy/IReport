@@ -24,21 +24,30 @@ import {
 } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { userCreateSchema } from "@/types/User";
 import { createUserService } from "@/services/auth/createUser";
 import { HiOutlineUserAdd } from "react-icons/hi";
 import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
 import { addUser } from "@/redux/features/users/usersSlice";
-import { teams } from "@/constants/teams";
+import { getTeams } from "@/services/company/getTeams";
 
 export type UserForm = z.infer<typeof userCreateSchema>;
 
 export default function CreateUserModal() {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useAppDispatch();
-  const currentUser = useAppSelector((state) => state.auth.user)
+  const currentUser = useAppSelector((state) => state.auth.user);
+  const [teams, setTeams] = useState<Array<string>>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const teamsResult = await getTeams();
+      setTeams(teamsResult);
+    };
+    fetchData();
+  }, []);
 
   const {
     register,
@@ -71,7 +80,7 @@ export default function CreateUserModal() {
           profilePicUrl: "",
           phoneNumber: "",
           companyId: currentUser?.companyId || "",
-          companyPicUrl: currentUser?.companyPicUrl || ""
+          companyPicUrl: currentUser?.companyPicUrl || "",
         }),
       );
       setIsOpen(false);
@@ -81,7 +90,10 @@ export default function CreateUserModal() {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !isSubmitting && setIsOpen(open)}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => !isSubmitting && setIsOpen(open)}
+    >
       <DialogTrigger asChild>
         <Button className="bg-green-500 hover:bg-green-600 text-white">
           <HiOutlineUserAdd size={16} />
@@ -91,7 +103,10 @@ export default function CreateUserModal() {
 
       {isOpen && (
         <DialogContent className="p-0 overflow-hidden">
-          <form onSubmit={handleSubmit(onSubmit)}  className={isSubmitting ? "pointer-events-none opacity-60" : ""}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className={isSubmitting ? "pointer-events-none opacity-60" : ""}
+          >
             <DialogHeader className="bg-gray-50 p-5 border-b-[1px] border-black/50">
               <DialogTitle>Create User</DialogTitle>
               <DialogDescription>

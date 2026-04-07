@@ -10,7 +10,7 @@ namespace SafeZone.Modules.Organization.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-internal class CompanyController(IDispatcher _dispatcher) : ControllerBase
+internal class CompaniesController(IDispatcher _dispatcher) : ControllerBase
 {
     private readonly IDispatcher dispatcher = _dispatcher;
 
@@ -22,12 +22,12 @@ internal class CompanyController(IDispatcher _dispatcher) : ControllerBase
         return Created();
     }
 
-    [HttpPut("{id:guid}")]
+    [HttpPut]
     [Authorize(Policy = "admin")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> UpdateCompany([FromRoute] Guid id, [FromForm] CompanyDto dto, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> UpdateCompany([FromForm] CompanyDto dto, CancellationToken cancellationToken)
     {
-        await dispatcher.SendAsync(new UpdateCompanyCommand(id, dto.CompanyName, dto.Logo), cancellationToken);
-        return Ok();
+        await dispatcher.SendAsync(new UpdateCompanyCommand(dto.CompanyName, dto.Logo), cancellationToken);
+        return NoContent();
     }
 }

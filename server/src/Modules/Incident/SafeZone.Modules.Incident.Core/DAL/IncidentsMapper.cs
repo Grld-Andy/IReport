@@ -8,7 +8,7 @@ internal static class IncidentMapper
             Id = incident.Id,
             Subject = incident.Subject.Value,
             Description = incident.Description.Value,
-            Category = incident.Category.ToString(),
+            Category = incident.Category,
             Severity = incident.Severity.ToString(),
             Status = incident.Status.ToString(),
             Reporter = new IncidentUserDto

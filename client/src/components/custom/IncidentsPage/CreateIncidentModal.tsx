@@ -25,15 +25,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { severityOptions } from "@/types/SeverityEnum";
-import { categoryOptions } from "@/types/CategoryEnum";
 import { incidentSchema } from "@/types/Incident";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createIncidentService } from "@/services/incidents/createInicident";
 import { toast } from "sonner";
 import LocationPicker from "./LocationPicker";
 import axios from "axios";
+import { getCategories } from "@/services/company/getCategories";
 
 export type IncidentForm = z.infer<typeof incidentSchema>;
 
@@ -41,6 +41,15 @@ export default function CreateIncidentModal() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
+  const [categories, setCategories] = useState<Array<string>>([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const categoriesResult = await getCategories()
+      setCategories(categoriesResult)
+    }
+    fetchData()
+  }, [])
 
   const handleLocationSelect = (lat: number, lng: number, name?: string) => {
     setLatitude(lat);
@@ -78,7 +87,7 @@ export default function CreateIncidentModal() {
     defaultValues: {
       subject: "",
       description: "",
-      category: 0,
+      category: "",
       severity: 0,
       status: 0,
       assignedTo: "",
@@ -154,8 +163,8 @@ export default function CreateIncidentModal() {
                 <Field>
                   <Label htmlFor="category">Category</Label>
                   <Select
-                    defaultValue="0"
-                    onValueChange={(val) => setValue("category", Number(val))}
+                    defaultValue=""
+                    onValueChange={(val) => setValue("category", val)}
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select category" />
@@ -163,9 +172,9 @@ export default function CreateIncidentModal() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Category</SelectLabel>
-                        {categoryOptions.map((category, idx) => (
-                          <SelectItem key={idx} value={category[1].toString()}>
-                            {category[0]}
+                        {categories.map((category, idx) => (
+                          <SelectItem key={idx} value={category}>
+                            {category}
                           </SelectItem>
                         ))}
                       </SelectGroup>

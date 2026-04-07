@@ -3,7 +3,7 @@ namespace SafeZone.Modules.Incident.Core.Commands.CreateIncident;
 internal record CreateIncidentCommand(
     string Subject,
     string Description,
-    IncidentCategory Category,
+    string Category,
     IncidentSeverity Severity,
     double Latitude,
     double Longitude,

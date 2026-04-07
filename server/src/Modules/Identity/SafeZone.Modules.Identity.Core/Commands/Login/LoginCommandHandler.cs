@@ -14,6 +14,10 @@ internal class LoginCommandHandler(ITokenStorage _tokenStorage, IUserRepository 
     public async Task<UserDetailsDto> HandleAsync(LoginCommand command, CancellationToken cancellationToken = default)
     {
         var user = await userRepository.GetByEmailAsync(command.Email.ToLowerInvariant(), cancellationToken);
+        if (user.Status.ToString().Equals("Suspended"))
+        {
+            throw new UnauthorizedException("Account suspended, please contact your admin to activate account");
+        }
 
         if (!user.Status.ToString().Equals("Active"))
         {

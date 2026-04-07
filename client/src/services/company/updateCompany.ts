@@ -2,14 +2,15 @@ import { apiUrl } from "@/constants";
 import axios from "axios";
 import { getAxiosError } from "../getAxiosError";
 
-export const updateCopmany = async (id: string, data: {name: string, logo: File}) => {
+export const updateCompany = async (data: {name: string, logo: File | undefined}) => {
   try {
     const formData = new FormData();
     formData.append("name", data.name)
-    formData.append("logo", data.logo)
+    if(data.logo)
+      formData.append("logo", data.logo)
 
-    const response = await axios.post(
-      `${apiUrl}company/${id}`,
+    const response = await axios.put(
+      `${apiUrl}company`,
       formData,
       { withCredentials: true,
         headers: {
@@ -18,8 +19,8 @@ export const updateCopmany = async (id: string, data: {name: string, logo: File}
       },
     );
 
-    if (response.status == 201) {
-      return { success: true, message: "Created successfully" };
+    if (response.status == 204) {
+      return { success: true, message: "Updated successfully" };
     }
 
     return { success: false, message: "Unknown error" };

@@ -6,7 +6,7 @@ internal class IncidentEntity
     public Guid Id { get; private set; }
     public IncidentSubject Subject { get; private set; } = default!;
     public IncidentDescription Description { get; private set; } = default!;
-    public IncidentCategory Category { get; private set; }
+    public string Category { get; private set; }
     public string Team {get; set;} = default!;
     public IncidentSeverity Severity { get; private set; }
     public IncidentStatus Status { get; private set; }
@@ -16,8 +16,6 @@ internal class IncidentEntity
     public IncidentLocation Location { get; private set; } = default!;
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
-
-    // navigation props
     public IncidentUser Reporter { get; private set; } = default!;
     public IncidentUser? AssignedTo { get; private set; } = default!;
 
@@ -27,7 +25,7 @@ internal class IncidentEntity
         Guid id,
         IncidentSubject subject,
         IncidentDescription description,
-        IncidentCategory category,
+        string category,
         IncidentSeverity severity,
         Guid reporterId,
         IncidentLocation location,
@@ -49,7 +47,7 @@ internal class IncidentEntity
     public static IncidentEntity Report(
         string subject,
         string description,
-        IncidentCategory category,
+        string category,
         IncidentSeverity severity,
         Guid reporterId,
         IncidentLocation location,
