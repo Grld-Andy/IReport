@@ -15,6 +15,7 @@ import ActivateAccount from "./pages/Auth/ActivateAccount";
 import Activities from "./pages/ProtectedPages/Activities";
 import LandingPage from "./pages/LandingPage";
 import RegisterCompany from "./pages/Auth/RegisterCompany";
+import SettingsPage from "./pages/ProtectedPages/SettingsPage";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="activities" element={<Activities />} />
         <Route path="kanban" element={<KanbanBoardPage />} />
         <Route path="reports" element={<ReportsPage />} />
+        <Route path="settings" element={<SettingsPage />} />
         <Route path="users">
           <Route index element={<UsersPage />} />
           <Route path=":page" element={<UsersPage />} />

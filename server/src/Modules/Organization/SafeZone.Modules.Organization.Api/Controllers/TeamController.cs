@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SafeZone.Modules.Organization.Core.Commands.CreateTeam;
+using SafeZone.Modules.Organization.Core.Commands.CreateTeams;
 using SafeZone.Modules.Organization.Core.Domain.Entities;
 using SafeZone.Modules.Organization.Core.Queries.GetTeamsQueries;
 using SafeZone.Shared.Abstractions.Dispatchers;
@@ -16,15 +15,7 @@ internal class TeamController(IDispatcher _dispatcher) : ControllerBase
 
     [HttpPost]
     [Authorize(Policy = "admin")]
-    public async Task<ActionResult> CreateTeam([FromBody]CreateTeamCommand command, CancellationToken cancellationToken)
-    {
-        await dispatcher.SendAsync(command, cancellationToken);
-        return Created();
-    }
-
-    [HttpPost("bulk")]
-    [Authorize(Policy = "admin")]
-    public async Task<ActionResult> CreateTeams([FromBody]CreateTeamCommand command, CancellationToken cancellationToken)
+    public async Task<ActionResult> CreateTeams([FromBody]CreateTeamsCommand command, CancellationToken cancellationToken)
     {
         await dispatcher.SendAsync(command, cancellationToken);
         return Created();

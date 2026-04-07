@@ -20,6 +20,6 @@ internal class CreateCompany(ICompanyRepository _companyRepository, ITeamReposit
 
         await messageBroker.PublishAsync(new CompanyRegisteredEvent(companyId, companyDto.CompanyName, result.Extension, companyDto.AdminName, companyDto.Email, companyDto.PhoneNumber), cancellationToken);
         await companyRepository.AddAsync(company, cancellationToken);
-        await teamRepository.AddAsync(team, cancellationToken);
+        await teamRepository.AddListAsync([team], cancellationToken);
     }
 }

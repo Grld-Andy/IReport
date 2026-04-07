@@ -134,8 +134,16 @@ public static class Extensions
         {
             KeepAliveInterval = TimeSpan.FromMinutes(2)
         };
-        webSocketOptions.AllowedOrigins.Add("http://localhost:81");
-        webSocketOptions.AllowedOrigins.Add("http://www.localhost:81");
+        var origins = new[]
+        {
+            "http://localhost:81",
+            "http://www.localhost:81"
+        };
+
+        foreach (var origin in origins)
+        {
+            webSocketOptions.AllowedOrigins.Add(origin);
+        }
         app.UseWebSockets(webSocketOptions);
 
         app.UseSwagger();

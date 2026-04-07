@@ -15,6 +15,7 @@ internal static class Extensions
     {
         services.AddScoped<ITeamRepository, TeamRepository>();
         services.AddScoped<ICompanyRepository, CompanyRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddPostgres<OrganizationDbContext>(configuration);
         services.AddInitializer<OrganizationInitializer>();
         return services;

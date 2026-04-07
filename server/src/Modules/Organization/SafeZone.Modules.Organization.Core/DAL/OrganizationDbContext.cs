@@ -6,6 +6,7 @@ internal class OrganizationDbContext(DbContextOptions options) : DbContext(optio
 {
     public DbSet<Company> Companies { get; set; }
     public DbSet<Team> Teams { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
