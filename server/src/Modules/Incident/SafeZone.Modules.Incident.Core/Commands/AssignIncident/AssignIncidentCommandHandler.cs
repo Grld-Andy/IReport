@@ -37,7 +37,8 @@ internal class AssignIncidentCommandHandler
                 actorName,
                 "assigned incident",
                 details,
-                "Incident"
+                "Incident",
+                incident.Reporter.CompanyId
             ), cancellationToken);
 
         var incidentDto = IncidentMapper.FromEntity(incident);

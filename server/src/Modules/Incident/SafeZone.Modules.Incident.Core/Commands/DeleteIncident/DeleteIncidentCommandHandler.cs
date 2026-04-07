@@ -40,7 +40,8 @@ internal class DeleteIncidentHandler
                 actor,
                 "deleted incident",
                 details,
-                "Incident"
+                "Incident",
+                incident.Reporter.CompanyId
             ), cancellationToken);
 
         await repository.DeleteAsync(incident.Id, cancellationToken);

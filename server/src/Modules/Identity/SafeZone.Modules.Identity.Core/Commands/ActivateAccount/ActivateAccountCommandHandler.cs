@@ -37,7 +37,8 @@ internal class ActivateAccountCommandHandler(IUserRepository _usersRepository, I
             command.Email.Split('@')[0],
             "activated account",
             $"Account: {command.Email}",
-            "User"
+            "User",
+            user.CompanyId
         ), cancellationToken);
     }
 }

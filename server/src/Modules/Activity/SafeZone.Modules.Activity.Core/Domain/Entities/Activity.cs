@@ -9,5 +9,6 @@ internal class ActivityEntity
     public string Action { get; set; } = default!;
     public string Details { get; set; } = default!;
     public string Module { get; set; } = default!;
+    public Guid CompanyId { get; set; } = default!;
     public DateTime CreatedAt { get; set; }
 }

@@ -56,7 +56,9 @@ internal sealed class ChangeIncidentStatusHandler(
                 actorName ?? "Guest",
                 "changed incident status",
                 details,
-                "Incident"),
+                "Incident",
+                incident.Reporter.CompanyId
+            ),
             cancellationToken);
 
         await context.SaveChangesAsync(cancellationToken);

@@ -26,7 +26,8 @@ internal class ResendOtpCommandHandler(IUserRepository _usersRepository, IMessag
             context.Identity.Claims["Name"].First(),
             "created user",
             $"User: {user.Name}",
-            "User"
+            "User",
+            user.CompanyId
         ), cancellationToken);
     }
 }

@@ -88,7 +88,8 @@ internal sealed class UpdateIncidentHandler
                 actor,
                 "updated incident",
                 changesString,
-                "Incident"
+                "Incident",
+                incident.Reporter.CompanyId
             ), cancellationToken);
 
         logger.LogInformation($"[INCIDENT] {actor} updated incident {incident.Subject}");

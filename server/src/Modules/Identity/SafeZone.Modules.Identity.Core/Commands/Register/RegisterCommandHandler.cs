@@ -28,7 +28,8 @@ internal class RegisterCommandHandler(IUserRepository _userRepository, IMessageB
             context.Identity.Claims["Name"].First(),
             "created user",
             $"User: {userDto.Name}",
-            "User"
+            "User",
+            userDto.CompanyId
         ), cancellationToken);
     }
 }

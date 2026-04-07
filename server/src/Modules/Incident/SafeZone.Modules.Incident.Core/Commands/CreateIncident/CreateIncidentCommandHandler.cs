@@ -36,7 +36,8 @@ internal sealed class CreateIncidentHandler
             incident.Reporter.Name,
             "reported incident",
             $"Incident: {incident.Subject.Value}",
-            "Incident"
+            "Incident",
+            incident.Reporter.CompanyId
         ), cancellationToken);
 
         return incident.Id;

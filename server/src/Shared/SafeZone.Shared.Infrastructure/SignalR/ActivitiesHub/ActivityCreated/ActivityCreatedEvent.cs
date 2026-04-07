@@ -8,7 +8,8 @@ internal record ActivityCreatedEvent(
     string ActorName,
     string Action,
     string Details,
-    string Module
+    string Module,
+    Guid CompanyId
 ) : IEvent;
 
 internal record ActivityEntity(
@@ -18,6 +19,7 @@ internal record ActivityEntity(
     string Action,
     string Details,
     string Module,
+    Guid CompanyId,
     DateTime CreatedAt
 );
 internal record CreateActivityCommand(ActivityCreatedEvent Activity);

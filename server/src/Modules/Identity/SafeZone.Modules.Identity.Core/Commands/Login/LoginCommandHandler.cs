@@ -25,7 +25,12 @@ internal class LoginCommandHandler(ITokenStorage _tokenStorage, IUserRepository 
             throw new BadRequestException("Login failed, please try again with valid credentials.");
         }
 
-        var claims = new Dictionary<string, IEnumerable<string>>{["Name"] = [user.Name.Value], ["Team"] = [user.Team], ["permissions"] = [user.Role.ToString().ToLower()]};
+        var claims = new Dictionary<string, IEnumerable<string>>{
+            ["Name"] = [user.Name.Value],
+            ["Team"] = [user.Team],
+            ["CompanyId"] = [user.CompanyId.ToString()],
+            ["permissions"] = [user.Role.ToString().ToLower()]
+        };
 
         var token = jsonWebTokenManager.CreateToken(user.Id.ToString(), user.Email, user.Role.ToString(), claims);
         tokenStorage.Set(token);
