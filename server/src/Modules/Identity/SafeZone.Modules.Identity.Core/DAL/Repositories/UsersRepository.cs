@@ -144,6 +144,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
     {
         var user = await dbContext.Users
             .Where(u => u.CompanyId == GetCompanyId())
+            .Include(i => i.Company)
             .SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException(id);
         return user;
@@ -157,7 +158,6 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
 
         var user = await dbContext.Users
             .Include(i => i.Company)
-            .Where(u => u.CompanyId == GetCompanyId())
             .SingleOrDefaultAsync(
                 u => u.Email.Value == normalizedEmail,
                 cancellationToken)

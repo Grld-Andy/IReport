@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using SafeZone.Modules.Identity.Core.Commands.ActivateAccount;
 using SafeZone.Modules.Identity.Core.Commands.Login;
 using SafeZone.Modules.Identity.Core.Commands.Register;
@@ -81,6 +82,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     }
 
     [HttpPost("login")]
+    [EnableRateLimiting("fixed")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult<UserDetailsDto>> LoginUser([FromBody] LoginCommand command, CancellationToken cancellationToken)
     {

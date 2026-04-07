@@ -45,7 +45,7 @@ const FEATURES = [
       </svg>
     ),
     title: "Real-Time Incident Reporting",
-    desc: "Capture and broadcast incidents the moment they happen — no delays, no missed alerts.",
+    desc: "Capture and broadcast incidents the moment they happen, no delays, no missed alerts.",
   },
   {
     icon: (
@@ -111,7 +111,7 @@ const FEATURES = [
       </svg>
     ),
     title: "Role-Based Access",
-    desc: "Dock worker to admin — every role sees only what they need. Secure, scoped, and compliant.",
+    desc: "Dock worker to admin, every role sees only what they need. Secure, scoped, and compliant.",
   },
   {
     icon: (
@@ -126,7 +126,7 @@ const FEATURES = [
       </svg>
     ),
     title: "Instant Notifications",
-    desc: "Critical incidents trigger real-time alerts across all connected devices — zero lag, maximum response.",
+    desc: "Critical incidents trigger real-time alerts across all connected devices, zero lag, maximum response.",
   },
 ];
 
@@ -247,8 +247,8 @@ function HeroSection() {
           </h1>
 
           <p className="text-lg text-gray-500 leading-relaxed mb-10 max-w-lg">
-            SafeZone gives any high-risk operation — ports, construction sites,
-            factories, mines — a single platform to report, dispatch, track, and
+            SafeZone gives any high-risk operation; ports, construction sites,
+            factories, mines, a single platform to report, dispatch, track, and
             resolve incidents before they escalate.
           </p>
 
@@ -520,7 +520,7 @@ function HowItWorksSection() {
     {
       num: "03",
       title: "Invite your team",
-      desc: "Add dock workers, supervisors, responders — each with role-appropriate access.",
+      desc: "Add dock workers, supervisors, responders, each with role-appropriate access.",
     },
     {
       num: "04",
@@ -596,7 +596,8 @@ function CTASection() {
         <button
           className="group inline-flex items-center gap-2 bg-lime-400 hover:bg-lime-500 text-gray-900 font-bold text-base px-10 py-4 rounded-full transition-all hover:shadow-xl hover:shadow-lime-200 active:scale-95"
         >
-          Register your company — it's free
+          Register your company,
+          it's free
           <svg
             viewBox="0 0 24 24"
             fill="none"

@@ -125,6 +125,7 @@ public static class Extensions
         {
             ForwardedHeaders = ForwardedHeaders.All
         });
+        app.UseRateLimiter();
         app.UseCors("cors");
         app.UseCorrelationId();
         app.UseErrorHandling();

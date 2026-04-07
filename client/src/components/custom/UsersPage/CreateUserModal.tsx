@@ -29,7 +29,7 @@ import { userCreateSchema } from "@/types/User";
 import { createUserService } from "@/services/auth/createUser";
 import { HiOutlineUserAdd } from "react-icons/hi";
 import { toast } from "sonner";
-import { useAppDispatch } from "@/redux/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
 import { addUser } from "@/redux/features/users/usersSlice";
 import { teams } from "@/constants/teams";
 
@@ -38,6 +38,7 @@ export type UserForm = z.infer<typeof userCreateSchema>;
 export default function CreateUserModal() {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useAppDispatch();
+  const currentUser = useAppSelector((state) => state.auth.user)
 
   const {
     register,
@@ -67,7 +68,10 @@ export default function CreateUserModal() {
           updatedAt: new Date(),
           status: "Inactive",
           id: crypto.randomUUID(),
-          profilePicUrl: ""
+          profilePicUrl: "",
+          phoneNumber: "",
+          companyId: currentUser?.companyId || "",
+          companyPicUrl: currentUser?.companyPicUrl || ""
         }),
       );
       setIsOpen(false);

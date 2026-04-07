@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { getCompanyPic, getProfilePic } from "@/constants/getProfilePic";
 import UpdateAvatarModal from "../custom/UpdateAvatarModal";
 import { logout } from "@/services/auth/logout";
+import { getCompanyName } from "@/utils/getCompanyName";
 
 const Navbar: React.FC = () => {
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
@@ -44,10 +45,11 @@ const Navbar: React.FC = () => {
                   src={getCompanyPic(user?.companyPicUrl)}
                   className="w-full h-full object-cover"
                   alt="company logo"
+                  onError={(e) => e.currentTarget.src = "/images/company_placeholder.avif"}
                 />
               </div>
               <span className="text-[20px] font-bold font-serif">
-                {user?.companyPicUrl.split("_")[1].split(".")[0].toUpperCase()}
+                {getCompanyName(user)}
               </span>
             </>
           ) : (
@@ -75,7 +77,9 @@ const Navbar: React.FC = () => {
                         className="object-cover"
                         src={getProfilePic(user.profilePicUrl)}
                       />
-                      <AvatarFallback>CN</AvatarFallback>
+                      <AvatarFallback className="bg-gradient-to-br from-blue-500 via-indigo-400 to-purple-500 text-white">
+                        {user.name[0].toUpperCase()}
+                      </AvatarFallback>
                     </Avatar>
                   ) : (
                     <FaUser size={17} color="white" />

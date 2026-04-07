@@ -76,7 +76,7 @@ const UserRow: React.FC<Props> = ({ user, updateUserStatus }) => {
                   className="object-cover"
                   src={getProfilePic(user.profilePicUrl)}
                 />
-                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="bg-gradient-to-br from-blue-500 via-indigo-400 to-purple-500 w-full h-full text-white font-bold text-xl">{user.name.charAt(0)}</AvatarFallback>
               </Avatar>
 
               <div>

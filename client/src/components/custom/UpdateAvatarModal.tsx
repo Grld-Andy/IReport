@@ -141,6 +141,7 @@ export default function UpdateAvatarModal({ open, onOpenChange }: Props) {
       : file?.name;
 
   const hasImage = preview ?? currentPic;
+  const [imageError, setImageError] = useState<boolean>(false)
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -174,12 +175,13 @@ export default function UpdateAvatarModal({ open, onOpenChange }: Props) {
                 }
               `}
             >
-              {hasImage ? (
+              {(hasImage && !imageError) ? (
                 <div className="flex flex-col items-center gap-3 py-6">
                   <div className="relative">
                     <img
                       src={preview ?? currentPic}
                       alt="Avatar preview"
+                      onError={() => {setImageError(true)}}
                       className="w-24 h-24 rounded-full object-cover ring-2 ring-gray-100"
                     />
                     {preview && (
