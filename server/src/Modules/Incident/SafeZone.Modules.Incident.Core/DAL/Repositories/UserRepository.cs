@@ -1,8 +1,10 @@
 namespace SafeZone.Modules.Incident.Core.DAL.Repositories;
 
-internal sealed class UserRepository(IncidentDbContext _dbcontext) : IUserRepository
+internal sealed class UserRepository(IncidentDbContext _dbcontext, IContext _context) : IUserRepository
 {
     private readonly IncidentDbContext dbcontext = _dbcontext;
+    private readonly IContext context = _context;
+    private Guid GetCompanyId() => Guid.Parse(context.Identity.Claims["CompanyId"].First());
 
     public async Task SaveAsync(CancellationToken cancellationToken = default)
     {
@@ -13,6 +15,7 @@ internal sealed class UserRepository(IncidentDbContext _dbcontext) : IUserReposi
     {
         return await dbcontext.Users
             .AsNoTracking()
+            .Where(u => u.CompanyId == GetCompanyId())
             .FirstOrDefaultAsync(i => i.Id == id, cancellationToken)
             ?? throw new NotFoundException("User not found");
     }
@@ -33,12 +36,14 @@ internal sealed class UserRepository(IncidentDbContext _dbcontext) : IUserReposi
     public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await dbcontext.Users
+            .Where(u => u.CompanyId == GetCompanyId())
             .AnyAsync(u => u.Id == id, cancellationToken);
     }
 
     public async Task DeleteUserAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var user = await dbcontext.Users
+            .Where(u => u.CompanyId == GetCompanyId())
             .FirstOrDefaultAsync(u => u.Id == id, cancellationToken)
             ?? throw new NotFoundException("User", id);
 
