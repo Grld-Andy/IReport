@@ -1,3 +1,4 @@
+using Polly;
 using SafeZone.Shared.Abstractions.Contexts;
 using SafeZone.Shared.Infrastructure.Postgres;
 
@@ -7,6 +8,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
 {
     private readonly UsersDbContext dbContext = _dbContext;
     private readonly IContext context = _context;
+    private Guid GetCompanyId() => Guid.Parse(context.Identity.Claims["CompanyId"].First());
 
     public async Task<Guid> CreateAsync(User userDto, CancellationToken cancellationToken = default)
     {
@@ -41,6 +43,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
 
         var exists = await dbContext.Users
             .AsNoTracking()
+            .Where(u => u.CompanyId == GetCompanyId())
             .AnyAsync(
                 u => u.Email.Value == normalizedEmail,
                 cancellationToken);
@@ -53,7 +56,9 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
 
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
+        var user = await dbContext.Users
+            .Where(u => u.CompanyId == GetCompanyId())
+            .SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
         if (user is null)
         {
             return false;
@@ -66,7 +71,10 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
 
     public async Task<bool> SoftDeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var user = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .Where(u => u.CompanyId == GetCompanyId())
+            .SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
         if (user is null)
         {
             return false;
@@ -83,7 +91,11 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
         CancellationToken cancellationToken = default)
     {
         var role = context.Identity.Role;
-        var userQuery = dbContext.Users.Include(i => i.Company).AsNoTracking().AsQueryable();
+        var userQuery = dbContext.Users
+            .Where(u => u.CompanyId == GetCompanyId())
+            .Include(i => i.Company)
+            .AsNoTracking()
+            .AsQueryable();
 
         if (role != "admin")
         {
@@ -119,14 +131,20 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
 
     public async Task<UserDetailsDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var user = await dbContext.Users.Include(i => i.Company).AsNoTracking().SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken)
+        var user = await dbContext.Users
+            .Where(u => u.CompanyId == GetCompanyId())
+            .Include(i => i.Company)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException(id);
         return UserMapper.FromEntity(user);
     }
 
     public async Task<User> GetIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var user = await dbContext.Users.SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken)
+        var user = await dbContext.Users
+            .Where(u => u.CompanyId == GetCompanyId())
+            .SingleOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken)
             ?? throw new UserNotFoundException(id);
         return user;
     }
@@ -139,6 +157,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
 
         var user = await dbContext.Users
             .Include(i => i.Company)
+            .Where(u => u.CompanyId == GetCompanyId())
             .SingleOrDefaultAsync(
                 u => u.Email.Value == normalizedEmail,
                 cancellationToken)
@@ -155,7 +174,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
     {
         var users = await dbContext.Users
             .AsNoTracking()
-            .Where(u => guids.Contains(u.Id))
+            .Where(u => guids.Contains(u.Id) && u.CompanyId == GetCompanyId())
             .Select(u => UserMapper.FromEntity(u))
             .ToListAsync(cancellationToken: cancellationToken);
         return users;
