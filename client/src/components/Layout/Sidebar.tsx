@@ -10,11 +10,13 @@ import {
 } from "@/constants/sidebarItems";
 import { apiUrl } from "@/constants";
 import axios from "axios";
-import { useAppSelector } from "@/redux/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/app/hooks";
+import { logout } from "@/redux/features/auth/authSlice";
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   let sidebarNaivgation = sidebarItems;
   sidebarNaivgation =
@@ -26,9 +28,9 @@ const Sidebar: React.FC = () => {
       ? sidebarNaivgation
       : [...sidebarNaivgation, ...adminSidebarItems];
 
-  const logout = async () => {
+  const logoutUser = async () => {
     await axios.post(`${apiUrl}auth/logout`, {}, { withCredentials: true });
-    localStorage.removeItem("__safezone_user");
+    dispatch(logout())
     navigate("/auth/login");
   };
 
@@ -77,7 +79,7 @@ const Sidebar: React.FC = () => {
 
       {/* lower: logout button */}
       <Button
-        onClick={logout}
+        onClick={logoutUser}
         className="flex items-center justify-start hover:bg-green-400 gap-3 bg-transparent shadow-none"
       >
         <CiLogout className="text-gray-800" />

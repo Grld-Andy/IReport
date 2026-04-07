@@ -16,14 +16,16 @@ internal static class IncidentMapper
                 Id = incident.Reporter.Id,
                 Name = incident.Reporter.Name,
                 Email = incident.Reporter.Email,
-                Role = incident.Reporter.Role
+                Role = incident.Reporter.Role,
+                CompanyId = incident.Reporter.CompanyId
             },
             AssignedTo = incident.AssignedTo == null ? null : new IncidentUserDto
             {
                 Id = incident.AssignedTo.Id,
                 Name = incident.AssignedTo.Name,
                 Email = incident.AssignedTo.Email,
-                Role = incident.AssignedTo.Role
+                Role = incident.AssignedTo.Role,
+                CompanyId = incident.AssignedTo.CompanyId,
             },
             Team = incident.Team,
             Latitude = incident.Location.Latitude,

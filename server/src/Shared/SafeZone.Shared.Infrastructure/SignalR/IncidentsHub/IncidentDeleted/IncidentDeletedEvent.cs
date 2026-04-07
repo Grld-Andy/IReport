@@ -3,4 +3,4 @@ using SafeZone.Shared.Abstractions.Events;
 
 namespace SafeZone.Shared.Infrastructure.SignalR.IncidentsHub.IncidentDeleted;
 
-internal record IncidentDeletedEvent(Guid Id) : IEvent;
+internal record IncidentDeletedEvent(Guid Id, Guid CompanyId) : IEvent;

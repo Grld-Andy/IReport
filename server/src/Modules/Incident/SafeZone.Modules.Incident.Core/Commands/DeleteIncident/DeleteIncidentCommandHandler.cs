@@ -32,7 +32,7 @@ internal class DeleteIncidentHandler
         var actor = userContext.Identity.Claims[ClaimTypes.Name].First();
 
         _ = messageBroker.PublishAsync(
-            new IncidentDeletedEvent(incident.Id), cancellationToken);
+            new IncidentDeletedEvent(incident.Id, incident.Reporter.CompanyId), cancellationToken);
 
         _ =  messageBroker.PublishAsync(
             new ActivityCreatedEvent(

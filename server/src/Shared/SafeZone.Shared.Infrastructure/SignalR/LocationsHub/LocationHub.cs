@@ -30,6 +30,16 @@ public class LocationHub : Hub
 
         await base.OnDisconnectedAsync(exception);
     }
+
+    public Task JoinRoom(string CompanyId)
+    {
+        return Groups.AddToGroupAsync(Context.ConnectionId, CompanyId);
+    }
+
+    public Task LeaveRoom(string CompanyId)
+    {
+        return Groups.RemoveFromGroupAsync(Context.ConnectionId, CompanyId);
+    }
 }
 
 public class UserLocationDto

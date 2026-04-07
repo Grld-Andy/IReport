@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
@@ -12,6 +11,6 @@ public class IncidentUpdatedEventHandler(IHubContext<IncidentHub> _hubContext) :
 
     async Task IEventHandler<IncidentUpdatedEvent>.HandleAsync(IncidentUpdatedEvent @event, CancellationToken cancellationToken)
     {
-        await hubContext.Clients.All.SendAsync("IncidentUpdated", new IncidentUpdatedEvent(@event.Incident), cancellationToken);
+        await hubContext.Clients.Group(@event.Incident.Reporter.CompanyId.ToString()).SendAsync("IncidentUpdated", new IncidentUpdatedEvent(@event.Incident), cancellationToken);
     }
 }

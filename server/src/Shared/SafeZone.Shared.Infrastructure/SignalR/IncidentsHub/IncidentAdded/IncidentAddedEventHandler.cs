@@ -11,7 +11,7 @@ namespace SafeZone.Shared.Infrastructure.SignalR.IncidentsHub.IncidentAdded
 
         async Task IEventHandler<IncidentAddedEvent>.HandleAsync(IncidentAddedEvent @event, CancellationToken cancellationToken)
         {
-            await _hub.Clients.All.SendAsync("IncidentAdded", new IncidentAddedEvent(@event.Incident), cancellationToken: cancellationToken);
+            await _hub.Clients.Group(@event.Incident.Reporter.CompanyId.ToString()).SendAsync("IncidentAdded", new IncidentAddedEvent(@event.Incident), cancellationToken: cancellationToken);
         }
     }
 }

@@ -12,6 +12,7 @@ export interface User{
     profilePicUrl: string
     phoneNumber: string
     companyPicUrl: string
+    companyId: string
 }
 
 export const userCreateSchema = z

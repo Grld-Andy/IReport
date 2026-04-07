@@ -11,6 +11,6 @@ public class IncidentDeletedEventHandler(IHubContext<IncidentHub> _hubContext) :
 
     async Task IEventHandler<IncidentDeletedEvent>.HandleAsync(IncidentDeletedEvent @event, CancellationToken cancellationToken)
     {
-        await hubContext.Clients.All.SendAsync("IncidentDeleted", new IncidentDeletedEvent(@event.Id), cancellationToken);
+        await hubContext.Clients.Group(@event.CompanyId.ToString()).SendAsync("IncidentDeleted", new IncidentDeletedEvent(@event.Id, @event.CompanyId), cancellationToken);
     }
 }

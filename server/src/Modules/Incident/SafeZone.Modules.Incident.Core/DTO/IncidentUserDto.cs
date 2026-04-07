@@ -6,6 +6,7 @@ internal class IncidentUserDto
     public string Name { get; set; } = default!;
     public string Email { get; set; } = default!;
     public string Role { get; set; } = default!;
+    public Guid CompanyId { get; set; } = default!;
 
     public static implicit operator IncidentUserDto(IncidentUser incidentUser)
     {
@@ -15,6 +16,7 @@ internal class IncidentUserDto
             Name = incidentUser.Name,
             Email = incidentUser.Email,
             Role = incidentUser.Role,
+            CompanyId = incidentUser.CompanyId,
         };
     }
 }
