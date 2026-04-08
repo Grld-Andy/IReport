@@ -8,7 +8,6 @@ internal class UserRegisteredEventHandler(IUserRepository _userRepository) : IEv
     {
         var existingUser = await userRepository.ExistsAsync(@event.Id, cancellationToken);
 
-        Console.WriteLine($"===================================== Company id is {@event.CompanyId}");
 
         if(!existingUser)
         {

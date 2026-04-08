@@ -67,7 +67,7 @@ export default function UpdateIncidentModal({
     useEffect(() => {
       const fetchData = async () => {
         const categoriesResult = await getCategories()
-        setCategories(categoriesResult)
+        setCategories(categoriesResult.map((c: {name: string}) => c.name))
       }
       fetchData()
     }, [])
@@ -273,7 +273,7 @@ export default function UpdateIncidentModal({
                 <Field>
                   <Label htmlFor="category">Category</Label>
                   <Select
-                    defaultValue={categories.indexOf(incident.category).toString()}
+                    defaultValue={incident.category}
                     onValueChange={(val) => setValue("category", val)}
                   >
                     <SelectTrigger className="w-full">
@@ -283,7 +283,7 @@ export default function UpdateIncidentModal({
                       <SelectGroup>
                         <SelectLabel>Category</SelectLabel>
                         {categories.map((category, idx) => (
-                          <SelectItem key={idx} value={idx.toString()}>
+                          <SelectItem key={idx} value={category}>
                             {category}
                           </SelectItem>
                         ))}

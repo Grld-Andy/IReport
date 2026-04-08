@@ -13,7 +13,7 @@ public class LocationHub : Hub
 
     public async Task UpdateLocation(UserLocationDto locationDto)
     {
-        await Clients.Others.SendAsync("UserLocationUpdated", locationDto);
+        await Clients.OthersInGroup(locationDto.CompanyId.ToString()).SendAsync("UserLocationUpdated", locationDto);
     }
 
     public override async Task OnDisconnectedAsync(Exception exception)
@@ -48,4 +48,5 @@ public class UserLocationDto
     public decimal Lng { get; set; }
     public string Name { get; set; } = string.Empty;
     public Guid UserId { get; set; }
+    public Guid CompanyId { get; set; }
 }

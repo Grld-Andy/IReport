@@ -8,7 +8,6 @@ internal class ChangeStatusCommandHandler(IUserRepository _usersRepository, IMes
     public async Task HandleAsync(ChangeStatusCommand command, CancellationToken cancellationToken = default)
     {
         User user = await usersRepository.GetIdAsync(command.Id, cancellationToken);
-        Console.WriteLine($"================= command id and status: {command.Id} {command.Status}");
         user.ChangeStatus(UserStatus.From(command.Status), new DateTime());
         await usersRepository.SaveAsync(cancellationToken);
         _ = messageBroker.PublishAsync(new UserUpdatedEvent(UserMapper.FromEntity(user)), cancellationToken);

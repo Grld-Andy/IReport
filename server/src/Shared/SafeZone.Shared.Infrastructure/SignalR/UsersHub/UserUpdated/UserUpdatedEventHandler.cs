@@ -12,6 +12,6 @@ internal class UserUpdatedEventHandler(IHubContext<UserHub> _hubContext) : IEven
 
     public async Task HandleAsync(UserUpdatedEvent @event, CancellationToken cancellationToken = default)
     {
-        await hubContext.Clients.All.SendAsync("UserUpdated", new UserUpdatedEvent(@event.User), cancellationToken);
+        await hubContext.Clients.Group(@event.User.CompanyId.ToString()).SendAsync("UserUpdated", new UserUpdatedEvent(@event.User), cancellationToken);
     }
 }

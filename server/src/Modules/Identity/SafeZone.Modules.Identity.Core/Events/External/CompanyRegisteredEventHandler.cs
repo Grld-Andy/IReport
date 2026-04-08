@@ -11,7 +11,6 @@ internal class CompanyRegisteredEventHandler(IDispatcher _dispatcher) : IEventHa
 
     public async Task HandleAsync(CompanyRegisteredEvent @event, CancellationToken cancellationToken = default)
     {
-        Console.WriteLine("========================== Calling company Registered Event Handler");
         var user = new UserCreateDto
         {
             Name = @event.AdminName,

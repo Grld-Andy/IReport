@@ -44,7 +44,7 @@ export default function CreateUserModal() {
   useEffect(() => {
     const fetchData = async () => {
       const teamsResult = await getTeams();
-      setTeams(teamsResult);
+      setTeams(teamsResult.map((t: {name: string}) => t.name));
     };
     fetchData();
   }, []);

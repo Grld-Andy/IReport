@@ -46,7 +46,7 @@ export default function CreateIncidentModal() {
   useEffect(() => {
     const fetchData = async () => {
       const categoriesResult = await getCategories()
-      setCategories(categoriesResult)
+      setCategories(categoriesResult.map((c: {name: string}) => c.name))
     }
     fetchData()
   }, [])

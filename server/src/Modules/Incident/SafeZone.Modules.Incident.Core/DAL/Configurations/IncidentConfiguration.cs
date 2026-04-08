@@ -10,7 +10,6 @@ internal sealed class IncidentConfiguration : IEntityTypeConfiguration<IncidentE
             .ValueGeneratedNever();
 
         builder.Property(x => x.Category)
-            .HasConversion<int>()
             .IsRequired();
         builder.Property(x => x.Severity)
             .HasConversion<int>()

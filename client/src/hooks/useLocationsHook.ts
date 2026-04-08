@@ -12,6 +12,7 @@ type LocationPayload = {
   lng: number;
   name: string;
   userId: string;
+  companyId: string;
 };
 
 export function useLocationsHub() {
@@ -91,6 +92,7 @@ export function useLocationsHub() {
           lng: pos.coords.longitude,
           name: user.name,
           userId: user.id,
+          companyId: user.companyId
         };
 
         dispatch(setMyLocation(location));

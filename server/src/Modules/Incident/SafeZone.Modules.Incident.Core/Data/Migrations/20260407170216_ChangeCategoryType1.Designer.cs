@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SafeZone.Modules.Incident.Core.DAL;
 
@@ -11,9 +12,11 @@ using SafeZone.Modules.Incident.Core.DAL;
 namespace SafeZone.Modules.Incident.Core.Data.Migrations
 {
     [DbContext(typeof(IncidentDbContext))]
-    partial class IncidentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260407170216_ChangeCategoryType1")]
+    partial class ChangeCategoryType1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
