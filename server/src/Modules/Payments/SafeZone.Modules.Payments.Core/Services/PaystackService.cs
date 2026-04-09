@@ -21,10 +21,9 @@ internal class PaystackService
     public async Task<InitializePaymentResponse> InitializePayment(InitializePaymentRequest request)
     {
         var payload = new { 
-            amount = request.Amount,
+            amount = 500 * 100,
             email = request.Email,
-            channels = request.Channels is not null ? request.Channels : ["card", "bank", "apple_pay", "ussd", "qr", "mobile_money", "bank_transfer"],
-            callback_url = "http://localhost:5173/register"
+            channels = request.Channels?.Count == 0 ? request.Channels : ["card", "bank", "apple_pay", "ussd", "qr", "mobile_money", "bank_transfer"],
         };
         var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
         var httpResponse = await client.PostAsync("/transaction/initialize", content);

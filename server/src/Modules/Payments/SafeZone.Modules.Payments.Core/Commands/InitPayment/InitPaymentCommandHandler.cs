@@ -12,7 +12,6 @@ internal record InitPaymentCommandHandler(PaystackService PaystackService) : ICo
         var request = new InitializePaymentRequest
         {
             Email = data.Email,
-            Amount = data.Amount,
             Channels = data.Channels,
             Currency = data.Currency,
             Plan = data.Plan

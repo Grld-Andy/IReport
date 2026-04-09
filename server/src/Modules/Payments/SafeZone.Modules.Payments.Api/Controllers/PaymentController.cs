@@ -13,7 +13,7 @@ internal class PaymentsController(IDispatcher _dispatcher) : ControllerBase
     private readonly IDispatcher dispatcher = _dispatcher;
 
     [HttpPost("initialize")]
-    public async Task<IActionResult> Initialize([FromBody] InitializePaymentRequest request, CancellationToken cancellationToken)
+    public async Task<ActionResult<InitializePaymentResponse>> Initialize([FromBody] InitializePaymentRequest request, CancellationToken cancellationToken)
     {
         var response = await dispatcher.SendAsync<InitPaymentCommand, InitializePaymentResponse>(new InitPaymentCommand(request), cancellationToken);
         return Ok(response);

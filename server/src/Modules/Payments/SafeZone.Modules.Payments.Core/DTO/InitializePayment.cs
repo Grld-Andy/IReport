@@ -5,7 +5,6 @@ namespace SafeZone.Modules.Payments.Core.DTO;
 internal class InitializePaymentRequest
 {
     public string Email { get; set; } = string.Empty;
-    public decimal Amount { get; set; }
     public List<string>? Channels { get; set; }
     public string? Currency { get; set; } = "GHS";
     public string? Plan { get; set; }

@@ -16,11 +16,14 @@ import Activities from "./pages/ProtectedPages/Activities";
 import LandingPage from "./pages/LandingPage";
 import RegisterCompany from "./pages/Auth/RegisterCompany";
 import SettingsPage from "./pages/ProtectedPages/SettingsPage";
+import SuccessPage from "./pages/Payment/SuccessPage";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage/>}/>
+      {/* <Route path="/payment" element={<PaymentPage/>}/> */}
+      <Route path="/success" element={<SuccessPage/>}/>
       <Route path="register" element={<RegisterCompany/>}/>
       <Route path="/" element={<Layout />}>
         <Route path="dashboard" element={<Dashboard />} />

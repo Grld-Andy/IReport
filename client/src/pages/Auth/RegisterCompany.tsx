@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast, Toaster } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import Paystack from "@paystack/inline-js";
 import { SiGoogleauthenticator } from "react-icons/si";
 import {
   ChevronLeft,
@@ -24,6 +25,7 @@ import {
 } from "@/types/Onboarding";
 import { registerCompany } from "@/services/company/registerCompany";
 import { cn } from "@/lib/utils";
+import { initializePayment } from "@/services/payment/payment";
 
 const STEPS = [
   { id: "admin", title: "Admin Info", icon: User },
@@ -35,9 +37,10 @@ const STEPS = [
 const RegisterCompany: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loadingPayment, setLoadingPayment] = useState(false);
   const [paymentReference, setPaymentReference] = useState<string | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const popup = new Paystack();
 
   const {
     register,
@@ -83,21 +86,35 @@ const RegisterCompany: React.FC = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 0));
   };
 
-  const handleSimulatedPayment = () => {
-    if (!formData.adminEmail) {
-      toast.error("Enter email before payment");
-      return;
-    }
+  const handlePayment = async () => {
+    try {
+      if (!formData.adminEmail) {
+        toast.error("Enter email before payment");
+        return;
+      }
+      setLoadingPayment(true);
 
-    toast.loading("Processing payment...", { id: "payment-toast" });
-    
-    // Simulate payment processing
-    setTimeout(() => {
-      const ref = "REF-" + Math.random().toString(36).substring(7).toUpperCase();
-      setPaymentReference(ref);
-      toast.success("Payment successful!", { id: "payment-toast" });
-      setCurrentStep(3);
-    }, 2000);
+      const result = await initializePayment(formData.adminEmail);
+
+      if (result.success) {
+        popup.resumeTransaction(result.data.access_code, {
+          onSuccess: (transaction: {message: string, reference: string}) => {
+            if (transaction.message == "Approved") {
+              setPaymentReference(transaction.reference);
+            } else {
+              toast.error(transaction.message);
+            }
+          },
+          onCancel: () => {
+            toast.message("Payment was cancelled")
+          }
+        });
+      } else {
+        toast.error(result.message);
+      }
+    } finally {
+      setLoadingPayment(false);
+    }
   };
 
   const onSubmit = async (data: CompanyRegistration) => {
@@ -107,12 +124,13 @@ const RegisterCompany: React.FC = () => {
     }
 
     setIsSubmitting(true);
-    const {success, message} = await registerCompany(data, paymentReference);
-    if(success){
-        toast.success("Registration complete! Check email to activate account and login");
-        // setTimeout(() => navigate("/auth/login"), 5000);
-    }else{
-        toast.error(message);
+    const { success, message } = await registerCompany(data, paymentReference);
+    if (success) {
+      toast.success(
+        "Registration complete! Check email to activate account and login",
+      );
+    } else {
+      toast.error(message);
     }
     setIsSubmitting(false);
   };
@@ -163,7 +181,7 @@ const RegisterCompany: React.FC = () => {
                         isActive
                           ? "bg-black border-black text-white"
                           : "bg-white border-gray-200 text-gray-400",
-                        isCompleted && "bg-green-500 border-green-500"
+                        isCompleted && "bg-green-500 border-green-500",
                       )}
                     >
                       {isCompleted ? <Check size={18} /> : <Icon size={18} />}
@@ -364,8 +382,9 @@ const RegisterCompany: React.FC = () => {
                         </div>
                       ) : (
                         <Button
-                          onClick={handleSimulatedPayment}
-                          className="w-full h-14 text-lg gap-2 bg-black hover:bg-black/90 text-white"
+                          onClick={handlePayment}
+                          disabled={loadingPayment}
+                          className={`w-full h-14 text-lg gap-2 bg-black hover:bg-black/90 text-white ${loadingPayment ? "opacity-80" : ""}`}
                         >
                           <CreditCard size={20} />
                           Make Payment
@@ -492,7 +511,10 @@ const RegisterCompany: React.FC = () => {
               </Button>
 
               {currentStep < 2 && (
-                <Button onClick={nextStep} className="gap-2 px-8 bg-black text-white hover:bg-black/90">
+                <Button
+                  onClick={nextStep}
+                  className="gap-2 px-8 bg-black text-white hover:bg-black/90"
+                >
                   Next
                   <ChevronRight size={18} />
                 </Button>
