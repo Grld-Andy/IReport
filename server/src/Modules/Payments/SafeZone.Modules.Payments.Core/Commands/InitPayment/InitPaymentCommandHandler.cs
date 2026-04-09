@@ -1,10 +1,14 @@
+using Safezone.Modules.Payments.Core.Domain.Repositories;
+using SafeZone.Modules.Payments.Core.DAL;
+using SafeZone.Modules.Payments.Core.Domain.Entities;
 using SafeZone.Modules.Payments.Core.Services;
 
 namespace SafeZone.Modules.Payments.Core.Commands.InitPayment;
 
-internal record InitPaymentCommandHandler(PaystackService PaystackService) : ICommandHandler<InitPaymentCommand, InitializePaymentResponse>
+internal class InitPaymentCommandHandler(PaystackService paystackService, IPaymentRepository _paymentRepo) : ICommandHandler<InitPaymentCommand, InitializePaymentResponse>
 {
-    private readonly PaystackService _paystackService = PaystackService;
+    private readonly PaystackService _paystackService = paystackService;
+    private readonly IPaymentRepository paymentRepo = _paymentRepo;
 
     async Task<InitializePaymentResponse> ICommandHandler<InitPaymentCommand, InitializePaymentResponse>.HandleAsync(InitPaymentCommand command, CancellationToken cancellationToken)
     {
@@ -16,6 +20,15 @@ internal record InitPaymentCommandHandler(PaystackService PaystackService) : ICo
             Currency = data.Currency,
             Plan = data.Plan
         };
-        return await _paystackService.InitializePayment(request);
+        var response = await _paystackService.InitializePayment(request);
+
+        PaymentReceipt receipt = new()
+        {
+            Id = Guid.NewGuid(),
+            Reference = response.Data.Reference,
+            Status = "pending"
+        };
+        await paymentRepo.AddAsync(receipt);
+        return response;
     }
 }

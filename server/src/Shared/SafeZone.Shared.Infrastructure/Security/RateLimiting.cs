@@ -1,5 +1,4 @@
 using System;
-using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
@@ -15,7 +14,6 @@ public static class RateLimiting
         int permitLimit = int.TryParse(configuration["rateLimiter:permitLimit"], out var permitValue) ? permitValue : 5;
         int window = int.TryParse(configuration["rateLimiter:window"], out var windowValue) ? windowValue : 5;
 
-        Console.WriteLine($"======================== Rate limter activated: {permitLimit} {window}");
         services.AddRateLimiter(options =>{ 
             options.AddFixedWindowLimiter("fixed", options =>
             {
