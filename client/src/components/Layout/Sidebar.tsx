@@ -1,5 +1,4 @@
 import React from "react";
-// import { SiGoogleauthenticator } from "react-icons/si";
 import { CiLogout } from "react-icons/ci";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";

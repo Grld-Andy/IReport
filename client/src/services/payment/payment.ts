@@ -7,11 +7,10 @@ export const initializePayment = async (email: string) => {
   try {
     const response = await axios.post<InitializePaymentResponse>(
       `${apiUrl}payments/initialize`,
-      {email, channels: ["card", "bank", "apple_pay", "ussd", "qr", "mobile_money", "bank_transfer"]},
+      {email, channels: ["card", "mobile_money", "bank_transfer"]},
     );
 
     if (response.data.status) {
-      console.log("payment successful: ", response.data)
       return {
         success: response.data.status,
         message: response.data.message,
@@ -19,8 +18,8 @@ export const initializePayment = async (email: string) => {
       };
     }
     return {
-        success: response.data.status,
-        message: response.data.message,
+      success: response.data.status,
+      message: response.data.message,
     };
   } catch (err) {
     return getAxiosError(err);

@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { SiGoogleauthenticator } from "react-icons/si";
 import React, { useState } from "react";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -75,9 +74,24 @@ const ActivateAccount: React.FC = () => {
       {/* Right Form */}
       <div className="flex flex-col justify-center items-center h-full p-8 gap-8">
         {/* Logo */}
-        <div className="flex items-center gap-3">
-          <SiGoogleauthenticator size={50} />
-          <span className="text-[30px] font-bold font-serif">SafeZone</span>
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-lime-400 flex items-center justify-center shadow-sm">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth={2.5}
+              className="w-4 h-4"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <span
+            className="font-black text-4xl tracking-tight text-gray-900"
+            style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
+          >
+            Safe<span className="text-lime-500">Zone</span>
+          </span>
         </div>
 
         {/* Form container */}
@@ -87,7 +101,10 @@ const ActivateAccount: React.FC = () => {
           }`}
         >
           <div className="text-center">
-            <h1 className="text-[32px] font-extrabold text-black font-serif">
+            <h1
+              style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
+              className="text-[32px] font-extrabold text-black font-serif"
+            >
               Welcome {name}
             </h1>
             <p className="text-gray-700">
@@ -139,16 +156,12 @@ const ActivateAccount: React.FC = () => {
                   {...register("otp")}
                 />
                 {errors.otp && (
-                  <p className="text-red-500 text-sm">
-                    {errors.otp.message}
-                  </p>
+                  <p className="text-red-500 text-sm">{errors.otp.message}</p>
                 )}
               </Field>
 
               {/* API Error */}
-              {apiError && (
-                <p className="text-red-500 text-sm">{apiError}</p>
-              )}
+              {apiError && <p className="text-red-500 text-sm">{apiError}</p>}
 
               {/* Submit */}
               <Field>

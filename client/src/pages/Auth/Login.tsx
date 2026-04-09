@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { SiGoogleauthenticator } from "react-icons/si";
 import React, { useState } from "react";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -64,9 +63,24 @@ const Login: React.FC = () => {
 
       <div className="flex flex-col justify-center items-center h-full p-8 gap-8">
         {/* Logo */}
-        <div className="flex items-center gap-3">
-          <SiGoogleauthenticator size={50} />
-          <span className="text-[30px] font-bold font-serif">SafeZone</span>
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-lime-400 flex items-center justify-center shadow-sm">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth={2.5}
+              className="w-4 h-4"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <span
+            className="font-black text-4xl tracking-tight text-gray-900"
+            style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
+          >
+            Safe<span className="text-lime-500">Zone</span>
+          </span>
         </div>
 
         {/* Form container */}
@@ -74,7 +88,10 @@ const Login: React.FC = () => {
           className={`w-full max-w-md flex flex-col gap-4 ${isSubmitting ? "pointer-events-none transition-all duration-100" : ""}`}
         >
           <div className="text-center">
-            <h1 className="text-[40px] font-extrabold text-black font-serif">
+            <h1
+              className="text-[40px] font-extrabold text-black font-serif"
+              style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
+            >
               Welcome Back
             </h1>
             <p className="text-gray-700">
@@ -130,11 +147,7 @@ const Login: React.FC = () => {
           {/* Signup link */}
           <div className="text-center text-gray-700 mt-2">
             Don't have an account?{" "}
-            <span
-              className="font-bold text-black"
-            >
-              Contact Admin
-            </span>
+            <span className="font-bold text-black">Contact Admin</span>
           </div>
         </div>
       </div>

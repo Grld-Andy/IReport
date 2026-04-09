@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast, Toaster } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import Paystack from "@paystack/inline-js";
-import { SiGoogleauthenticator } from "react-icons/si";
 import {
   ChevronLeft,
   ChevronRight,
@@ -94,13 +93,14 @@ const RegisterCompany: React.FC = () => {
       }
       setLoadingPayment(true);
 
-      const result = await initializePayment(formData.adminEmail);
+      const {success, message, data} = await initializePayment(formData.adminEmail);
 
-      if (result.success) {
-        popup.resumeTransaction(result.data.access_code, {
+      if (success) {
+        popup.resumeTransaction(data.access_code, {
           onSuccess: (transaction: {message: string, reference: string}) => {
             if (transaction.message == "Approved") {
               setPaymentReference(transaction.reference);
+              setCurrentStep(3);
             } else {
               toast.error(transaction.message);
             }
@@ -110,7 +110,7 @@ const RegisterCompany: React.FC = () => {
           }
         });
       } else {
-        toast.error(result.message);
+        toast.error(message);
       }
     } finally {
       setLoadingPayment(false);
@@ -141,10 +141,23 @@ const RegisterCompany: React.FC = () => {
       {/* Header */}
       <header className="bg-white border-b px-6 py-4 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-2">
-          <span className="text-black">
-            <SiGoogleauthenticator size={32} />
+          <div className="w-8 h-8 rounded-lg bg-lime-400 flex items-center justify-center shadow-sm">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth={2.5}
+              className="w-4 h-4"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <span
+            className="font-black text-xl tracking-tight text-gray-900"
+            style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
+          >
+            Safe<span className="text-lime-500">Zone</span>
           </span>
-          <span className="text-xl font-bold font-serif">SafeZone</span>
         </div>
         <Link
           to="/auth/login"
