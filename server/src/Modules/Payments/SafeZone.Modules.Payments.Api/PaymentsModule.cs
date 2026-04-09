@@ -28,13 +28,6 @@ internal sealed class PaymentsModule : IModule
         // Optional: add middleware here
     }
 
-    public void Expose(IEndpointRouteBuilder endpoints)
-    {
-        endpoints.MapGet("/payments/status", () =>
-        {
-            return Results.Ok("Payments is working");
-        })
-        .WithTags("Payments")
-        .WithName("Get Payments Status");
+    public void Expose(IEndpointRouteBuilder endpoints){
     }
 }

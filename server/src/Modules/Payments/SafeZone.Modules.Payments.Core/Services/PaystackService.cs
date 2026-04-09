@@ -24,12 +24,11 @@ internal class PaystackService
             amount = request.Amount,
             email = request.Email,
             channels = request.Channels is not null ? request.Channels : ["card", "bank", "apple_pay", "ussd", "qr", "mobile_money", "bank_transfer"],
-            // callback_url = "http://localhost:5173/success"
+            callback_url = "http://localhost:5173/register"
         };
         var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
         var httpResponse = await client.PostAsync("/transaction/initialize", content);
         var responseContent = await httpResponse.Content.ReadAsStringAsync();
-        Console.WriteLine($"=============== {responseContent}");
 
         var response = JsonSerializer.Deserialize<InitializePaymentResponse>(responseContent);
         return response!;

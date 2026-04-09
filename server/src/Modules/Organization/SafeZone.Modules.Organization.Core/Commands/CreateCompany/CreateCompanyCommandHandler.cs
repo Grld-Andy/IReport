@@ -22,9 +22,8 @@ internal class CreateCompany(
         var company = Company.AddCompany(companyId, companyDto.CompanyName, result.Url);
         var team = Team.AddTeam("Admin", company.Id);
 
-        await messageBroker.PublishAsync(new CompanyRegisteredEvent(companyId, companyDto.CompanyName, result.Extension, companyDto.AdminName, companyDto.Email, companyDto.PhoneNumber), cancellationToken);
-        await messageBroker.PublishAsync(new InitializePaymentEvent(companyDto.Email, 500, companyDto.Channels), cancellationToken);
-        await companyRepository.AddAsync(company, cancellationToken);
-        await teamRepository.AddListAsync([team], cancellationToken);
+        // await messageBroker.PublishAsync(new CompanyRegisteredEvent(companyId, companyDto.CompanyName, result.Extension, companyDto.AdminName, companyDto.Email, companyDto.PhoneNumber), cancellationToken);
+        // await companyRepository.AddAsync(company, cancellationToken);
+        // await teamRepository.AddListAsync([team], cancellationToken);
     }
 }

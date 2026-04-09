@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace SafeZone.Modules.Payments.Core.DTO;
 
 internal class InitializePaymentRequest
@@ -11,14 +13,24 @@ internal class InitializePaymentRequest
 
 internal class InitializePaymentResponse
 {
-  public bool Status { get; set; }
-  public string Message { get; set; } = string.Empty;
-  public DataBody Data {get; set; } = new DataBody();
+    [JsonPropertyName("status")]
+    public bool Status { get; set; }
+
+    [JsonPropertyName("message")]
+    public string Message { get; set; } = string.Empty;
+
+    [JsonPropertyName("data")]
+    public DataBody Data { get; set; } = new DataBody();
 }
 
 internal class DataBody
 {
-    public string Authorization_Url { get; set; } = string.Empty;
-    public string Access_Code { get; set; } = string.Empty;
+    [JsonPropertyName("authorization_url")]
+    public string AuthorizationUrl { get; set; } = string.Empty;
+
+    [JsonPropertyName("access_code")]
+    public string AccessCode { get; set; } = string.Empty;
+
+    [JsonPropertyName("reference")]
     public string Reference { get; set; } = string.Empty;
 }
