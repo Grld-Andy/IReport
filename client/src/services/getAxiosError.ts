@@ -3,6 +3,10 @@ import axios from "axios";
 export const getAxiosError = (err: unknown) => {
   if (axios.isAxiosError(err)) {
     const axiosErr = err;
+    
+    if(axiosErr.response?.status ==  429){
+      return { success: false, message: "Too many attempts, try again after 5 minutes"}
+    }
     const status = axiosErr.response?.status;
 
     const errors = axiosErr.response?.data?.errors;

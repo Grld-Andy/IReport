@@ -115,6 +115,7 @@ public static class Extensions
                     
                 manager.FeatureProviders.Add(new InternalControllerFeatureProvider());
             });
+        services.AddFixedRateLimiter(configuration);
             
         return services;
     }
@@ -125,7 +126,6 @@ public static class Extensions
         {
             ForwardedHeaders = ForwardedHeaders.All
         });
-        app.UseRateLimiter();
         app.UseCors("cors");
         app.UseCorrelationId();
         app.UseErrorHandling();
@@ -159,6 +159,7 @@ public static class Extensions
         app.UseContext();
         app.UseLogging();
         app.UseRouting();
+        app.UseRateLimiter();
         app.UseAuthorization();
 
         return app;

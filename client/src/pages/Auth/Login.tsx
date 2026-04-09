@@ -132,7 +132,7 @@ const Login: React.FC = () => {
                   </p>
                 )}
               </Field>
-              {apiError && <p className="text-red-500 text-sm">{apiError}</p>}
+              {apiError ? <p className="text-red-500 text-sm">{apiError}</p> : <div className="h-5"></div>}
               <Field>
                 <Button type="submit" className="w-full h-10">
                   {isSubmitting ? (

@@ -39,7 +39,6 @@ public static class Extensions
 
         return services
             .Configure<SecurityOptions>(section)
-            .FixedRateLimiter(configuration)
             .AddSingleton<IPasswordHasher<object>, PasswordHasher<object>>()
             .AddSingleton<IPasswordManager, PasswordManager>()
             .AddSingleton<ISecurityProvider, SecurityProvider>()
