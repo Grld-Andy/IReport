@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace SafeZone.Modules.Payment.Api.Controllers;
+namespace SafeZone.Modules.Payments.Api.Controllers;
 
 [ApiController]
 [Route("api/payments/webhook")]

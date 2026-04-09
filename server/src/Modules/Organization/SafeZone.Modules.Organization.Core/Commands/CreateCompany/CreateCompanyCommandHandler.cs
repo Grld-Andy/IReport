@@ -1,10 +1,14 @@
-using SafeZone.Modules.Organization.Core.DAL.Repositories;
 using SafeZone.Modules.Organization.Core.Events;
+using SafeZone.Modules.Organization.Core.Events.External;
 using SafeZone.Shared.Abstractions.Messaging;
 
 namespace SafeZone.Modules.Organization.Core.Commands.CreateCompany;
 
-internal class CreateCompany(ICompanyRepository _companyRepository, ITeamRepository _teamRepository, IMessageBroker _messageBroker) : ICommandHandler<CreateCompanyCommand>
+internal class CreateCompany(
+    ICompanyRepository _companyRepository,
+    ITeamRepository _teamRepository,
+    IMessageBroker _messageBroker
+    ) : ICommandHandler<CreateCompanyCommand>
 {
     private readonly IMessageBroker messageBroker = _messageBroker;
     private readonly ICompanyRepository companyRepository = _companyRepository;
@@ -19,6 +23,7 @@ internal class CreateCompany(ICompanyRepository _companyRepository, ITeamReposit
         var team = Team.AddTeam("Admin", company.Id);
 
         await messageBroker.PublishAsync(new CompanyRegisteredEvent(companyId, companyDto.CompanyName, result.Extension, companyDto.AdminName, companyDto.Email, companyDto.PhoneNumber), cancellationToken);
+        await messageBroker.PublishAsync(new InitializePaymentEvent(companyDto.Email, 500, companyDto.Channels), cancellationToken);
         await companyRepository.AddAsync(company, cancellationToken);
         await teamRepository.AddListAsync([team], cancellationToken);
     }

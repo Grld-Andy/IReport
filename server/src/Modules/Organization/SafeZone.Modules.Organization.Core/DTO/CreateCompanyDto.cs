@@ -6,4 +6,5 @@ internal class CreateCompanyDto : CompanyDto
     public string AdminName { get; set; } = default!;
     public string PhoneNumber { get; set; } = default!;
     public string PaymentRef { get; set; } = default!;
+    public List<string> Channels { get; set; } = [];
 }

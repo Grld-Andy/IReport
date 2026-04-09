@@ -13,7 +13,6 @@
     <ProjectReference Include="..\..\Modules\Notifications\SafeZone.Modules.Notifications.Api\SafeZone.Modules.Notifications.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Media\SafeZone.Modules.Media.Api\SafeZone.Modules.Media.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Organization\SafeZone.Modules.Organization.Api\SafeZone.Modules.Organization.Api.csproj" />
-    <ProjectReference Include="..\..\Modules\Payment\SafeZone.Modules.Payment.Api\SafeZone.Modules.Payment.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Payments\SafeZone.Modules.Payments.Api\SafeZone.Modules.Payments.Api.csproj" />
   </ItemGroup>
 
@@ -25,6 +24,7 @@
   </ItemGroup>
 
 </Project>
+
 
 
 
