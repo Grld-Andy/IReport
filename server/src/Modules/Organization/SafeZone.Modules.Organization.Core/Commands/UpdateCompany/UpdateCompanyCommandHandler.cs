@@ -12,7 +12,7 @@ internal class UpdateCompanyCommandHandler(ICompanyRepository _companyRepository
         Guid companyId = Guid.Parse(context.Identity.Claims["CompanyId"].First());
         var company = await companyRepository.GetByIdAsync(companyId, cancellationToken);
         if(command.Logo is not null){
-            var result = await Bucket.UploadFile(companyId, command.Name, command.Logo, cancellationToken);
+            var result = await Bucket.UploadFile(companyId, command.Name, command.Logo, company.Name, cancellationToken);
             company.UpdateCompany(command.Name, result.Url);
         }
         else

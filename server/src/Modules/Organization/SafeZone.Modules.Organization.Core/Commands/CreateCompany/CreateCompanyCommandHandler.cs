@@ -18,7 +18,7 @@ internal class CreateCompany(
         var companyDto = command.Company;
         Guid companyId = Guid.NewGuid();
         await companyRepository.GetByReference(companyDto.PaymentRef, cancellationToken);
-        var result = await Bucket.UploadFile(companyId, companyDto.CompanyName, companyDto.Logo, cancellationToken);
+        var result = await Bucket.UploadFile(companyId, companyDto.CompanyName, companyDto.Logo, "", cancellationToken);
         var company = Company.AddCompany(companyId, companyDto.CompanyName, result.Url, companyDto.PaymentRef);
         var team = Team.AddTeam("Admin", company.Id);
 

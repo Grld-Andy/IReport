@@ -24,7 +24,8 @@ internal class OrganizationInitializer(ILogger<OrganizationInitializer> _logger,
         var company = Company.AddCompany(
             id: Guid.Parse("fac586f8-1ffa-4cca-9bb0-224736bbc5a4"),
             name: "SafeZone",
-            logoUrl: "uploads/profiles/fac586f8-1ffa-4cca-9bb0-224736bbc5a4_SafeZone.webp"
+            logoUrl: "uploads/profiles/fac586f8-1ffa-4cca-9bb0-224736bbc5a4_SafeZone.webp",
+            paymentReference: "rand0m1"
         );
         OrganizationDbContext.Companies.Add(company);
         await OrganizationDbContext.SaveChangesAsync();

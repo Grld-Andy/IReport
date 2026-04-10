@@ -16,20 +16,26 @@ internal class RegisterCommandHandler(IUserRepository _userRepository, IMessageB
         var userDto = command.User;
         userDto.OTP = OTPGenerator.GenerateOTP();
 
-        if(context.Identity.Role == "admin" && userDto.Role == "admin")
+        
+        if(context?.Identity?.Role == "admin" && userDto.Role == "admin")
         {
             userDto.Team = "Admin";
         }
         var id = await userRepository.CreateAsync(UserMapper.ToEntity(userDto), cancellationToken);
 
         _ = messageBroker.PublishAsync(new UserRegisteredEvent(id, userDto.Name, userDto.Email, userDto.Role, userDto.Team, userDto.PhoneNumber, userDto.OTP, userDto.CompanyId), cancellationToken);
-        _ = messageBroker.PublishAsync(new ActivityCreatedEvent(
-            context.Identity.Id,
-            context.Identity.Claims["Name"].First(),
-            "created user",
-            $"User: {userDto.Name}",
-            "User",
-            userDto.CompanyId
-        ), cancellationToken);
+
+        var identity = context?.Identity;
+        if(identity != null && identity.Claims != null)
+        {
+            _ = messageBroker.PublishAsync(new ActivityCreatedEvent(
+                context!.Identity.Id,
+                context.Identity.Claims["Name"].First(),
+                "created user",
+                $"User: {userDto.Name}",
+                "User",
+                userDto.CompanyId
+            ), cancellationToken);
+        }
     }
 }

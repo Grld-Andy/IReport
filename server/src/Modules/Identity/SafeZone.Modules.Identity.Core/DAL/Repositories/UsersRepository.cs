@@ -10,13 +10,17 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
     private readonly IContext context = _context;
     private Guid? GetCompanyId()
     {
-        if (Guid.TryParse(context.Identity.Claims["CompanyId"].FirstOrDefault(), out var companyId)){
+        var companyIdClaim = context?.Identity?.Claims?
+            .TryGetValue("CompanyId", out var claims) == true
+            ? claims?.FirstOrDefault()
+            : null;
+
+        if (Guid.TryParse(companyIdClaim, out var companyId))
+        {
             return companyId;
         }
-        else
-        {
-            return default;
-        }
+
+        return null;
     }
 
     public async Task<Guid> CreateAsync(User userDto, CancellationToken cancellationToken = default)
@@ -55,7 +59,7 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
         var companyId = GetCompanyId();
         if (companyId.HasValue)
         {
-            query = query.Where(u => u.CompanyId == GetCompanyId());
+            query = query.Where(u => u.CompanyId == companyId);
         }
         var exists = await query.AnyAsync(
                         u => u.Email.Value == normalizedEmail,
