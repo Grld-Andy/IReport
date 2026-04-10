@@ -36,6 +36,7 @@ internal class PaystackService
     {
         var httpResponse = await client.GetAsync($"/transaction/verify/{reference}");
         var responseContent = await httpResponse.Content.ReadAsStringAsync();
+        Console.WriteLine($"@@@@@@@@@@@@@@@@@@@ respone from verificaiton is {responseContent}");
         return responseContent;
     }
 }

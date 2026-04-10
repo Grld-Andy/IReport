@@ -25,8 +25,3 @@ export const initializePayment = async (email: string) => {
     return getAxiosError(err);
   }
 };
-
-export const verifyPayment = async (reference: string) => {
-  const res = await axios.get(`${apiUrl}payments/verify/${reference}`);
-  return res.data;
-};

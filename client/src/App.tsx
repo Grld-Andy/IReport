@@ -5,8 +5,6 @@ import NotFound from "./pages/NotFound";
 import AuthLayout from "./components/Layout/AuthLayout";
 import Dashboard from "./pages/ProtectedPages/Dashboard";
 import LiveMap from "./pages/ProtectedPages/LiveMap";
-import "./App.css";
-import "leaflet/dist/leaflet.css";
 import IncidentsPage from "./pages/ProtectedPages/IncidentsPage";
 import KanbanBoardPage from "./pages/ProtectedPages/KanbanBoardPage";
 import ReportsPage from "./pages/ProtectedPages/ReportsPage";
@@ -16,14 +14,13 @@ import Activities from "./pages/ProtectedPages/Activities";
 import LandingPage from "./pages/LandingPage";
 import RegisterCompany from "./pages/Auth/RegisterCompany";
 import SettingsPage from "./pages/ProtectedPages/SettingsPage";
-import SuccessPage from "./pages/Payment/SuccessPage";
+import "leaflet/dist/leaflet.css";
+import "./App.css";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage/>}/>
-      {/* <Route path="/payment" element={<PaymentPage/>}/> */}
-      <Route path="/success" element={<SuccessPage/>}/>
       <Route path="register" element={<RegisterCompany/>}/>
       <Route path="/" element={<Layout />}>
         <Route path="dashboard" element={<Dashboard />} />

@@ -5,9 +5,9 @@ using SafeZone.Modules.Payments.Core.Services;
 
 namespace SafeZone.Modules.Payments.Core.Commands.InitPayment;
 
-internal class InitPaymentCommandHandler(PaystackService paystackService, IPaymentRepository _paymentRepo) : ICommandHandler<InitPaymentCommand, InitializePaymentResponse>
+internal class InitPaymentCommandHandler(PaystackService _paystackService, IPaymentRepository _paymentRepo) : ICommandHandler<InitPaymentCommand, InitializePaymentResponse>
 {
-    private readonly PaystackService _paystackService = paystackService;
+    private readonly PaystackService paystackService = _paystackService;
     private readonly IPaymentRepository paymentRepo = _paymentRepo;
 
     async Task<InitializePaymentResponse> ICommandHandler<InitPaymentCommand, InitializePaymentResponse>.HandleAsync(InitPaymentCommand command, CancellationToken cancellationToken)
@@ -20,7 +20,7 @@ internal class InitPaymentCommandHandler(PaystackService paystackService, IPayme
             Currency = data.Currency,
             Plan = data.Plan
         };
-        var response = await _paystackService.InitializePayment(request);
+        var response = await paystackService.InitializePayment(request);
 
         PaymentReceipt receipt = new()
         {
