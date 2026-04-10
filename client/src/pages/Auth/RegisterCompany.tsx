@@ -24,7 +24,8 @@ import {
 } from "@/types/Onboarding";
 import { registerCompany } from "@/services/company/registerCompany";
 import { cn } from "@/lib/utils";
-import { initializePayment } from "@/services/payment/payment";
+import { initializePayment } from "@/services/payment/initializePayment";
+import { verifyPayment } from "@/services/payment/verifyPayment";
 
 const STEPS = [
   { id: "admin", title: "Admin Info", icon: User },
@@ -36,6 +37,8 @@ const STEPS = [
 const RegisterCompany: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [manualReference, setManualReference] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
   const [loadingPayment, setLoadingPayment] = useState(false);
   const [paymentReference, setPaymentReference] = useState<string | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
@@ -85,6 +88,26 @@ const RegisterCompany: React.FC = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 0));
   };
 
+  const handleManualVerification = async () => {
+    if (!manualReference.trim()) return;
+
+    setIsVerifying(true);
+    try {
+      const response = await verifyPayment(manualReference.trim());
+
+      if (response.status) {
+        setPaymentReference(manualReference.trim());
+        setCurrentStep(3);
+      } else {
+        toast.error(response.message);
+      }
+    } catch {
+      toast.error("Verification failed. Please try again.");
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
   const handlePayment = async () => {
     try {
       if (!formData.adminEmail) {
@@ -93,11 +116,13 @@ const RegisterCompany: React.FC = () => {
       }
       setLoadingPayment(true);
 
-      const {success, message, data} = await initializePayment(formData.adminEmail);
+      const { success, message, data } = await initializePayment(
+        formData.adminEmail,
+      );
 
       if (success) {
         popup.resumeTransaction(data.access_code, {
-          onSuccess: (transaction: {message: string, reference: string}) => {
+          onSuccess: (transaction: { message: string; reference: string }) => {
             if (transaction.message == "Approved") {
               setPaymentReference(transaction.reference);
               setCurrentStep(3);
@@ -106,8 +131,8 @@ const RegisterCompany: React.FC = () => {
             }
           },
           onCancel: () => {
-            toast.message("Payment was cancelled")
-          }
+            toast.message("Payment was cancelled");
+          },
         });
       } else {
         toast.error(message);
@@ -380,7 +405,7 @@ const RegisterCompany: React.FC = () => {
                       </ul>
                     </div>
 
-                    <div className="pt-4">
+                    <div className="pt-4 space-y-4">
                       {paymentReference ? (
                         <div className="bg-green-50 border border-green-200 text-green-900 p-4 rounded-xl flex items-center gap-3">
                           <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white">
@@ -397,11 +422,42 @@ const RegisterCompany: React.FC = () => {
                         <Button
                           onClick={handlePayment}
                           disabled={loadingPayment}
-                          className={`w-full h-14 text-lg gap-2 bg-black hover:bg-black/90 text-white ${loadingPayment ? "opacity-80" : ""}`}
+                          className={`w-full h-11 text-lg gap-2 bg-black hover:bg-black/90 text-white ${loadingPayment ? "opacity-80" : ""}`}
                         >
                           <CreditCard size={20} />
-                          Make Payment
+                          {loadingPayment ? "Initializing..." : "Make Payment"}
                         </Button>
+                      )}
+
+                      {/* Manual reference entry */}
+                      {!paymentReference && (
+                        <div className="border-t pt-4 space-y-2">
+                          <p className="text-sm text-gray-500 font-medium">
+                            Already paid? Enter your payment reference
+                          </p>
+                          <div className="flex gap-2 h-11">
+                            <Input
+                              placeholder="e.g. T123456789"
+                              value={manualReference}
+                              onChange={(e) =>
+                                setManualReference(e.target.value)
+                              }
+                              className="h-11 font-mono bg-white"
+                            />
+                            <Button
+                              variant="secondary"
+                              onClick={handleManualVerification}
+                              disabled={!manualReference.trim() || isVerifying}
+                              className="shrink-0 h-full w-28 border-black/20 border-[1px]"
+                            >
+                              {isVerifying ? (
+                                <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                              ) : (
+                                "Verify"
+                              )}
+                            </Button>
+                          </div>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -495,7 +551,7 @@ const RegisterCompany: React.FC = () => {
                     <Button
                       onClick={handleSubmit(onSubmit)}
                       disabled={isSubmitting}
-                      className="w-full h-14 text-lg bg-green-600 hover:bg-green-700 text-white"
+                      className="w-full h-11 text-lg bg-green-600 hover:bg-green-700 text-white"
                     >
                       {isSubmitting ? (
                         <div className="flex items-center gap-2">

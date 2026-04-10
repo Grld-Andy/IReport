@@ -17,12 +17,13 @@ internal class CreateCompany(
     {
         var companyDto = command.Company;
         Guid companyId = Guid.NewGuid();
+        await companyRepository.GetByReference(companyDto.PaymentRef, cancellationToken);
         var result = await Bucket.UploadFile(companyId, companyDto.CompanyName, companyDto.Logo, cancellationToken);
-        var company = Company.AddCompany(companyId, companyDto.CompanyName, result.Url);
+        var company = Company.AddCompany(companyId, companyDto.CompanyName, result.Url, companyDto.PaymentRef);
         var team = Team.AddTeam("Admin", company.Id);
 
-        await messageBroker.PublishAsync(new CompanyRegisteredEvent(companyId, companyDto.CompanyName, result.Extension, companyDto.AdminName, companyDto.Email, companyDto.PhoneNumber, companyDto.PaymentRef), cancellationToken);
-        // await companyRepository.AddAsync(company, cancellationToken);
-        // await teamRepository.AddListAsync([team], cancellationToken);
+        _ = messageBroker.PublishAsync(new CompanyRegisteredEvent(companyId, companyDto.CompanyName, result.Extension, companyDto.AdminName, companyDto.Email, companyDto.PhoneNumber, companyDto.PaymentRef), cancellationToken);
+        await companyRepository.AddAsync(company, cancellationToken);
+        await teamRepository.AddListAsync([team], cancellationToken);
     }
 }

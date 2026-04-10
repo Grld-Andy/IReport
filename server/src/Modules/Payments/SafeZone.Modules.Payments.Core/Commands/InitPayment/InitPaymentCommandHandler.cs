@@ -26,9 +26,11 @@ internal class InitPaymentCommandHandler(PaystackService _paystackService, IPaym
         {
             Id = Guid.NewGuid(),
             Reference = response.Data.Reference,
-            Status = "pending"
+            Status = "pending",
+            DateCreated = DateTime.UtcNow,
+            CheckedOut = false
         };
-        await paymentRepo.AddAsync(receipt);
+        await paymentRepo.AddAsync(receipt, cancellationToken);
         return response;
     }
 }

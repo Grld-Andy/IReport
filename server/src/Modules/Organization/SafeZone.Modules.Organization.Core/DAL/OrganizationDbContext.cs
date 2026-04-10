@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SafeZone.Modules.Organization.Core.DAL;
 
-internal class OrganizationDbContext(DbContextOptions options) : DbContext(options)
+internal class OrganizationDbContext(DbContextOptions<OrganizationDbContext> options) : DbContext(options)
 {
     public DbSet<Company> Companies { get; set; }
     public DbSet<Team> Teams { get; set; }

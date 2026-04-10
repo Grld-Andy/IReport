@@ -15,6 +15,9 @@ internal class CompanyConfiguration : IEntityTypeConfiguration<Company>
             .IsRequired()
             .HasMaxLength(100);
 
+        builder.HasIndex(c => c.Name)
+            .IsUnique();
+
         builder.Property(c => c.LogoUrl)
             .IsRequired()
             .HasMaxLength(500);

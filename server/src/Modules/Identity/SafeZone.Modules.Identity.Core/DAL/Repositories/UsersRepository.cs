@@ -8,7 +8,16 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
 {
     private readonly UsersDbContext dbContext = _dbContext;
     private readonly IContext context = _context;
-    private Guid GetCompanyId() => Guid.Parse(context.Identity.Claims["CompanyId"].First());
+    private Guid? GetCompanyId()
+    {
+        if (Guid.TryParse(context.Identity.Claims["CompanyId"].FirstOrDefault(), out var companyId)){
+            return companyId;
+        }
+        else
+        {
+            return default;
+        }
+    }
 
     public async Task<Guid> CreateAsync(User userDto, CancellationToken cancellationToken = default)
     {
@@ -41,12 +50,17 @@ internal class UsersRepository(UsersDbContext _dbContext, IContext _context) : I
     {
         var normalizedEmail = email.ToLower();
 
-        var exists = await dbContext.Users
-            .AsNoTracking()
-            .Where(u => u.CompanyId == GetCompanyId())
-            .AnyAsync(
-                u => u.Email.Value == normalizedEmail,
-                cancellationToken);
+        var query = dbContext.Users.AsNoTracking();
+
+        var companyId = GetCompanyId();
+        if (companyId.HasValue)
+        {
+            query = query.Where(u => u.CompanyId == GetCompanyId());
+        }
+        var exists = await query.AnyAsync(
+                        u => u.Email.Value == normalizedEmail,
+                        cancellationToken
+                    );
 
         if (exists)
         {

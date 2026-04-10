@@ -6,6 +6,7 @@ internal class Company
     public string Name { get; private set; } = default!;
     public string LogoUrl { get; private set; } = default!;
     public bool IsActive { get; private set; } = true;
+    public string PaymentReferene { get; private set; } = default!;
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
 
@@ -20,9 +21,12 @@ internal class Company
         LogoUrl = logoUrl;
     }
 
-    public static Company AddCompany(Guid id, string name, string logoUrl)
+    public static Company AddCompany(Guid id, string name, string logoUrl, string paymentReference)
     {
-        return new(id, name, logoUrl);
+        return new(id, name, logoUrl)
+        {
+            PaymentReferene = paymentReference
+        };
     }
 
     public void UpdateCompany(string name, string logoUrl)

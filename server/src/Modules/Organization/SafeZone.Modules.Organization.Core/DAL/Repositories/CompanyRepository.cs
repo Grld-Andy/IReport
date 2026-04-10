@@ -18,6 +18,16 @@ internal class CompanyRepository(OrganizationDbContext _organizationDbContext) :
             ?? throw new NotFoundException("Company not found");
     }
 
+    public async Task GetByReference(string reference, CancellationToken cancellationToken = default)
+    {
+        var company = await domainDbContext.Companies
+            .FirstOrDefaultAsync(c => c.PaymentReferene == reference, cancellationToken: cancellationToken);
+        if (company is not null)
+        {
+            throw new BadRequestException("This payment reference has already been used");
+        }
+    }
+
     public async Task SaveAsync(CancellationToken cancellationToken = default)
     {
         await domainDbContext.SaveChangesAsync(cancellationToken);

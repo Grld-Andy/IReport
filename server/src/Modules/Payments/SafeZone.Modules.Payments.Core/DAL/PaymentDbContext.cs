@@ -3,7 +3,7 @@ using SafeZone.Modules.Payments.Core.Domain.Entities;
 
 namespace SafeZone.Modules.Payments.Core.DAL;
 
-internal class PaymentDbContext(DbContextOptions options) : DbContext(options)
+internal class PaymentDbContext(DbContextOptions<PaymentDbContext> options) : DbContext(options)
 {
     public DbSet<PaymentReceipt> Payments { get; set; }
 

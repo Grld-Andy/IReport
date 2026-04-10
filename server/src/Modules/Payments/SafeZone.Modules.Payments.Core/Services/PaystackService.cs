@@ -32,11 +32,13 @@ internal class PaystackService
         return response!;
     }
 
-    public async Task<string> VerifyPaymentService(string reference)
+    public async Task<VerifyPaymentResponse> VerifyPaymentService(string reference)
     {
         var httpResponse = await client.GetAsync($"/transaction/verify/{reference}");
         var responseContent = await httpResponse.Content.ReadAsStringAsync();
-        Console.WriteLine($"@@@@@@@@@@@@@@@@@@@ respone from verificaiton is {responseContent}");
-        return responseContent;
+        var response = JsonSerializer.Deserialize<VerifyPaymentResponse>(responseContent);
+
+        Console.WriteLine($"@@@@=======@@@@@ response from verificaiton is {response?.Message}");
+        return response;
     }
 }

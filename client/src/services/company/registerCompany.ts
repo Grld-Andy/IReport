@@ -15,7 +15,7 @@ export const registerCompany = async (data: CompanyRegistration, paymentRef: str
     formData.append("Company.Logo", data.companyLogo)
 
     const response = await axios.post(
-      `${apiUrl}company`,
+      `${apiUrl}companies`,
       formData,
       { withCredentials: true,
         headers: {

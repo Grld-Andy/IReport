@@ -15,13 +15,18 @@ internal class CompanyRegisteredEventHandler(PaystackService _paystackService, I
         Console.WriteLine($"=================== payment reference is {@event.PaymentRef}");
         var response = await paystackService.VerifyPaymentService(@event.PaymentRef);
         Console.WriteLine($"response is {response}");
-        if (!response.Contains("true"))
+        if (!response.Status)
         {
             throw new BadRequestException("Please make payment before proceeding");
         }
         var payment = await paymentRepository.GetAsync(@event.PaymentRef, cancellationToken);
+        if (payment.CheckedOut)
+        {
+            throw new BadRequestException("Payment reference already checked out");
+        }
         payment.PaitAt = DateTime.UtcNow;
         payment.Status = "paid";
+        payment.CheckedOut = true;
         await paymentRepository.SaveAsycn(cancellationToken);
     }
 }

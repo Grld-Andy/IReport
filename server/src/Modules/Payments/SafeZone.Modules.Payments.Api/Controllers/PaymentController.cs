@@ -20,7 +20,7 @@ internal class PaymentsController(IDispatcher _dispatcher) : ControllerBase
     }
 
     [HttpGet("verify/{reference}")]
-    public async Task<IActionResult> Verify(string reference, CancellationToken cancellationToken)
+    public async Task<ActionResult<VerifyPaymentResponse>> Verify(string reference, CancellationToken cancellationToken)
     {
         var response = await dispatcher.QueryAsync(new VerifyPaymentQuery(reference), cancellationToken);
         return Ok(response);

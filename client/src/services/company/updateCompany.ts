@@ -10,7 +10,7 @@ export const updateCompany = async (data: {name: string, logo: File | undefined}
       formData.append("logo", data.logo)
 
     const response = await axios.put(
-      `${apiUrl}company`,
+      `${apiUrl}companies`,
       formData,
       { withCredentials: true,
         headers: {
