@@ -5,14 +5,9 @@ using SendGrid.Helpers.Mail;
 using Microsoft.Extensions.Options;
 using SafeZone.Modules.Notifications.Core.DTO;
 
-public class SendGridEmailSender : IEmailSender
+public class SendGridEmailSender(IOptions<SendGridSettings> options) : IEmailSender
 {
-    private readonly SendGridSettings _settings;
-
-    public SendGridEmailSender(IOptions<SendGridSettings> options)
-    {
-        _settings = options.Value;
-    }
+    private readonly SendGridSettings _settings = options.Value;
 
     public async Task SendAsync(EmailRequest request)
     {

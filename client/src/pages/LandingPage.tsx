@@ -111,7 +111,7 @@ const FEATURES = [
       </svg>
     ),
     title: "Role-Based Access",
-    desc: "Dock worker to admin, every role sees only what they need. Secure, scoped, and compliant.",
+    desc: "Employees to Admin, every role sees only what they need. Secure, scoped, and compliant.",
   },
   {
     icon: (
@@ -253,20 +253,22 @@ function HeroSection() {
           </p>
 
           <div className="flex flex-wrap items-center gap-4">
-            <button
-              className="group flex items-center gap-2 bg-lime-400 hover:bg-lime-500 text-gray-900 font-bold text-base px-8 py-4 rounded-full transition-all hover:shadow-xl hover:shadow-lime-200 active:scale-95"
-            >
-              Register your company
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2.5}
-                className="w-4 h-4 transition-transform group-hover:translate-x-1"
+            <Link to="register">
+              <button
+                className="group flex items-center gap-2 bg-lime-400 hover:bg-lime-500 text-gray-900 font-bold text-base px-8 py-4 rounded-full transition-all hover:shadow-xl hover:shadow-lime-200 active:scale-95"
               >
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </button>
+                Register your company
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                  className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                >
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+            </Link>
             <button className="flex items-center gap-2 text-gray-700 font-semibold text-sm hover:text-lime-600 transition-colors">
               <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
                 <svg
@@ -363,7 +365,7 @@ function HeroSection() {
                 },
                 {
                   id: "#1041",
-                  title: "Cargo spill – Dock 7B",
+                  title: "Cargo spill - Dock 7B",
                   sev: "High",
                   status: "In Progress",
                   ago: "11m ago",
@@ -520,7 +522,7 @@ function HowItWorksSection() {
     {
       num: "03",
       title: "Invite your team",
-      desc: "Add dock workers, supervisors, responders, each with role-appropriate access.",
+      desc: "Add workers, supervisors, responders, each with role-appropriate access.",
     },
     {
       num: "04",
@@ -593,21 +595,23 @@ function CTASection() {
           Join safety teams across industries using SafeZone to prevent
           incidents, accelerate response, and maintain compliance.
         </p>
-        <button
-          className="group inline-flex items-center gap-2 bg-lime-400 hover:bg-lime-500 text-gray-900 font-bold text-base px-10 py-4 rounded-full transition-all hover:shadow-xl hover:shadow-lime-200 active:scale-95"
-        >
-          Register your company,
-          it's free
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2.5}
-            className="w-4 h-4 transition-transform group-hover:translate-x-1"
+        <Link to="register">
+          <button
+            className="group inline-flex items-center gap-2 bg-lime-400 hover:bg-lime-500 text-gray-900 font-bold text-base px-10 py-4 rounded-full transition-all hover:shadow-xl hover:shadow-lime-200 active:scale-95"
           >
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </button>
+            Register your company,
+            it's free
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.5}
+              className="w-4 h-4 transition-transform group-hover:translate-x-1"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </button>
+        </Link>
       </div>
     </section>
   );

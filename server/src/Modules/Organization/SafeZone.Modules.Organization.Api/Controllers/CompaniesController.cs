@@ -5,6 +5,7 @@ using SafeZone.Modules.Organization.Core.Commands.CreateCompany;
 using SafeZone.Modules.Organization.Core.Commands.UpdateCompany;
 using SafeZone.Modules.Organization.Core.DTO;
 using SafeZone.Shared.Abstractions.Dispatchers;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SafeZone.Modules.Organization.Api.Controllers;
 
@@ -15,6 +16,7 @@ internal class CompaniesController(IDispatcher _dispatcher) : ControllerBase
     private readonly IDispatcher dispatcher = _dispatcher;
 
     [HttpPost]
+    [SwaggerOperation("Register company")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult> CreateCompany([FromForm] CreateCompanyCommand command, CancellationToken cancellationToken)
     {
@@ -24,6 +26,7 @@ internal class CompaniesController(IDispatcher _dispatcher) : ControllerBase
 
     [HttpPut]
     [Authorize(Policy = "admin")]
+    [SwaggerOperation("Update company details (name, logo)")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> UpdateCompany([FromForm] CompanyDto dto, CancellationToken cancellationToken)
     {
