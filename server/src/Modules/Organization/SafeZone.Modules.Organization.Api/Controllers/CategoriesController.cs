@@ -5,6 +5,7 @@ using SafeZone.Modules.Organization.Core.Commands.CreateCategories;
 using SafeZone.Modules.Organization.Core.Domain.Entities;
 using SafeZone.Modules.Organization.Core.Queries.GetCategories;
 using SafeZone.Shared.Abstractions.Dispatchers;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SafeZone.Modules.Organization.Api.Controllers;
 
@@ -15,6 +16,7 @@ internal class CategoriesController(IDispatcher _dispatcher) : ControllerBase
     private readonly IDispatcher dispatcher = _dispatcher;
 
     [HttpPost]
+    [SwaggerOperation("Create list of categories for company (admin only)")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [Authorize(Policy = "admin")]
     public async Task<ActionResult> CreateCategories([FromBody]CreateCategoriesCommand command, CancellationToken cancellationToken)
@@ -24,6 +26,7 @@ internal class CategoriesController(IDispatcher _dispatcher) : ControllerBase
     }
 
     [HttpGet]
+    [SwaggerOperation("Get list of categories for company")]
     public async Task<ActionResult<IEnumerable<string>>> GetCategories(CancellationToken cancellationToken)
     {
         var categories = await dispatcher.QueryAsync(new GetCategoriesQuery(), cancellationToken);

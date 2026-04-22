@@ -13,6 +13,7 @@ using SafeZone.Modules.Identity.Core.Queries.GetSingleUser;
 using SafeZone.Modules.Identity.Core.Services;
 using SafeZone.Shared.Abstractions.Contexts;
 using SafeZone.Shared.Abstractions.Dispatchers;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SafeZone.Modules.Identity.Api.Controllers;
 
@@ -26,6 +27,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
 
 
     [HttpPost("register")]
+    [SwaggerOperation("Register user")]
     [Authorize(Policy = "admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> RegisterUser([FromBody] UserDto dto, CancellationToken cancellationToken)
@@ -44,6 +46,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     }
 
     [HttpGet("me")]
+    [SwaggerOperation("Get user identity")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<UserDetailsDto>> CheckAuth()
     {
@@ -54,6 +57,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
 
 
     [HttpPost("activate-account")]
+    [SwaggerOperation("Activate account and set password")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> ActivateAccount([FromBody] ActivateAccountCommand command, CancellationToken cancellationToken)
     {
@@ -63,6 +67,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
 
     [Authorize]
     [HttpPost("reset-password")]
+    [SwaggerOperation("Reset password for user")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordCommand command, CancellationToken cancellationToken)
     {
@@ -74,6 +79,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     }
 
     [HttpPost("resend-otp")]
+    [SwaggerOperation("Resend otp if email fails to send")]
     [Authorize(Policy = "admin")]
     public async Task<IActionResult> ResendOTP([FromBody] ResendOtpCommand command, CancellationToken cancellationToken)
     {
@@ -83,6 +89,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
 
     [HttpPost("login")]
     [EnableRateLimiting("fixed")]
+    [SwaggerOperation("Login user (rate limit: 5 attempts per 2 minutes)")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult<UserDetailsDto>> LoginUser([FromBody] LoginCommand command, CancellationToken cancellationToken)
     {

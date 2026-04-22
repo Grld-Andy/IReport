@@ -16,7 +16,7 @@ internal class CompaniesController(IDispatcher _dispatcher) : ControllerBase
     private readonly IDispatcher dispatcher = _dispatcher;
 
     [HttpPost]
-    [SwaggerOperation("Register company")]
+    [SwaggerOperation("Register company, check mail to setup password")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult> CreateCompany([FromForm] CreateCompanyCommand command, CancellationToken cancellationToken)
     {
@@ -26,7 +26,7 @@ internal class CompaniesController(IDispatcher _dispatcher) : ControllerBase
 
     [HttpPut]
     [Authorize(Policy = "admin")]
-    [SwaggerOperation("Update company details (name, logo)")]
+    [SwaggerOperation("Update company details (name, logo) [admin only]")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> UpdateCompany([FromForm] CompanyDto dto, CancellationToken cancellationToken)
     {

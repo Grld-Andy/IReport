@@ -6,6 +6,7 @@ using SafeZone.Modules.Identity.Core.Queries.GetSingleUser;
 using SafeZone.Modules.Identity.Core.Queries.GetUsers;
 using SafeZone.Shared.Abstractions.Dispatchers;
 using SafeZone.Shared.Abstractions.Queries;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SafeZone.Modules.Identity.Api.Controllers;
 
@@ -19,6 +20,7 @@ internal class UsersController(IDispatcher _dispatcher) : ControllerBase
 
     [Authorize(Policy = "admin")]
     [HttpGet]
+    [SwaggerOperation("Get all users (admin only)")]
     public async Task<ActionResult<Paged<UserDetailsDto>>> GetAllUsers([FromQuery] GetUsersQuery query, CancellationToken cancellationToken)
     {
         var result = await dispatcher.QueryAsync(query, cancellationToken);
@@ -26,13 +28,15 @@ internal class UsersController(IDispatcher _dispatcher) : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<UserDetailsDto>> LoginUser([FromRoute] Guid id, CancellationToken cancellationToken)
+    [SwaggerOperation("Get single user by id")]
+    public async Task<ActionResult<UserDetailsDto>> GetUser([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var user = await dispatcher.QueryAsync(new GetSingleUserQuery(id), cancellationToken);
         return Ok(user);
     }
 
     [HttpPatch("updateStatus/{id:guid}")]
+    [SwaggerOperation("Update user status (Inactive, Active, Suspended)")]
     public async Task<ActionResult> UpdateUserStatus([FromRoute] Guid id, [FromBody] ChangeStatusCommand command, CancellationToken cancellationToken)
     {
         await dispatcher.SendAsync(command with {Id = id}, cancellationToken);
