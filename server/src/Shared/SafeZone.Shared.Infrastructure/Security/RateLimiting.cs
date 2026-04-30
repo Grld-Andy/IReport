@@ -1,4 +1,5 @@
 using System;
+using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
@@ -14,11 +15,15 @@ public static class RateLimiting
         int permitLimit = int.TryParse(configuration["rateLimiter:permitLimit"], out var permitValue) ? permitValue : 5;
         int window = int.TryParse(configuration["rateLimiter:window"], out var windowValue) ? windowValue : 5;
 
-        services.AddRateLimiter(options =>{ 
-            options.AddFixedWindowLimiter("fixed", options =>
+        services.AddRateLimiter(options =>{
+            options.AddPolicy("fixed", context =>
             {
-                options.PermitLimit = permitLimit;
-                options.Window = TimeSpan.FromMinutes(window);
+                var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+                return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = permitLimit,
+                    Window = TimeSpan.FromMinutes(window)
+                });
             });
 
             options.OnRejected = async (context, token) =>
