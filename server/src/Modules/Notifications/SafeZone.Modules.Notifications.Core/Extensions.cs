@@ -16,7 +16,7 @@ internal static class Extensions
             configuration.GetSection("SendGrid")
         );
 
-        services.AddScoped<IEmailSender, SendGridEmailSender>();
+        services.AddScoped<IEmailSender, GmailSmtpEmailSender>();
         services.AddScoped<NotificationService>();
         return services;
     }
