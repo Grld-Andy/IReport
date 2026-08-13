@@ -12,6 +12,12 @@ using SafeZone.Shared.Infrastructure.SignalR.UsersHub;
 var builder = WebApplication
     .CreateBuilder(args);
 
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrWhiteSpace(port))
+{
+    builder.WebHost.UseUrls($"http://+:{port}");
+}
+
 builder.Host.ConfigureModules().UseLogging();
 
 var assemblies = ModuleLoader.LoadAssemblies(builder.Configuration, "SafeZone.Modules.");

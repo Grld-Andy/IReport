@@ -4,4 +4,5 @@ export interface DashboardTitleCards{
     percentage: number
     color: string
     isIncrese: boolean
+    subtitle?: string
 }

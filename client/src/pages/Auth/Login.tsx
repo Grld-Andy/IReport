@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type z from "zod";
 import { userLoginSchema } from "@/types/User";
 import { useForm } from "react-hook-form";
@@ -147,7 +147,11 @@ const Login: React.FC = () => {
           {/* Signup link */}
           <div className="text-center text-gray-700 mt-2">
             Don't have an account?{" "}
-            <span className="font-bold text-black">Contact Admin</span>
+            <span className="font-bold text-black">Contact your admin</span>
+            {" "}or{" "}
+            <Link to="/register" className="font-bold text-black underline">
+              register a company
+            </Link>
           </div>
         </div>
       </div>

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using SafeZone.Shared.Abstractions;
 using SafeZone.Shared.Abstractions.Dispatchers;
 using SafeZone.Shared.Abstractions.Modules;
@@ -134,13 +135,9 @@ public static class Extensions
         {
             KeepAliveInterval = TimeSpan.FromMinutes(2)
         };
-        var origins = new[]
-        {
-            "http://localhost:81",
-            "http://www.localhost:81"
-        };
-
-        foreach (var origin in origins)
+        var corsOrigins = app.ApplicationServices.GetRequiredService<IOptions<CorsOptions>>().Value.AllowedOrigins
+                          ?? Enumerable.Empty<string>();
+        foreach (var origin in corsOrigins)
         {
             webSocketOptions.AllowedOrigins.Add(origin);
         }

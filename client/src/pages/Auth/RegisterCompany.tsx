@@ -116,12 +116,12 @@ const RegisterCompany: React.FC = () => {
       }
       setLoadingPayment(true);
 
-      const { success, message, data } = await initializePayment(
+      const result = await initializePayment(
         formData.adminEmail,
       );
 
-      if (success) {
-        popup.resumeTransaction(data.access_code, {
+      if (result.success && "data" in result) {
+        popup.resumeTransaction(result.data.access_code, {
           onSuccess: (transaction: { message: string; reference: string }) => {
             if (transaction.message == "Approved") {
               setPaymentReference(transaction.reference);
@@ -135,7 +135,7 @@ const RegisterCompany: React.FC = () => {
           },
         });
       } else {
-        toast.error(message);
+        toast.error(result.message);
       }
     } finally {
       setLoadingPayment(false);

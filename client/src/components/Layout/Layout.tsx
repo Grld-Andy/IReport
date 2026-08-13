@@ -61,10 +61,10 @@ const Layout: React.FC = () => {
     return <Navigate to="/auth/login" replace />;
   }
 
-  if(user.role == 'responder' && (location.pathname.includes("/kanban"))){
+  if(user.role == 'responder' && (location.pathname.includes("/kanban") || location.pathname.includes("/reports"))){
     return <NotFound/>
   }
-  if(user.role != 'admin' && (location.pathname.includes("/users") || location.pathname.includes("/reports"))){
+  if(user.role != 'admin' && location.pathname.includes("/users")){
     return <NotFound/>
   }
 
