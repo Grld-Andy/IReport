@@ -20,7 +20,7 @@ internal class CompanyConfiguration : IEntityTypeConfiguration<Company>
 
         builder.Property(c => c.LogoUrl)
             .IsRequired()
-            .HasMaxLength(500);
+            .HasMaxLength(2000);
 
         builder.Property(c => c.IsActive)
             .IsRequired();

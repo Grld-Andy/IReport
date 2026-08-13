@@ -21,7 +21,7 @@ internal class CompanyRegisteredEventHandler(IDispatcher _dispatcher) : IEventHa
             OTP = "",
             CompanyId = @event.CompanyId
         };
-        var company = Company.AddCompany(@event.CompanyId, @event.CompanyName, @event.Extension);
+        var company = Company.AddCompany(@event.CompanyId, @event.CompanyName, @event.Extension, @event.LogoUrl);
         await dispatcher.SendAsync(new CreateUserCompanyCommand(company), cancellationToken);
         await dispatcher.SendAsync(new RegisterCommand(user), cancellationToken);
     }

@@ -13,7 +13,7 @@ export function useActivityHub() {
     if (!currentUser?.companyId) return;
 
     const hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${socketUrl}Activities`)
+      .withUrl(`${socketUrl}Activities`, { withCredentials: true })
       .withAutomaticReconnect()
       .build();
 

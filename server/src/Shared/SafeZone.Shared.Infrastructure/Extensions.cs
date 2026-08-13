@@ -21,6 +21,7 @@ using SafeZone.Shared.Infrastructure.Contexts;
 using SafeZone.Shared.Infrastructure.Dispatchers;
 using SafeZone.Shared.Infrastructure.Events;
 using SafeZone.Shared.Infrastructure.Exceptions;
+using SafeZone.Shared.Infrastructure.FileStorage;
 using SafeZone.Shared.Infrastructure.Kernel;
 using SafeZone.Shared.Infrastructure.Logging;
 using SafeZone.Shared.Infrastructure.Messaging;
@@ -76,6 +77,7 @@ public static class Extensions
         
         services.AddMemoryCache();
         services.AddHttpClient();
+        services.AddSupabaseStorage(configuration);
         services.AddSingleton<IActivityApiClient, ActivityApiClient>();
         services.AddSingleton<IRequestStorage, RequestStorage>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -123,10 +125,13 @@ public static class Extensions
 
     public static IApplicationBuilder UseModularInfrastructure(this IApplicationBuilder app)
     {
-        app.UseForwardedHeaders(new ForwardedHeadersOptions
+        var forwardedHeaders = new ForwardedHeadersOptions
         {
-            ForwardedHeaders = ForwardedHeaders.All
-        });
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+        };
+        forwardedHeaders.KnownIPNetworks.Clear();
+        forwardedHeaders.KnownProxies.Clear();
+        app.UseForwardedHeaders(forwardedHeaders);
         app.UseCors("cors");
         app.UseCorrelationId();
         app.UseErrorHandling();

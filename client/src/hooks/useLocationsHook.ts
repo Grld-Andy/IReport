@@ -28,7 +28,7 @@ export function useLocationsHub() {
     if (!user?.companyId) return;
 
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl(`${socketUrl}Locations`)
+      .withUrl(`${socketUrl}Locations`, { withCredentials: true })
       .withAutomaticReconnect()
       .build();
 

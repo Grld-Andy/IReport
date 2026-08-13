@@ -13,7 +13,7 @@ const useUsersHub = () => {
   useEffect(() => {
     if (!currentUser?.companyId) return;
     const hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${socketUrl}Users`)
+      .withUrl(`${socketUrl}Users`, { withCredentials: true })
       .withAutomaticReconnect()
       .build();
 

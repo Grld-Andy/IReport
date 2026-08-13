@@ -72,9 +72,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordCommand command, CancellationToken cancellationToken)
     {
         await dispatcher.SendAsync(command, cancellationToken);
-        Response.Cookies.Delete(
-            "__access_token"
-        );
+        Response.Cookies.Delete(AuthCookie.Name, AuthCookie.Create(Request));
         return NoContent();
     }
 
@@ -96,13 +94,9 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
         var result = await dispatcher.SendAsync<LoginCommand, UserDetailsDto>(command, cancellationToken);
         var jwt = tokenStorage.Get();
         Response.Cookies.Append(
-            "__access_token",
+            AuthCookie.Name,
             jwt.AccessToken,
-            new CookieOptions
-            {
-                HttpOnly = true,
-                // Secure = true // uncomment once deployed over https
-            }
+            AuthCookie.Create(Request)
         );
         return Ok(result);
     }
@@ -111,9 +105,7 @@ internal class AuthController(IDispatcher _dispatcher, IContext _context, IToken
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> LogoutUser()
     {
-        Response.Cookies.Delete(
-            "__access_token"
-        );
+        Response.Cookies.Delete(AuthCookie.Name, AuthCookie.Create(Request));
         return NoContent();
     }
 

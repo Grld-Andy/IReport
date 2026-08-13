@@ -32,7 +32,7 @@ internal static class UserMapper
             Team = user.Team,
             ProfilePicUrl = user.ProfilePicUrl,
             CompanyId = user.CompanyId,
-            CompanyPicUrl = $"{user.Company.Id}_{user.Company.Name}{user.Company.Extension}"
+            CompanyPicUrl = user.Company.LogoUrl
         };
     }
 }

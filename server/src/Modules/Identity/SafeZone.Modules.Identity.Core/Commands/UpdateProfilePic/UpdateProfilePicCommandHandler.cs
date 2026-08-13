@@ -1,19 +1,26 @@
 using Microsoft.AspNetCore.Http;
 using SafeZone.Modules.Identity.Core.Events.External;
 using SafeZone.Shared.Abstractions.Contexts;
+using SafeZone.Shared.Abstractions.FileStorage;
 
 namespace SafeZone.Modules.Identity.Core.Commands.UpdateProfilePic;
 
-internal class UpdateProfilePicCommandHandler(IUserRepository _userRepository, IContext _context, IMessageBroker _messageBroker) : ICommandHandler<UpdateProfilePicCommand, string>
+internal class UpdateProfilePicCommandHandler(
+    IUserRepository _userRepository,
+    IContext _context,
+    IMessageBroker _messageBroker,
+    IFileStorage _fileStorage
+    ) : ICommandHandler<UpdateProfilePicCommand, string>
 {
     private readonly IUserRepository userRepository = _userRepository;
     private readonly IMessageBroker messageBroker = _messageBroker;
     private readonly IContext context = _context;
+    private readonly IFileStorage fileStorage = _fileStorage;
 
     public async Task<string> HandleAsync(UpdateProfilePicCommand command, CancellationToken cancellationToken = default)
     {
         var file = command.File;
-        if(file.Length <= 0)
+        if (file.Length <= 0)
         {
             throw new BadRequestException("Invalid Image");
         }
@@ -23,7 +30,7 @@ internal class UpdateProfilePicCommandHandler(IUserRepository _userRepository, I
         }
 
         var user = await userRepository.GetIdAsync(context.Identity.Id, cancellationToken);
-        var url = await UploadFile(file, cancellationToken);
+        var url = await UploadFile(file, user.ProfilePicUrl, cancellationToken);
 
         user.UpdateProfilePic(url);
         await userRepository.SaveAsync(cancellationToken);
@@ -40,21 +47,16 @@ internal class UpdateProfilePicCommandHandler(IUserRepository _userRepository, I
         return url;
     }
 
-    private static async Task<string> UploadFile(IFormFile file, CancellationToken cancellationToken)
+    private async Task<string> UploadFile(IFormFile file, string oldUrl, CancellationToken cancellationToken)
     {
-        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "profiles");
-        if (!Directory.Exists(uploadsFolder))
+        var extension = Path.GetExtension(file.FileName);
+        var fileName = $"{Guid.NewGuid()}{extension}";
+        await using var stream = file.OpenReadStream();
+        var url = await fileStorage.UploadAsync($"profiles/{fileName}", stream, file.ContentType, cancellationToken);
+        if (!string.IsNullOrWhiteSpace(oldUrl))
         {
-            Directory.CreateDirectory(uploadsFolder);
+            await fileStorage.DeleteAsync(oldUrl, cancellationToken);
         }
-
-        var safeFileName = Path.GetFileName(file.FileName);
-        var fileName = $"{Guid.NewGuid()}_{safeFileName}";
-        var filePath = Path.Combine(uploadsFolder, fileName);
-
-        using var stream = new FileStream(filePath, FileMode.Create);
-        await file.CopyToAsync(stream, cancellationToken);
-
-        return $"uploads/profiles/{fileName}";
+        return url;
     }
 }

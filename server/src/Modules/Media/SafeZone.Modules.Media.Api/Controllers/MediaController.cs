@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SafeZone.Shared.Abstractions.FileStorage;
 
 namespace SafeZone.Modules.Media.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-internal class MediaController : ControllerBase
+internal class MediaController(IFileStorage fileStorage) : ControllerBase
 {
     [HttpPost("upload")]
     public async Task<ActionResult> UploadFile(IFormFile file)
@@ -20,19 +21,11 @@ internal class MediaController : ControllerBase
             return BadRequest("Only images are allowed");
         }
 
-        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-        if (!Directory.Exists(uploadsFolder))
-        {
-            Directory.CreateDirectory(uploadsFolder);
-        }
+        var extension = Path.GetExtension(file.FileName);
+        var fileName = $"{Guid.NewGuid()}{extension}";
+        await using var stream = file.OpenReadStream();
+        var url = await fileStorage.UploadAsync($"media/{fileName}", stream, file.ContentType);
 
-        var safeFileName = Path.GetFileName(file.FileName);
-        var fileName = $"{Guid.NewGuid()}_{safeFileName}";
-        var filePath = Path.Combine(uploadsFolder, fileName);
-
-        using var stream = new FileStream(filePath, FileMode.Create);
-        await file.CopyToAsync(stream);
-
-        return Ok(new { Url = $"/uploads/{fileName}" });
+        return Ok(new { Url = url });
     }
 }

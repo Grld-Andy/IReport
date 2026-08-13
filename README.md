@@ -6,6 +6,140 @@
 
 This system is tailored for large ports and shipping terminals where real-time incident tracking, personnel coordination, and vehicle/equipment monitoring are critical. The system manages safety, operational efficiency, and incident response for dock workers, supervisors, and administrators.
 
+It is a multi-tenant SaaS (not port-only): companies register, pay via Paystack, then run their own incident workspace.
+
+---
+
+# Stack
+
+| Layer | Tech | Host |
+|-------|------|------|
+| Frontend | React + Vite | [Vercel](https://vercel.com) (`client/`) |
+| API | .NET 10 modular Web API + SignalR | [Render](https://render.com) Docker (`server/`) |
+| Database | PostgreSQL | [Supabase](https://supabase.com) (session mode, port **5432**) |
+| Images | Supabase Storage (public bucket `safezone`) | Logos, profile pictures, media |
+
+Render free disk is ephemeral, so files are never stored on the API host.
+
+---
+
+# Setup
+
+Copy env templates from `client/.env.example` and `server/.env.example`. Nested API settings use double underscores (`postgres__connectionString`).
+
+## Prerequisites
+
+- [.NET 10 SDK](https://dotnet.microsoft.com/download)
+- Node.js 22+
+- Docker (local Postgres) **or** a Supabase project
+- A [Supabase](https://supabase.com) project (required for images; recommended for the database in production)
+
+## 1. Supabase (database + bucket)
+
+1. Create a project at [supabase.com](https://supabase.com).
+2. **Database** — Project Settings → Database → connection string.
+   - Use **Session mode, port 5432**. Do **not** use the transaction pooler on port 6543 (EF migrations need session mode).
+3. **Storage** — create a **public** bucket named `safezone` (the API also tries to create it on first upload).
+4. **API keys** — Project Settings → API: copy the Project URL and the **service_role** key.
+   - Put `service_role` on the **server / Render only**. Never add it to Vercel or the client.
+
+## 2. Local development
+
+### Database
+
+From `server/`:
+
+```bash
+docker compose up -d
+```
+
+This starts Postgres (`localhost:5432`, database `SafeZone`, user/password `postgres`) and Seq (`http://localhost:5341`). Point `postgres.connectionString` in `server/src/Bootstrapper/SafeZone.Bootstrapper/appsettings.json` at this instance, or at Supabase if you prefer one database everywhere.
+
+EF migrations run automatically when the API starts.
+
+### API
+
+For local image uploads, set Supabase storage in `appsettings.json` or environment variables:
+
+```json
+"supabase": {
+  "url": "https://YOUR_PROJECT_REF.supabase.co",
+  "serviceRoleKey": "YOUR_SERVICE_ROLE_KEY",
+  "bucket": "safezone"
+}
+```
+
+Then:
+
+```bash
+cd server
+dotnet run --project src/Bootstrapper/SafeZone.Bootstrapper/SafeZone.Bootstrapper.csproj
+```
+
+API: `http://localhost:5000` · health: `GET /ping` → `pong`
+
+### Frontend
+
+```bash
+cd client
+cp .env.example .env
+npm install
+npm run dev
+```
+
+`client/.env`:
+
+```
+VITE_API_URL="http://localhost:5000/api/"
+VITE_SOCKET_URL="http://localhost:5000/"
+VITE_PAYSTACK_PUBLIC_KEY="pk_test_..."
+```
+
+Keep the trailing slashes on the URL vars. App: `http://localhost:5173`.
+
+## 3. Production (Vercel + Render + Supabase)
+
+### Render (API)
+
+1. New **Web Service**, repo root directory **`server`**, Dockerfile path **`Dockerfile`**.
+2. Health check: `/ping`.
+3. Paste env vars from `server/.env.example`. Required in production:
+
+| Variable | Notes |
+|----------|--------|
+| `postgres__connectionString` | Supabase **session** URI, port **5432**, `SSL Mode=Require` |
+| `supabase__url` | `https://YOUR_PROJECT_REF.supabase.co` |
+| `supabase__serviceRoleKey` | service_role key (server only) |
+| `supabase__bucket` | `safezone` |
+| `auth__jwt__issuerSigningKey` | random secret, 32+ characters |
+| `security__encryption__key` | **exactly 32** characters |
+| `cors__allowedOrigins__0` | Vercel origin, **no** trailing slash (`https://YOUR-APP.vercel.app`) |
+| `paystack__secretKey` | Paystack secret |
+| `paystack__callbackUrl` | `https://YOUR-APP.vercel.app/payment/callback` |
+| `GmailSmtpSettings__Email` / `__AppPassword` | OTP / password-reset email |
+| `logger__file__enabled` | `false` (Render disk is ephemeral) |
+| `ASPNETCORE_ENVIRONMENT` | `Production` |
+
+Render injects `PORT`; the container listens on `8080` locally in Docker.
+
+After the first deploy, copy the service URL (e.g. `https://your-api.onrender.com`).
+
+### Vercel (frontend)
+
+1. New project, root directory **`client`**.
+2. Framework: Vite. `vercel.json` already rewrites SPA routes to `index.html`.
+3. Environment variables (include trailing slashes):
+
+```
+VITE_API_URL=https://your-api.onrender.com/api/
+VITE_SOCKET_URL=https://your-api.onrender.com/
+VITE_PAYSTACK_PUBLIC_KEY=pk_live_or_test
+```
+
+4. Redeploy the client after changing Vite env vars (they are baked in at build time).
+
+Auth cookies use `SameSite=None; Secure` in production so the Vercel origin can call the Render API with credentials.
+
 ---
 
 # Key Users / Roles
@@ -259,16 +393,3 @@ This system is tailored for large ports and shipping terminals where real-time i
 - Multi-terminal tracking for large port operations
 - Vehicle telemetry (speed, equipment status)
 - Heatmaps for incident hotspots
-
-
-this is an mvp so it should not be for only ports, it would be used across various domains
-create the landing page, as well as the registration pages to register by paying up and entering company details(name and company logo) which will be submitted
-after create the admin account(internal class UserDto{
-    public string Name { get;  set; } = default!;
-    public string Email { get; set; } = default!;
-    public string Role { get; set; } = default!;
-    public string Team { get; set; } = default!;
-})
-
-so a multipart for would be best
-i want to make it a multitenant/saas application

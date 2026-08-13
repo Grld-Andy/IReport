@@ -1,20 +1,20 @@
-// using Microsoft.EntityFrameworkCore;
-// using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
-// namespace SafeZone.Modules.Activity.Core.DAL;
+namespace SafeZone.Modules.Activity.Core.DAL;
 
-// internal sealed class ActivitiesDbContextFactory 
-//     : IDesignTimeDbContextFactory<ActivitiesDbContext>
-// {
-//     public ActivitiesDbContext CreateDbContext(string[] args)
-//     {
-//         var optionsBuilder = new DbContextOptionsBuilder<ActivitiesDbContext>();
+internal sealed class ActivitiesDbContextFactory : IDesignTimeDbContextFactory<ActivitiesDbContext>
+{
+    public ActivitiesDbContext CreateDbContext(string[] args)
+    {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-//         var connectionString =
-//             "Data Source=PSL-AANSONG\\SQLEXPRESS;Database=SafeZone;Integrated Security=True;TrustServerCertificate=True;Encrypt=True;Max Pool Size=100;Min Pool Size=5;Connection Timeout=30;MultipleActiveResultSets=True;";
+        var connectionString =
+            Environment.GetEnvironmentVariable("postgres__connectionString")
+            ?? "Host=localhost;Port=5432;Database=safezone;Username=postgres;Password=postgres";
 
-//         optionsBuilder.UseSqlServer(connectionString);
-
-//         return new ActivitiesDbContext(optionsBuilder.Options);
-//     }
-// }
+        var optionsBuilder = new DbContextOptionsBuilder<ActivitiesDbContext>();
+        optionsBuilder.UseNpgsql(connectionString);
+        return new ActivitiesDbContext(optionsBuilder.Options);
+    }
+}

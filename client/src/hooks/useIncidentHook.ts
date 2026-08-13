@@ -25,7 +25,7 @@ export function useIncidentHub() {
     if (!currentUser?.companyId) return;
 
     const hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${socketUrl}Incidents`)
+      .withUrl(`${socketUrl}Incidents`, { withCredentials: true })
       .withAutomaticReconnect()
       .build();
 
